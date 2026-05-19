@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LuxLanding – Luxembourg Relocation Intake</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="form.css">
+</head>
+<body>
+  <main class="app">
+
+    <div class="form-brand">
+      <span class="brand-logo">LuxLanding</span>
+      <span class="brand-tagline">Luxembourg relocation support</span>
+    </div>
+
+    <!-- Language selector -->
+    <section class="page saas-card" id="page-language">
+      <div class="form-progress" aria-label="Form progress">
+        <div class="progress-step active">1</div>
+        <div class="progress-line"></div>
+        <div class="progress-step">2</div>
+        <div class="progress-line"></div>
+        <div class="progress-step">3</div>
+      </div>
+
+      <span class="form-kicker">Relocation onboarding</span>
+      <h1 data-i18n="lang.title">Build your Luxembourg relocation plan</h1>
+      <p class="form-helper">Takes less than 2 minutes • No commitment required</p>
+
+      <div class="options language-options">
+        <button type="button" class="btn-lang" data-lang="en">English</button>
+        <button type="button" class="btn-lang" data-lang="fr">Français</button>
+        <button type="button" class="btn-lang" data-lang="es">Español</button>
+        <button type="button" class="btn-lang" data-lang="pt">Português</button>
+      </div>
+    </section>
+
+    <!-- Main needs selection -->
+    <section class="page saas-card" id="page-main" hidden>
+      <div class="form-progress" aria-label="Form progress">
+        <div class="progress-step completed">1</div>
+        <div class="progress-line active"></div>
+        <div class="progress-step active">2</div>
+        <div class="progress-line"></div>
+        <div class="progress-step">3</div>
+      </div>
+
+      <span class="form-kicker">Your situation</span>
+      <h2 data-i18n="profile.title">What best describes your situation?</h2>
+      <p class="form-helper">We’ll use this to match you with the right type of support.</p>
+      <button type="button" class="btn-back">← Back</button>
+
+      <!-- Profile -->
+      <div class="block">
+        <label class="chip">
+          <input type="radio" name="profile" value="moving_job" />
+          <span data-i18n="profile.moving_job">I’m moving for a job</span>
+        </label>
+        <label class="chip">
+          <input type="radio" name="profile" value="moving_family" />
+          <span data-i18n="profile.moving_family">I’m moving with my family</span>
+        </label>
+        <label class="chip">
+          <input type="radio" name="profile" value="student" />
+          <span data-i18n="profile.student">I’m a student</span>
+        </label>
+        <label class="chip">
+          <input type="radio" name="profile" value="freelancer" />
+          <span data-i18n="profile.freelancer">I’m a freelancer / self-employed</span>
+        </label>
+        <label class="chip">
+          <input type="radio" name="profile" value="looking_job" />
+          <span data-i18n="profile.looking_job">I’m looking for a job</span>
+        </label>
+        <label class="chip">
+          <input type="radio" name="profile" value="other" />
+          <span data-i18n="profile.other">Other</span>
+        </label>
+      </div>
+
+      <label id="profile-other-wrap" hidden>
+        <span data-i18n="profile.other_specify">Please specify</span>
+        <input type="text" name="profile_other" id="profile-other-input" placeholder="Please specify" />
+      </label>
+
+      <h2 data-i18n="needs.title">What do you need help with for your move?</h2>
+      <p class="form-helper" data-i18n="main.subtitle">You can select more than one option.</p>
+
+      <div class="options">
+        <label class="chip">
+          <input type="checkbox" name="needs" value="housing" />
+          <span data-i18n="needs.housing">Housing / apartment search</span>
+        </label>
+
+        <label class="chip">
+          <input type="checkbox" name="needs" value="admin" />
+          <span data-i18n="needs.admin">Administrative paperwork</span>
+        </label>
+
+        <label class="chip">
+          <input type="checkbox" name="needs" value="schools" />
+          <span data-i18n="needs.schools">Schools / childcare</span>
+        </label>
+
+        <label class="chip">
+          <input type="checkbox" name="needs" value="health" />
+          <span data-i18n="needs.health">Health insurance</span>
+        </label>
+
+        <label class="chip">
+          <input type="checkbox" name="needs" value="banking" />
+          <span data-i18n="needs.banking">Banking</span>
+        </label>
+
+        <label class="chip">
+          <input type="checkbox" name="needs" value="moving" />
+          <span data-i18n="needs.moving">Moving services</span>
+        </label>
+
+        <label class="chip">
+          <input type="checkbox" name="needs" value="language" />
+          <span data-i18n="needs.language">Language courses</span>
+        </label>
+
+        <label class="chip">
+          <input type="checkbox" name="needs" value="job" />
+          <span data-i18n="needs.job">Job search / CV</span>
+        </label>
+
+        <label class="chip">
+          <input type="checkbox" name="needs" value="freelancer" />
+          <span data-i18n="needs.freelancer">Freelancer / self-employed</span>
+        </label>
+
+        <label class="chip">
+          <input type="checkbox" name="needs" value="other" />
+          <span data-i18n="needs.other">Other</span>
+        </label>
+      </div>
+
+      <label id="needs-other-wrap" hidden>
+        <span data-i18n="needs.other_specify">Please specify</span>
+        <input type="text" name="needs_other" id="needs-other-input" placeholder="Please specify" />
+      </label>
+
+      <button type="button" id="btn-main-next" class="btn-primary" data-i18n="main.next">
+        Next
+      </button>
+    </section>
+
+    <!-- FORM WRAPPER -->
+    <form id="intake-form" class="page saas-card" hidden>
+      <div class="form-progress" aria-label="Form progress">
+        <div class="progress-step completed">1</div>
+        <div class="progress-line active"></div>
+        <div class="progress-step completed">2</div>
+        <div class="progress-line active"></div>
+        <div class="progress-step active">3</div>
+      </div>
+
+      <span class="form-kicker">Personalized details</span>
+      <h2 class="form-title">Tell us the details</h2>
+      <p class="form-helper">Only answer the sections related to the help you selected.</p>
+
+      <button type="button" class="btn-back">← Back</button>
+
+      <!-- Housing block -->
+      <section class="block" id="block-housing" hidden>
+        <h2 data-i18n="housing.title">Housing / apartment search</h2>
+
+        <label>
+          <span data-i18n="housing.q1">What is your monthly budget?</span>
+          <input type="number" name="housing_budget" min="0" step="1" />
+        </label>
+
+        <label>
+          <span data-i18n="housing.q2">How many bedrooms do you need?</span>
+          <select name="housing_bedrooms">
+            <option value="" disabled selected data-i18n="common.select">Please select</option>
+            <option value="studio" data-i18n="housing.studio">Studio</option>
+            <option value="1" data-i18n="housing.1br">1 bedroom</option>
+            <option value="2" data-i18n="housing.2br">2 bedrooms</option>
+            <option value="3" data-i18n="housing.3br">3 bedrooms</option>
+            <option value="4plus" data-i18n="housing.4br">4+ bedrooms</option>
+          </select>
+        </label>
+
+        <fieldset>
+          <legend data-i18n="housing.q3">Do you already have a work contract?</legend>
+          <label>
+            <input type="radio" name="housing_contract" value="yes" />
+            <span data-i18n="common.yes">Yes</span>
+          </label>
+          <label>
+            <input type="radio" name="housing_contract" value="no" />
+            <span data-i18n="common.no">No</span>
+          </label>
+        </fieldset>
+      </section>
+
+      <!-- Schools block -->
+      <section class="block" id="block-schools" hidden>
+        <h2 data-i18n="schools.title">Schools / childcare</h2>
+
+        <label>
+          <span data-i18n="schools.q1">How many children?</span>
+          <input type="number" name="schools_children_count" min="0" step="1" />
+        </label>
+
+        <label>
+          <span data-i18n="schools.q2">Ages?</span>
+          <input type="text" name="schools_children_ages" />
+        </label>
+
+        <label>
+          <span data-i18n="schools.q3">Public, private or international?</span>
+          <select name="schools_type">
+            <option value="" disabled selected data-i18n="common.select">Please select</option>
+            <option value="public" data-i18n="schools.public">Public</option>
+            <option value="private" data-i18n="schools.private">Private</option>
+            <option value="international" data-i18n="schools.international">International</option>
+          </select>
+        </label>
+      </section>
+
+      <!-- Administrative paperwork block -->
+      <section class="block" id="block-admin" hidden>
+        <h2 data-i18n="admin.title">Administrative paperwork</h2>
+
+        <label>
+          <span data-i18n="admin.q1">Do you already have a job contract?</span>
+          <select name="admin_job_contract">
+            <option value="" disabled selected data-i18n="common.select">Please select</option>
+            <option value="yes" data-i18n="common.yes">Yes</option>
+            <option value="no" data-i18n="common.no">No</option>
+          </select>
+        </label>
+
+        <label>
+          <span data-i18n="admin.q2">Do you already have an address in Luxembourg?</span>
+          <select name="admin_address">
+            <option value="" disabled selected data-i18n="common.select">Please select</option>
+            <option value="yes" data-i18n="common.yes">Yes</option>
+            <option value="no" data-i18n="common.no">No</option>
+          </select>
+        </label>
+      </section>
+
+      <!-- Health insurance block -->
+      <section class="block" id="block-health" hidden>
+        <h2 data-i18n="health.title">Health insurance</h2>
+
+        <label>
+          <span data-i18n="health.q1">Do you need help choosing a health insurance provider?</span>
+          <select name="health_provider">
+            <option value="" disabled selected data-i18n="common.select">Please select</option>
+            <option value="yes" data-i18n="common.yes">Yes</option>
+            <option value="no" data-i18n="common.no">No</option>
+          </select>
+        </label>
+
+        <label>
+          <span data-i18n="health.q2">Are you already registered with CNS?</span>
+          <select name="health_cns">
+            <option value="" disabled selected data-i18n="common.select">Please select</option>
+            <option value="yes" data-i18n="common.yes">Yes</option>
+            <option value="no" data-i18n="common.no">No</option>
+          </select>
+        </label>
+      </section>
+
+      <!-- Banking block -->
+      <section class="block" id="block-banking" hidden>
+        <h2 data-i18n="banking.title">Banking</h2>
+
+        <label>
+          <span data-i18n="banking.q1">Do you need help opening a bank account?</span>
+          <select name="bank_account">
+            <option value="" disabled selected data-i18n="common.select">Please select</option>
+            <option value="yes" data-i18n="common.yes">Yes</option>
+            <option value="no" data-i18n="common.no">No</option>
+          </select>
+        </label>
+
+        <label>
+          <span data-i18n="banking.q2">Are you already employed?</span>
+          <select name="bank_employed">
+            <option value="" disabled selected data-i18n="common.select">Please select</option>
+            <option value="yes" data-i18n="common.yes">Yes</option>
+            <option value="no" data-i18n="common.no">No</option>
+          </select>
+        </label>
+      </section>
+
+      <!-- Moving services block -->
+      <section class="block" id="block-moving" hidden>
+        <h2 data-i18n="moving.title">Moving services</h2>
+
+        <label>
+          <span data-i18n="moving.q1">Do you need help with moving companies?</span>
+          <select name="moving_help">
+            <option value="" disabled selected data-i18n="common.select">Please select</option>
+            <option value="yes" data-i18n="common.yes">Yes</option>
+            <option value="no" data-i18n="common.no">No</option>
+          </select>
+        </label>
+
+        <label>
+          <span data-i18n="moving.q2">From which country are you moving?</span>
+          <input type="text" name="moving_country" />
+        </label>
+      </section>
+
+      <!-- Language courses block -->
+      <section class="block" id="block-language" hidden>
+        <h2 data-i18n="language.title">Language courses</h2>
+
+        <label>
+          <span data-i18n="language.q1">Which language do you want to learn?</span>
+          <select name="language_target">
+            <option value="" disabled selected data-i18n="common.select">Please select</option>
+            <option value="fr" data-i18n="language.fr">French</option>
+            <option value="de" data-i18n="language.de">German</option>
+            <option value="lu" data-i18n="language.lu">Luxembourgish</option>
+            <option value="en" data-i18n="language.en">English</option>
+          </select>
+        </label>
+
+        <label>
+          <span data-i18n="language.q2">What is your current level?</span>
+          <select name="language_level">
+            <option value="" disabled selected data-i18n="common.select">Please select</option>
+            <option value="beginner" data-i18n="language.beginner">Beginner</option>
+            <option value="intermediate" data-i18n="language.intermediate">Intermediate</option>
+            <option value="advanced" data-i18n="language.advanced">Advanced</option>
+          </select>
+        </label>
+      </section>
+
+      <!-- Job search block -->
+      <section class="block" id="block-job" hidden>
+        <h2 data-i18n="job.title">Job search / CV</h2>
+
+        <label>
+          <span data-i18n="job.q1">Do you need help with your CV?</span>
+          <select name="job_cv_help">
+            <option value="" disabled selected data-i18n="common.select">Please select</option>
+            <option value="yes" data-i18n="common.yes">Yes</option>
+            <option value="no" data-i18n="common.no">No</option>
+          </select>
+        </label>
+
+        <label>
+          <span data-i18n="job.q2">Do you need interview preparation?</span>
+          <select name="job_interview">
+            <option value="" disabled selected data-i18n="common.select">Please select</option>
+            <option value="yes" data-i18n="common.yes">Yes</option>
+            <option value="no" data-i18n="common.no">No</option>
+          </select>
+        </label>
+      </section>
+
+      <!-- Freelancer block -->
+      <section class="block" id="block-freelancer" hidden>
+        <h2 data-i18n="freelancer.title">Freelancer / self-employed</h2>
+
+        <label>
+          <span data-i18n="freelancer.q1">Do you need help registering your business?</span>
+          <select name="freelancer_register">
+            <option value="" disabled selected data-i18n="common.select">Please select</option>
+            <option value="yes" data-i18n="common.yes">Yes</option>
+            <option value="no" data-i18n="common.no">No</option>
+          </select>
+        </label>
+
+        <label>
+          <span data-i18n="freelancer.q2">Do you need tax guidance?</span>
+          <select name="freelancer_tax">
+            <option value="" disabled selected data-i18n="common.select">Please select</option>
+            <option value="yes" data-i18n="common.yes">Yes</option>
+            <option value="no" data-i18n="common.no">No</option>
+          </select>
+        </label>
+      </section>
+
+      <!-- Additional context -->
+      <section class="block" id="block-context" hidden>
+        <h2 data-i18n="context.title">Tell us a bit about your situation</h2>
+        <label>
+          <span data-i18n="context.q1">What should we know about your situation?</span>
+          <textarea name="situation_notes" rows="4" placeholder="Tell us what you're looking for, what you're struggling with, or what kind of help you need."></textarea>
+        </label>
+      </section>
+
+      <!-- Final details block -->
+      <section class="block" id="block-final" hidden>
+        <h2 data-i18n="final.title">Final details</h2>
+
+        <label>
+          <span data-i18n="final.q1">When are you planning to move?</span>
+          <select name="move_timing">
+            <option value="" disabled selected data-i18n="common.select">Please select</option>
+            <option value="30_days" data-i18n="final.opt1">Within 30 days</option>
+            <option value="1_3_months" data-i18n="final.opt2">1–3 months</option>
+            <option value="3_6_months" data-i18n="final.opt3">3–6 months</option>
+            <option value="exploring" data-i18n="final.opt4">I’m just exploring</option>
+          </select>
+        </label>
+
+        <label>
+          <span data-i18n="final.q2">Are you looking for personalized professional support?</span>
+          <select name="support_readiness">
+            <option value="" disabled selected data-i18n="common.select">Please select</option>
+            <option value="yes">Yes, I’m ready to get help</option>
+            <option value="maybe">Maybe, I’d like to know more first</option>
+            <option value="exploring">I’m just exploring</option>
+          </select>
+        </label>
+      </section>
+
+      <!-- Contact details block -->
+      <section class="block" id="block-contact" hidden>
+        <h2 data-i18n="contact.title">Your contact details</h2>
+
+        <label>
+          <span data-i18n="contact.name">Your name</span>
+          <input type="text" name="contact_name" required />
+        </label>
+
+        <label>
+          <span data-i18n="contact.email">Your email</span>
+          <input type="email" name="contact_email" placeholder="Your email" required>
+        </label>
+
+        <label>
+          <span data-i18n="contact.phone">Your phone (WhatsApp recommended)</span>
+          <input type="tel" name="contact_phone" placeholder="Your phone (WhatsApp)" inputmode="tel" autocomplete="tel" pattern="^[+0-9 ()-]{6,20}$" title="Please enter a valid phone number" oninput="this.value = this.value.replace(/[^0-9+()\s-]/g, '')">
+        </label>
+      </section>
+
+      <!-- Submit -->
+      <button type="submit" class="btn-primary" data-i18n="form.submit">
+        Send
+      </button>
+    </form>
+
+    <!-- Thank you page -->
+    <section class="page saas-card" id="page-thankyou" hidden>
+      <div class="form-progress" aria-label="Form progress">
+        <div class="progress-step completed">1</div>
+        <div class="progress-line active"></div>
+        <div class="progress-step completed">2</div>
+        <div class="progress-line active"></div>
+        <div class="progress-step completed">3</div>
+      </div>
+
+      <span class="form-kicker">Request received</span>
+      <h2 data-i18n="thank.title">Thank you!</h2>
+      <p data-i18n="thank.text">
+        We’ve received your information and will get back to you shortly.
+      </p>
+      <p class="form-helper">A confirmation email has been sent if you provided a valid email address.</p>
+    </section>
+
+  </main>
+
+  <script>
+    // Load reCAPTCHA only outside localhost
+    if (!["localhost", "127.0.0.1"].includes(window.location.hostname)) {
+      const s = document.createElement("script");
+      s.src = "https://www.google.com/recaptcha/api.js?render=6Le7tsIsAAAAAPcPGZtFzwO-aZ-CUq11bhyQKIFd";
+      document.head.appendChild(s);
+    }
+  </script>
+  <script src="languages.js"></script>
+  <script src="logic.js"></script>
+  <script src="submit.js"></script>
+</body>
+</html>
