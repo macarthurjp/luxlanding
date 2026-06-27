@@ -1,6 +1,16 @@
 window.currentLang = window.currentLang || "en";
 window.selectedNeeds = window.selectedNeeds || [];
 
+/* =========================================================
+   GA4 CONVERSION TRACKING
+========================================================= */
+
+function trackEvent(name, params = {}) {
+  if (typeof gtag === "function") {
+    gtag("event", name, params);
+  }
+}
+
 const pageLanguage = document.getElementById("page-language");
 const pageMain = document.getElementById("page-main");
 const intakeForm = document.getElementById("intake-form");
@@ -156,6 +166,7 @@ langButtons.forEach(btn => {
   btn.addEventListener("click", () => {
     const lang = btn.dataset.lang || "en";
     applySelectedLanguage(lang);
+    trackEvent("form_start", { form_name: "lead_intake", language: lang });
     goToPage("page-main");
     scrollToFormSafe();
   });
@@ -178,6 +189,11 @@ if (btnMainNext) {
 
     window.selectedNeeds = getSelectedNeeds();
     showSelectedBlocks();
+    trackEvent("form_profile_completed", {
+      form_name: "lead_intake",
+      profile: getSelectedProfile(),
+      needs: window.selectedNeeds.join(",")
+    });
     goToPage("intake-form");
     scrollToFormSafe();
   });

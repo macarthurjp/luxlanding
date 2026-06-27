@@ -435,7 +435,7 @@
 
         <label>
           <span data-i18n="contact.phone">Your phone (WhatsApp recommended)</span>
-          <input type="tel" name="contact_phone" placeholder="Your phone (WhatsApp)" inputmode="tel" autocomplete="tel" pattern="^[+0-9 ()-]{6,20}$" title="Please enter a valid phone number" oninput="this.value = this.value.replace(/[^0-9+()\s-]/g, '')">
+          <input type="tel" name="contact_phone" placeholder="Your phone (WhatsApp)" inputmode="tel" autocomplete="tel" pattern="^[+0-9 \(\)\-]{6,20}$" title="Please enter a valid phone number" oninput="this.value = this.value.replace(/[^0-9+()\s-]/g, '')">
         </label>
       </section>
 

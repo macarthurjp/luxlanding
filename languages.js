@@ -41,9 +41,12 @@ const translations = {
     "how.step3.title": "3. Get help fast",
     "how.step3.text": "Receive assistance within 24h",
 
+    "seo.eyebrow": "Why LuxLanding",
     "seo.title": "Relocation services in Luxembourg for expats",
     "seo.p1": "Moving to Luxembourg can be complex, especially for expats and international professionals. LuxLanding helps you relocate smoothly by connecting you with trusted experts for housing, administrative paperwork, banking, schools, and relocation support tailored to your situation.",
     "seo.p2": "Whether you are moving for work, with your family, or planning a new life abroad, our platform simplifies the process and helps you avoid common mistakes. Get matched with the right support and move to Luxembourg with confidence.",
+    "seo.tag.schools": "Schools",
+    "seo.tag.moving": "Moving",
 
     "housing.title": "Housing / apartment search",
     "housing.q1": "What is your monthly budget?",
@@ -151,7 +154,23 @@ const translations = {
 
     "common.yes": "Yes",
     "common.no": "No",
-    "common.select": "Please select"
+    "common.select": "Please select",
+
+    "faq.toggle": "Frequently asked questions",
+    "faq.eyebrow": "FAQ",
+    "faq.title": "Frequently asked questions",
+    "faq.q1": "What relocation services does LuxLanding help with?",
+    "faq.a1": "LuxLanding helps with housing, administrative paperwork, banking, schools, childcare, language courses and moving services for people relocating to Luxembourg.",
+    "faq.q2": "Who can use LuxLanding?",
+    "faq.a2": "LuxLanding is built for expats, families, students, freelancers and professionals moving to Luxembourg or already settling in the country.",
+    "faq.q3": "How quickly can I get help?",
+    "faq.a3": "After you submit your request, LuxLanding reviews your situation and aims to reply with clear next steps within 24 hours.",
+
+    "footer.tagline": "Relocation support for expats, families and professionals moving to Luxembourg.",
+    "footer.faq": "FAQ",
+    "footer.privacy": "Privacy notice",
+    "footer.contact": "Contact us",
+    "footer.rights": "All rights reserved."
   },
 
   fr: {
@@ -190,9 +209,12 @@ const translations = {
     "how.step3.title": "3. Obtenez de l’aide rapidement",
     "how.step3.text": "Recevez une assistance sous 24h",
 
+    "seo.eyebrow": "Pourquoi LuxLanding",
     "seo.title": "Services de relocation au Luxembourg pour expatriés",
     "seo.p1": "S’installer au Luxembourg peut être complexe, surtout pour les expatriés et les professionnels internationaux. LuxLanding vous aide à vous installer plus facilement en vous mettant en relation avec des experts de confiance pour le logement, les démarches administratives, la banque, les écoles et un accompagnement relocation adapté à votre situation.",
     "seo.p2": "Que vous déménagiez pour le travail, avec votre famille ou pour commencer une nouvelle vie à l’étranger, notre plateforme simplifie le processus et vous aide à éviter les erreurs courantes. Trouvez le bon accompagnement et installez-vous au Luxembourg en toute confiance.",
+    "seo.tag.schools": "Écoles",
+    "seo.tag.moving": "Déménagement",
 
     "housing.title": "Logement / recherche d’appartement",
     "housing.q1": "Quel est votre budget mensuel ?",
@@ -300,7 +322,23 @@ const translations = {
 
     "common.yes": "Oui",
     "common.no": "Non",
-    "common.select": "Veuillez sélectionner"
+    "common.select": "Veuillez sélectionner",
+
+    "faq.toggle": "Questions fréquentes",
+    "faq.eyebrow": "FAQ",
+    "faq.title": "Questions fréquentes",
+    "faq.q1": "Avec quels services de relocation LuxLanding peut-il m’aider ?",
+    "faq.a1": "LuxLanding aide pour le logement, les démarches administratives, la banque, les écoles, la garde d’enfants, les cours de langue et les services de déménagement pour les personnes qui s’installent au Luxembourg.",
+    "faq.q2": "Qui peut utiliser LuxLanding ?",
+    "faq.a2": "LuxLanding est conçu pour les expatriés, les familles, les étudiants, les freelances et les professionnels qui s’installent au Luxembourg ou y vivent déjà.",
+    "faq.q3": "À quelle vitesse puis-je obtenir de l’aide ?",
+    "faq.a3": "Après l’envoi de votre demande, LuxLanding analyse votre situation et s’efforce de répondre avec des étapes claires sous 24 heures.",
+
+    "footer.tagline": "Accompagnement relocation pour les expatriés, familles et professionnels qui s’installent au Luxembourg.",
+    "footer.faq": "FAQ",
+    "footer.privacy": "Notice de confidentialité",
+    "footer.contact": "Nous contacter",
+    "footer.rights": "Tous droits réservés."
   },
 
   es: {
@@ -339,9 +377,12 @@ const translations = {
     "how.step3.title": "3. Recibe ayuda rápido",
     "how.step3.text": "Recibe asistencia en 24h",
 
+    "seo.eyebrow": "Por qué LuxLanding",
     "seo.title": "Servicios de relocation en Luxemburgo para expatriados",
     "seo.p1": "Mudarse a Luxemburgo puede ser complejo, especialmente para expatriados y profesionales internacionales. LuxLanding te ayuda a instalarte con más tranquilidad conectándote con expertos de confianza en vivienda, trámites administrativos, banca, escuelas y apoyo de relocation adaptado a tu situación.",
     "seo.p2": "Ya sea que te mudes por trabajo, con tu familia o para empezar una nueva vida en el extranjero, nuestra plataforma simplifica el proceso y te ayuda a evitar errores comunes. Encuentra el apoyo adecuado y múdate a Luxemburgo con confianza.",
+    "seo.tag.schools": "Escuelas",
+    "seo.tag.moving": "Mudanza",
 
     "housing.title": "Vivienda / búsqueda de apartamento",
     "housing.q1": "¿Cuál es tu presupuesto mensual?",
@@ -449,7 +490,23 @@ const translations = {
 
     "common.yes": "Sí",
     "common.no": "No",
-    "common.select": "Por favor selecciona"
+    "common.select": "Por favor selecciona",
+
+    "faq.toggle": "Preguntas frecuentes",
+    "faq.eyebrow": "FAQ",
+    "faq.title": "Preguntas frecuentes",
+    "faq.q1": "¿Con qué servicios de relocation ayuda LuxLanding?",
+    "faq.a1": "LuxLanding ayuda con vivienda, trámites administrativos, banca, escuelas, cuidado infantil, cursos de idiomas y servicios de mudanza para personas que se relocan a Luxemburgo.",
+    "faq.q2": "¿Quién puede usar LuxLanding?",
+    "faq.a2": "LuxLanding está pensado para expatriados, familias, estudiantes, freelancers y profesionales que se mudan a Luxemburgo o que ya están instalándose en el país.",
+    "faq.q3": "¿Qué tan rápido puedo recibir ayuda?",
+    "faq.a3": "Después de enviar tu solicitud, LuxLanding revisa tu situación y procura responder con próximos pasos claros dentro de 24 horas.",
+
+    "footer.tagline": "Apoyo de relocation para expatriados, familias y profesionales que se mudan a Luxemburgo.",
+    "footer.faq": "FAQ",
+    "footer.privacy": "Aviso de privacidad",
+    "footer.contact": "Contáctanos",
+    "footer.rights": "Todos los derechos reservados."
   },
 
   pt: {
@@ -488,9 +545,12 @@ const translations = {
     "how.step3.title": "3. Receba ajuda rapidamente",
     "how.step3.text": "Receba assistência em até 24h",
 
+    "seo.eyebrow": "Por que a LuxLanding",
     "seo.title": "Serviços de relocation no Luxemburgo para expatriados",
     "seo.p1": "Mudar-se para o Luxemburgo pode ser complexo, especialmente para expatriados e profissionais internacionais. A LuxLanding ajuda você a se instalar com mais tranquilidade, conectando você a especialistas de confiança em moradia, documentação, banco, escolas e suporte de relocation adaptado à sua situação.",
     "seo.p2": "Se você está se mudando por trabalho, com a família ou para começar uma nova vida no exterior, nossa plataforma simplifica o processo e ajuda você a evitar erros comuns. Encontre o suporte certo e mude-se para o Luxemburgo com confiança.",
+    "seo.tag.schools": "Escolas",
+    "seo.tag.moving": "Mudança",
 
     "housing.title": "Moradia / busca de apartamento",
     "housing.q1": "Qual é o seu orçamento mensal?",
@@ -598,7 +658,23 @@ const translations = {
 
     "common.yes": "Sim",
     "common.no": "Não",
-    "common.select": "Por favor selecione"
+    "common.select": "Por favor selecione",
+
+    "faq.toggle": "Perguntas frequentes",
+    "faq.eyebrow": "FAQ",
+    "faq.title": "Perguntas frequentes",
+    "faq.q1": "Com quais serviços de relocation a LuxLanding ajuda?",
+    "faq.a1": "A LuxLanding ajuda com moradia, processos administrativos, banco, escolas, cuidados infantis, cursos de idioma e serviços de mudança para quem está se relocando para o Luxemburgo.",
+    "faq.q2": "Quem pode usar a LuxLanding?",
+    "faq.a2": "A LuxLanding foi criada para expatriados, famílias, estudantes, freelancers e profissionais que estão se mudando para o Luxemburgo ou já vivem no país.",
+    "faq.q3": "Com que rapidez posso receber ajuda?",
+    "faq.a3": "Depois de enviar seu pedido, a LuxLanding analisa sua situação e procura responder com próximos passos claros em até 24 horas.",
+
+    "footer.tagline": "Suporte de relocation para expatriados, famílias e profissionais que se mudam para o Luxemburgo.",
+    "footer.faq": "FAQ",
+    "footer.privacy": "Aviso de privacidade",
+    "footer.contact": "Fale connosco",
+    "footer.rights": "Todos os direitos reservados."
   }
 };
 

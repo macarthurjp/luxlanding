@@ -9,12 +9,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Sora:wght@600;700;800;900&display=swap" rel="stylesheet">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.2"></script>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -64,9 +64,9 @@ body{
   font-family:"Inter",-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Arial,sans-serif;
   background:
     radial-gradient(circle at 12% 10%, rgba(106,169,255,.34), transparent 30%),
-    radial-gradient(circle at 90% 12%, rgba(255,222,135,.52), transparent 32%),
+    radial-gradient(circle at 90% 12%, rgba(108,92,231,.16), transparent 32%),
     radial-gradient(circle at 74% 78%, rgba(126,182,255,.18), transparent 34%),
-    linear-gradient(135deg,#edf5ff 0%,#f7fbff 44%,#fff7dc 100%);
+    linear-gradient(135deg,#edf5ff 0%,#f7fbff 44%,#f3f0ff 100%);
   color:var(--text);
   min-height:100vh;
   padding:28px;
@@ -74,37 +74,15 @@ body{
   overflow-x:hidden;
 }
 
-body::before,
-body::after{
-  content:"";
-  position:fixed;
-  inset:-12%;
-  background-image:url("images/logo.png");
-  background-repeat:repeat;
-  background-size:230px auto;
-  opacity:.055;
-  transform:rotate(-12deg);
-  pointer-events:none;
-  filter:grayscale(1) brightness(1.08) contrast(1.12);
-  z-index:0;
-  mix-blend-mode:multiply;
-}
-
-body::after{
-  inset:-18%;
-  background-size:380px auto;
-  opacity:.034;
-  transform:rotate(10deg);
-}
 
 #loginScreen{
   position:fixed;
   inset:0;
   background:
     radial-gradient(circle at 12% 10%, rgba(106,169,255,.34), transparent 30%),
-    radial-gradient(circle at 90% 12%, rgba(255,222,135,.52), transparent 32%),
+    radial-gradient(circle at 90% 12%, rgba(108,92,231,.16), transparent 32%),
     radial-gradient(circle at 74% 78%, rgba(126,182,255,.18), transparent 34%),
-    linear-gradient(135deg,#edf5ff 0%,#f7fbff 44%,#fff7dc 100%);
+    linear-gradient(135deg,#edf5ff 0%,#f7fbff 44%,#f3f0ff 100%);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -112,28 +90,6 @@ body::after{
   overflow:hidden;
 }
 
-#loginScreen::before,
-#loginScreen::after{
-  content:"";
-  position:absolute;
-  inset:-12%;
-  background-image:url("images/logo.png");
-  background-repeat:repeat;
-  background-size:210px auto;
-  opacity:.048;
-  transform:rotate(-14deg);
-  pointer-events:none;
-  filter:grayscale(1) brightness(1.08) contrast(1.12);
-  mix-blend-mode:multiply;
-  z-index:0;
-}
-
-#loginScreen::after{
-  inset:-18%;
-  background-size:330px auto;
-  opacity:.031;
-  transform:rotate(12deg);
-}
 
 .login-box{
   width:min(92vw,520px);
@@ -153,7 +109,7 @@ body::after{
 
 .login-logo-wrap{
   width:100%;
-  height:230px;
+  height:120px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -162,15 +118,13 @@ body::after{
 }
 
 .login-logo{
-  width:min(520px,88vw);
-  max-height:220px;
+  width:min(320px,80vw);
+  max-height:100px;
   height:auto;
   object-fit:contain;
   object-position:center center;
   display:block;
   margin:0 auto;
-  transform:scale(2.35);
-  transform-origin:center center;
 }
 
 .login-title,
@@ -217,6 +171,38 @@ body::after{
   margin-top:10px;
   color:var(--danger);
   font-size:13px;
+}
+
+.biometric-btn{
+  width:100%;
+  height:54px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin-top:12px;
+  border:1px solid rgba(53,122,189,.22);
+  border-radius:20px;
+  background:rgba(53,122,189,.06);
+  color:var(--primary);
+  font-weight:800;
+  font-size:14.5px;
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.biometric-btn svg{
+  width:20px;
+  height:20px;
+}
+
+.biometric-btn:hover{
+  background:rgba(53,122,189,.12);
+  border-color:rgba(53,122,189,.4);
+}
+
+.biometric-btn[hidden]{
+  display:none;
 }
 
 .auth-user{
@@ -294,6 +280,7 @@ body::after{
 }
 
 .sidebar-title{
+  font-family:'Sora',sans-serif;
   font-size:72px;
   line-height:.88;
   letter-spacing:-.09em;
@@ -375,9 +362,9 @@ body::after{
 }
 
 .sidebar-link.active{
-  background:linear-gradient(135deg,#f7dd7a,#F1CE54);
+  background:linear-gradient(135deg,#6aa9ff,#357abd);
   color:#121826;
-  box-shadow:0 14px 30px rgba(241,206,84,.38);
+  box-shadow:0 14px 30px rgba(53,122,189,.38);
 }
 
 .dashboard-main{
@@ -402,6 +389,7 @@ body::after{
 }
 
 .top-title{
+  font-family:'Sora',sans-serif;
   font-size:42px;
   font-weight:900;
   letter-spacing:-.055em;
@@ -417,9 +405,9 @@ body::after{
   width:120px;
   height:6px;
   border-radius:999px;
-  background:linear-gradient(135deg,#f7dd7a,#F1CE54);
+  background:linear-gradient(135deg,#6aa9ff,#357abd);
   margin-top:18px;
-  box-shadow:0 10px 24px rgba(241,206,84,.34);
+  box-shadow:0 10px 24px rgba(53,122,189,.34);
 }
 
 .logo{
@@ -511,9 +499,9 @@ body::after{
 }
 
 .btn-primary{
-  background:linear-gradient(135deg,#f7dd7a,#F1CE54);
+  background:linear-gradient(135deg,#6aa9ff,#357abd);
   color:#121826;
-  box-shadow:0 12px 26px rgba(241,206,84,.30);
+  box-shadow:0 12px 26px rgba(53,122,189,.30);
 }
 
 .btn-success{
@@ -630,7 +618,7 @@ body::after{
 #selectAllLeads{
   width:18px;
   height:18px;
-  accent-color:#F1CE54;
+  accent-color:#357abd;
   cursor:pointer;
 }
 
@@ -675,7 +663,7 @@ body::after{
 .partner-option input{
   width:18px;
   height:18px;
-  accent-color:#F1CE54;
+  accent-color:#357abd;
 }
 
 .partner-name{
@@ -782,6 +770,41 @@ body::after{
   overflow-x:auto;
 }
 
+.pagination-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+}
+
+.pagination-summary{
+  font-size:12px;
+  color:var(--muted);
+}
+
+.pagination-controls{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.pagination-page{
+  font-size:13px;
+  font-weight:800;
+  color:var(--text);
+  white-space:nowrap;
+}
+
+.pagination-controls .btn:disabled{
+  opacity:.45;
+  cursor:default;
+  pointer-events:none;
+}
+
 table{
   width:100%;
   border-collapse:collapse;
@@ -802,6 +825,259 @@ th{
   font-size:12px;
   text-transform:uppercase;
   letter-spacing:.05em;
+}
+
+.empty-state-row td{
+  white-space:normal;
+  padding:0;
+  border-bottom:none;
+}
+
+.empty-state{
+  position:sticky;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:6px;
+  padding:48px 24px;
+  width:max-content;
+  max-width:90vw;
+  color:var(--muted);
+}
+
+.empty-state-icon{
+  width:48px;
+  height:48px;
+  border-radius:14px;
+  background:rgba(53,122,189,.1);
+  color:var(--primary);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:8px;
+}
+
+.empty-state-icon svg{
+  width:24px;
+  height:24px;
+}
+
+.empty-state--danger .empty-state-icon{
+  background:rgba(220,38,38,.1);
+  color:var(--danger);
+}
+
+.empty-state-title{
+  font-size:15px;
+  font-weight:800;
+  color:var(--text);
+}
+
+.empty-state-sub{
+  font-size:13px;
+  color:var(--muted);
+  max-width:380px;
+}
+
+/* =========================
+PREMIUM DATE PICKER
+========================= */
+
+.date-picker{
+  position:relative;
+  width:100%;
+}
+
+.date-picker-native{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  pointer-events:none;
+  width:1px;
+  height:1px;
+}
+
+.date-picker-trigger{
+  width:100%;
+  min-width:160px;
+  height:48px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  border:1px solid rgba(18,24,38,.08);
+  border-radius:16px;
+  padding:0 14px;
+  font-size:15px;
+  font-family:inherit;
+  background:#fff;
+  color:var(--text);
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.date-picker-trigger:hover{
+  border-color:rgba(53,122,189,.4);
+}
+
+.date-picker-trigger svg{
+  width:18px;
+  height:18px;
+  color:var(--primary);
+  flex-shrink:0;
+}
+
+.dp-trigger-label{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.date-picker-popover{
+  display:none;
+  position:fixed;
+  z-index:4000;
+  width:272px;
+  max-width:calc(100vw - 32px);
+  background:#fff;
+  border-radius:24px;
+  box-shadow:var(--shadow-strong);
+  border:1px solid rgba(255,255,255,.7);
+  padding:18px;
+}
+
+.date-picker-popover.open{
+  display:block;
+}
+
+.dp-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:16px;
+}
+
+.dp-month-label{
+  font-family:'Sora',sans-serif;
+  font-weight:800;
+  font-size:17px;
+  letter-spacing:-.02em;
+  color:var(--text);
+}
+
+.dp-nav{
+  width:32px;
+  height:32px;
+  border:none;
+  border-radius:10px;
+  background:rgba(53,122,189,.08);
+  color:var(--primary);
+  font-size:18px;
+  line-height:1;
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.dp-nav:hover{
+  background:rgba(53,122,189,.18);
+}
+
+.dp-weekdays{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  margin-bottom:6px;
+}
+
+.dp-weekdays span{
+  text-align:center;
+  font-size:11px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  color:var(--muted);
+}
+
+.dp-grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  row-gap:4px;
+}
+
+.dp-day{
+  width:32px;
+  height:32px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:none;
+  border-radius:999px;
+  background:transparent;
+  font-size:14px;
+  font-weight:600;
+  color:var(--text);
+  cursor:pointer;
+  transition:.15s ease;
+}
+
+.dp-day:hover{
+  background:rgba(53,122,189,.1);
+}
+
+.dp-day--empty{
+  cursor:default;
+  pointer-events:none;
+}
+
+.dp-day--today{
+  color:var(--primary);
+  font-weight:800;
+}
+
+.dp-day--selected,
+.dp-day--selected:hover{
+  background:linear-gradient(135deg,#6aa9ff,#357abd);
+  color:#fff;
+  font-weight:800;
+  box-shadow:0 8px 18px rgba(53,122,189,.38);
+}
+
+.dp-footer{
+  display:flex;
+  gap:10px;
+  margin-top:18px;
+}
+
+.dp-footer button{
+  flex:1;
+  height:44px;
+  border:none;
+  border-radius:14px;
+  font-size:14px;
+  font-weight:800;
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.dp-cancel{
+  background:rgba(18,24,38,.06);
+  color:var(--text);
+}
+
+.dp-cancel:hover{
+  background:rgba(18,24,38,.1);
+}
+
+.dp-apply{
+  background:linear-gradient(135deg,#6aa9ff,#357abd);
+  color:#fff;
+  box-shadow:0 10px 22px rgba(53,122,189,.3);
+}
+
+.dp-apply:hover{
+  transform:translateY(-1px);
 }
 
 .badge{
@@ -848,6 +1124,28 @@ th{
 .modal h2{
   font-size:24px;
   margin-bottom:8px;
+}
+
+.confirm-modal{
+  max-width:420px;
+  text-align:center;
+}
+
+.confirm-icon{
+  width:52px;
+  height:52px;
+  margin:0 auto 16px;
+  border-radius:14px;
+  background:rgba(220,38,38,.1);
+  color:var(--danger);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.confirm-icon svg{
+  width:26px;
+  height:26px;
 }
 
 .detail-grid{
@@ -950,16 +1248,14 @@ th{
   }
 
   .login-logo-wrap{
-    height:190px;
+    height:100px;
     margin-bottom:22px;
     overflow:hidden;
   }
 
   .login-logo{
-    width:min(380px,88vw);
-    max-height:170px;
-    transform:scale(2.25);
-    transform-origin:center center;
+    width:min(280px,80vw);
+    max-height:90px;
   }
 
   .sidebar{
@@ -1001,9 +1297,9 @@ th{
 }
 
   .sidebar-link.active{
-    background:linear-gradient(135deg,#f7dd7a,#F1CE54);
+    background:linear-gradient(135deg,#6aa9ff,#357abd);
     color:#121826;
-    box-shadow:0 14px 30px rgba(241,206,84,.38);
+    box-shadow:0 14px 30px rgba(53,122,189,.38);
   }
 
 .dashboard-section{
@@ -1081,7 +1377,7 @@ th{
 .multi-check input{
   width:16px;
   height:16px;
-  accent-color:#F1CE54;
+  accent-color:#357abd;
 }
 
 .chart-card{
@@ -1296,9 +1592,9 @@ DASHBOARD SECTIONS: PARTNERS + REVENUE
 }
 
 .sidebar-link.active{
-  background:linear-gradient(135deg,#f7dd7a,#F1CE54);
+  background:linear-gradient(135deg,#6aa9ff,#357abd);
   color:#121826;
-  box-shadow:0 14px 30px rgba(241,206,84,.38);
+  box-shadow:0 14px 30px rgba(53,122,189,.38);
 }
 
 .sidebar-title{
@@ -1392,7 +1688,7 @@ DASHBOARD SECTIONS: PARTNERS + REVENUE
 .multi-check input{
   width:16px;
   height:16px;
-  accent-color:#F1CE54;
+  accent-color:#357abd;
 }
 
 .chart-card{
@@ -1854,7 +2150,7 @@ RESPONSIVE + DASHBOARD FIXES
   }
 
   .mobile-nav-card .sidebar-link.active{
-    background:linear-gradient(135deg,#f7dd7a,#F1CE54);
+    background:linear-gradient(135deg,#6aa9ff,#357abd);
     color:#121826;
   }
 
@@ -1906,11 +2202,17 @@ RESPONSIVE + DASHBOARD FIXES
 <div id="loginScreen">
   <div class="login-box">
     <div class="login-logo-wrap">
-      <img src="images/logo.png" alt="LuxLanding logo" class="login-logo">
+      <img src="images/luxlanding-logo-clean.png" alt="LuxLanding logo" class="login-logo">
     </div>
     <input type="email" id="emailInput" class="login-email" placeholder="Admin email" autocomplete="off" autocapitalize="none" spellcheck="false">
     <input type="password" id="passwordInput" class="login-input" placeholder="Password" autocomplete="new-password">
     <button id="loginBtn" class="login-btn">Sign in</button>
+
+    <button id="biometricLoginBtn" class="biometric-btn" type="button" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 11a4 4 0 0 0-4 4v1"></path><path d="M16 16v-1a4 4 0 0 0-2.5-3.71"></path><path d="M8 7.5A4 4 0 0 1 12 4a4 4 0 0 1 4 4v1.5"></path><path d="M4 12v1a8 8 0 0 0 .3 2.2"></path><path d="M20 12v1a8 8 0 0 1-1 3.87"></path><path d="M12 16v2"></path></svg>
+      <span id="biometricLoginLabel">Sign in with Face ID</span>
+    </button>
+
     <div id="loginError" class="login-error">Incorrect PIN</div>
   </div>
 </div>
@@ -1990,6 +2292,7 @@ RESPONSIVE + DASHBOARD FIXES
     </div>
 
     <div class="actions">
+      <button class="btn btn-outline" id="enableBiometricBtn" hidden>Enable Face ID</button>
       <button class="btn btn-outline" id="logoutBtn">Logout</button>
       <button class="btn btn-outline" id="refreshBtn">Refresh</button>
       <button class="btn btn-primary" id="sendSelectedBtn" disabled>Send selected</button>
@@ -2099,6 +2402,15 @@ RESPONSIVE + DASHBOARD FIXES
           </thead>
           <tbody id="leadsBody"></tbody>
         </table>
+      </div>
+
+      <div class="pagination-bar" id="leadsPagination">
+        <span class="pagination-summary" id="paginationSummary"></span>
+        <div class="pagination-controls">
+          <button class="btn btn-outline" id="paginationPrevBtn">‹ Previous</button>
+          <span class="pagination-page" id="paginationPageLabel"></span>
+          <button class="btn btn-outline" id="paginationNextBtn">Next ›</button>
+        </div>
       </div>
     </section>
 
@@ -2398,6 +2710,21 @@ RESPONSIVE + DASHBOARD FIXES
   </div>
 </div>
 
+<div class="lead-detail" id="confirmModal">
+  <div class="modal confirm-modal">
+    <div class="confirm-icon" id="confirmIcon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+    </div>
+    <h2 id="confirmTitle">Delete this item?</h2>
+    <p id="confirmMessage" style="color:var(--muted);font-size:14px;"></p>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin-top:22px;">
+      <button class="btn btn-outline" id="confirmCancelBtn">Cancel</button>
+      <button class="btn btn-danger" id="confirmOkBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -2409,7 +2736,9 @@ const SUPABASE_URL = "https://itldyciokbtzwufrrifh.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml0bGR5Y2lva2J0end1ZnJyaWZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MTM5OTMsImV4cCI6MjA5NDA4OTk5M30.GPcmLPH9kkndW3VycqbR6yFoKERiY6URfH4SmpusJUg";
 
 const { createClient } = supabase;
-const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: { experimental: { passkey: true } }
+});
 const db = supabaseClient;
 const APP_DOMAIN = "luxlanding.eu";
 const APP_URL = "https://luxlanding.eu";
@@ -2418,6 +2747,8 @@ let allLeads = [];
 let allPartners = [];
 let selectedLead = null;
 let revenueMonthlyChart = null;
+let leadsPage = 1;
+const LEADS_PER_PAGE = 25;
 
 const selectedLeadKeys = new Set();
 
@@ -2530,6 +2861,77 @@ function showLoginError(msg) {
   loginError.style.display = "block";
 }
 
+// -----------------------------
+// PASSKEYS (Face ID / Touch ID / Windows Hello)
+// Native Supabase Auth API — https://supabase.com/docs/guides/auth/passkeys
+// -----------------------------
+
+const biometricLoginBtn = document.getElementById("biometricLoginBtn");
+const biometricLoginLabel = document.getElementById("biometricLoginLabel");
+const enableBiometricBtn = document.getElementById("enableBiometricBtn");
+
+function getBiometricLabel() {
+  const ua = navigator.userAgent;
+  if (/iPhone|iPad|iPod|Macintosh/.test(ua)) return "Face ID / Touch ID";
+  if (/Android/.test(ua)) return "fingerprint";
+  return "Windows Hello";
+}
+
+async function setupBiometricUi() {
+  if (!window.PublicKeyCredential || !PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) return;
+
+  const platformAvailable = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+  if (!platformAvailable) return;
+
+  const label = getBiometricLabel();
+  enableBiometricBtn.textContent = `Enable ${label}`;
+  enableBiometricBtn.hidden = false;
+
+  biometricLoginLabel.textContent = `Sign in with ${label}`;
+  biometricLoginBtn.hidden = false;
+}
+
+async function handleBiometricLogin() {
+  loginError.style.display = "none";
+  biometricLoginBtn.disabled = true;
+
+  const { data, error } = await supabaseClient.auth.signInWithPasskey();
+
+  biometricLoginBtn.disabled = false;
+
+  if (error) {
+    console.error(error);
+    if (error.name !== "NotAllowedError") {
+      showLoginError(error.message || "Biometric sign-in failed");
+    }
+    return;
+  }
+  // onAuthStateChange handles showing the dashboard once data.session lands.
+}
+
+async function handleEnableBiometric() {
+  enableBiometricBtn.disabled = true;
+  enableBiometricBtn.textContent = "Setting up…";
+
+  const { error } = await supabaseClient.auth.registerPasskey();
+
+  if (error) {
+    console.error(error);
+    if (error.name !== "NotAllowedError") {
+      showToast(error.message || "Could not enable biometric sign-in");
+    }
+  } else {
+    showToast(`${getBiometricLabel()} enabled for this device`);
+  }
+
+  enableBiometricBtn.disabled = false;
+  enableBiometricBtn.textContent = `Enable ${getBiometricLabel()}`;
+}
+
+biometricLoginBtn.addEventListener("click", handleBiometricLogin);
+enableBiometricBtn.addEventListener("click", handleEnableBiometric);
+setupBiometricUi();
+
 /* =========================
 HELPERS
 ========================= */
@@ -2541,6 +2943,26 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+const EMPTY_STATE_ICONS = {
+  tray: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h4l2 3h6l2-3h4"></path><path d="M5.5 13 3 19.5A1 1 0 0 0 4 21h16a1 1 0 0 0 1-1.5L18.5 13"></path><path d="M8.5 13 7 5.5A1 1 0 0 1 8 4h8a1 1 0 0 1 1 1.5L15.5 13"></path></svg>',
+  people: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="3"></circle><circle cx="16" cy="9.5" r="2.5"></circle><path d="M2.8 19c0-3.3 2.5-5.8 5.7-5.8s5.7 2.5 5.7 5.8"></path><path d="M14.8 14.3c2.6.2 4.6 2.3 4.6 4.9"></path></svg>',
+  alert: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 22 20H2z"></path><line x1="12" y1="9" x2="12" y2="14"></line><line x1="12" y1="17" x2="12" y2="17.01"></line></svg>'
+};
+
+function emptyStateRow(colspan, { icon = "tray", title, subtitle = "", tone = "" } = {}) {
+  return `
+    <tr class="empty-state-row">
+      <td colspan="${colspan}">
+        <div class="empty-state${tone ? ` empty-state--${tone}` : ""}">
+          <div class="empty-state-icon">${EMPTY_STATE_ICONS[icon] || EMPTY_STATE_ICONS.tray}</div>
+          <p class="empty-state-title">${escapeHtml(title)}</p>
+          ${subtitle ? `<p class="empty-state-sub">${escapeHtml(subtitle)}</p>` : ""}
+        </div>
+      </td>
+    </tr>
+  `;
 }
 
 function normalize(value) {
@@ -2571,6 +2993,40 @@ function showToast(msg) {
   toast.textContent = msg;
   toast.classList.add("show");
   setTimeout(() => toast.classList.remove("show"), 2400);
+}
+
+/* =========================
+CONFIRM MODAL (replaces window.confirm with something on-brand)
+========================= */
+
+const confirmModal = document.getElementById("confirmModal");
+const confirmTitle = document.getElementById("confirmTitle");
+const confirmMessage = document.getElementById("confirmMessage");
+const confirmOkBtn = document.getElementById("confirmOkBtn");
+const confirmCancelBtn = document.getElementById("confirmCancelBtn");
+
+function showConfirmModal({ title = "Are you sure?", message = "", confirmLabel = "Delete" } = {}) {
+  confirmTitle.textContent = title;
+  confirmMessage.textContent = message;
+  confirmOkBtn.textContent = confirmLabel;
+  confirmModal.style.display = "flex";
+
+  return new Promise((resolve) => {
+    function cleanup(result) {
+      confirmModal.style.display = "none";
+      confirmOkBtn.removeEventListener("click", onConfirm);
+      confirmCancelBtn.removeEventListener("click", onCancel);
+      confirmModal.removeEventListener("click", onBackdrop);
+      resolve(result);
+    }
+    function onConfirm() { cleanup(true); }
+    function onCancel() { cleanup(false); }
+    function onBackdrop(e) { if (e.target === confirmModal) cleanup(false); }
+
+    confirmOkBtn.addEventListener("click", onConfirm);
+    confirmCancelBtn.addEventListener("click", onCancel);
+    confirmModal.addEventListener("click", onBackdrop);
+  });
 }
 
 function formatDate(value) {
@@ -2729,7 +3185,9 @@ function resetFilters(clearSelection = true) {
   if (filterStatusMobile) filterStatusMobile.value = "";
   if (filterLang) filterLang.value = "";
   if (searchInput) searchInput.value = "";
+  if (window.refreshDatePickers) window.refreshDatePickers();
 
+  leadsPage = 1;
   if (clearSelection) selectedLeadKeys.clear();
 }
 
@@ -2782,7 +3240,7 @@ API (Supabase v2)
 
 async function loadLeads() {
   const tbody = document.getElementById("leadsBody");
-  tbody.innerHTML = "<tr><td colspan='12'>Loading leads...</td></tr>";
+  tbody.innerHTML = emptyStateRow(12, { icon: "tray", title: "Loading leads…" });
 
   try {
     const { data, error } = await supabaseClient
@@ -2799,9 +3257,12 @@ async function loadLeads() {
     showToast("Leads loaded");
   } catch (err) {
     console.error(err);
-    tbody.innerHTML = `<tr><td colspan='12'>Could not load leads: ${escapeHtml(
-      err.message || "Check Supabase connection and table permissions."
-    )}</td></tr>`;
+    tbody.innerHTML = emptyStateRow(12, {
+      icon: "alert",
+      tone: "danger",
+      title: "Could not load leads",
+      subtitle: err.message || "Check Supabase connection and table permissions."
+    });
     showToast("Error loading leads");
   }
 }
@@ -2931,16 +3392,30 @@ function renderTable() {
     );
 
     tbody.innerHTML = hasActiveFilters
-      ? "<tr><td colspan='12'>No leads match the current filters. Click Clear filters to see all leads.</td></tr>"
-      : "<tr><td colspan='12'>No leads found</td></tr>";
+      ? emptyStateRow(12, {
+          icon: "tray",
+          title: "No leads match the current filters",
+          subtitle: "Click Clear filters to see all leads."
+        })
+      : emptyStateRow(12, {
+          icon: "tray",
+          title: "No leads yet",
+          subtitle: "New relocation requests will show up here automatically."
+        });
 
     updateSelectionUi();
+    renderPaginationControls(0);
     return;
   }
 
   tbody.innerHTML = "";
 
-  rows.forEach((lead) => {
+  const totalPages = Math.max(1, Math.ceil(rows.length / LEADS_PER_PAGE));
+  leadsPage = Math.min(Math.max(1, leadsPage), totalPages);
+  const start = (leadsPage - 1) * LEADS_PER_PAGE;
+  const pageRows = rows.slice(start, start + LEADS_PER_PAGE);
+
+  pageRows.forEach((lead) => {
     const name = getLeadName(lead);
     const email = getLeadEmail(lead);
     const phone = getLeadPhone(lead);
@@ -2985,6 +3460,32 @@ function renderTable() {
   });
 
   updateSelectionUi();
+  renderPaginationControls(rows.length);
+}
+
+function renderPaginationControls(totalCount) {
+  const summaryEl = document.getElementById("paginationSummary");
+  const pageLabelEl = document.getElementById("paginationPageLabel");
+  const prevBtn = document.getElementById("paginationPrevBtn");
+  const nextBtn = document.getElementById("paginationNextBtn");
+  if (!summaryEl || !pageLabelEl || !prevBtn || !nextBtn) return;
+
+  if (!totalCount) {
+    summaryEl.textContent = "";
+    pageLabelEl.textContent = "";
+    prevBtn.disabled = true;
+    nextBtn.disabled = true;
+    return;
+  }
+
+  const totalPages = Math.max(1, Math.ceil(totalCount / LEADS_PER_PAGE));
+  const start = (leadsPage - 1) * LEADS_PER_PAGE + 1;
+  const end = Math.min(leadsPage * LEADS_PER_PAGE, totalCount);
+
+  summaryEl.textContent = `Showing ${start}–${end} of ${totalCount}`;
+  pageLabelEl.textContent = `Page ${leadsPage} of ${totalPages}`;
+  prevBtn.disabled = leadsPage <= 1;
+  nextBtn.disabled = leadsPage >= totalPages;
 }
 
 function setDashboardSection(sectionId) {
@@ -3043,7 +3544,11 @@ function renderPartnersManager() {
   if (!body) return;
 
   if (!allPartners.length) {
-    body.innerHTML = "<tr><td colspan='7'>No partners found. Add partners in the Partners section.</td></tr>";
+    body.innerHTML = emptyStateRow(7, {
+      icon: "people",
+      title: "No partners yet",
+      subtitle: "Add your first partner using the form on the left."
+    });
     return;
   }
 
@@ -3133,6 +3638,13 @@ async function deletePartner(index) {
   const partner = allPartners[index];
   if (!partner) return;
 
+  const confirmed = await showConfirmModal({
+    title: "Delete this partner?",
+    message: `${partner.name || partner.company || partner.email} will be permanently removed. This cannot be undone.`,
+    confirmLabel: "Delete partner"
+  });
+  if (!confirmed) return;
+
   try {
     const query = db.from("partners").delete();
     const { error } = partner.partner_id
@@ -3203,7 +3715,11 @@ function renderRevenueManager() {
   if (paidCountEl) paidCountEl.textContent = paidCount;
 
   if (!rows.length) {
-    body.innerHTML = "<tr><td colspan='9'>No leads found.</td></tr>";
+    body.innerHTML = emptyStateRow(9, {
+      icon: "tray",
+      title: "No leads to price yet",
+      subtitle: "Leads will appear here once they come in from the landing page."
+    });
     renderRevenueMonthlyChart();
     return;
   }
@@ -3334,8 +3850,8 @@ function renderRevenueMonthlyChart() {
       datasets: [{
         label: "Paid revenue (€)",
         data: values.length ? values : [0],
-        backgroundColor: "rgba(241,206,84,.75)",
-        borderColor: "rgba(241,206,84,1)",
+        backgroundColor: "rgba(53,122,189,.75)",
+        borderColor: "rgba(53,122,189,1)",
         borderWidth: 1,
         borderRadius: 12
       }]
@@ -3505,7 +4021,11 @@ async function deleteSelectedLead() {
     return;
   }
 
-  const confirmed = window.confirm(`Delete lead ${leadId}? This cannot be undone.`);
+  const confirmed = await showConfirmModal({
+    title: "Delete this lead?",
+    message: `Lead ${leadId} will be permanently removed. This cannot be undone.`,
+    confirmLabel: "Delete lead"
+  });
   if (!confirmed) return;
 
   try {
@@ -3772,6 +4292,7 @@ if (clearRevenueChartFiltersBtn) {
   clearRevenueChartFiltersBtn.onclick = () => {
     if (revenueChartFrom) revenueChartFrom.value = "";
     if (revenueChartTo) revenueChartTo.value = "";
+    if (window.refreshDatePickers) window.refreshDatePickers();
     renderRevenueMonthlyChart();
   };
 }
@@ -3791,10 +4312,21 @@ if (clearFiltersBtn) {
 
   if (!element) return;
 
-  element.addEventListener("input", renderTable);
-  element.addEventListener("change", renderTable);
+  const onFilterChange = () => { leadsPage = 1; renderTable(); };
+  element.addEventListener("input", onFilterChange);
+  element.addEventListener("change", onFilterChange);
 
 });
+
+document.getElementById("paginationPrevBtn").onclick = () => {
+  leadsPage -= 1;
+  renderTable();
+};
+
+document.getElementById("paginationNextBtn").onclick = () => {
+  leadsPage += 1;
+  renderTable();
+};
 
 document.getElementById("refreshBtn").onclick = async () => {
   resetFilters(false);
@@ -3878,7 +4410,7 @@ document.getElementById("exportPdfBtn").onclick = () => {
   doc.setTextColor(102, 112, 133);
   doc.text("Real-time relocation lead management", 14, 27);
 
-  doc.setDrawColor(241, 206, 84);
+  doc.setDrawColor(53, 122, 189);
   doc.setLineWidth(1.2);
   doc.line(14, 33, 120, 33);
 
@@ -3908,7 +4440,7 @@ document.getElementById("exportPdfBtn").onclick = () => {
     body: tableRows,
     startY: 50,
     styles: { fontSize: 8, cellPadding: 2.2, overflow: "linebreak", valign: "top" },
-    headStyles: { fillColor: [241, 206, 84], textColor: [18, 24, 38], fontStyle: "bold" },
+    headStyles: { fillColor: [53, 122, 189], textColor: [255, 255, 255], fontStyle: "bold" },
     alternateRowStyles: { fillColor: [248, 250, 252] },
     margin: { left: 14, right: 14 },
     didDrawPage: function () {
@@ -3922,6 +4454,151 @@ document.getElementById("exportPdfBtn").onclick = () => {
 
   doc.save("luxlanding_leads_report.pdf");
 };
+
+/* =========================
+PREMIUM DATE PICKER
+========================= */
+
+const DP_WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const DP_MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const datePickerRefreshers = [];
+
+function dpToIso(y, m, d) {
+  return `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+}
+
+function dpFormatLabel(value) {
+  if (!value) return "Select date";
+  const d = new Date(value + "T00:00:00");
+  return d.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+}
+
+function attachDatePicker(input) {
+  if (!input || input.dataset.dpAttached) return;
+  input.dataset.dpAttached = "1";
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "date-picker";
+
+  const trigger = document.createElement("button");
+  trigger.type = "button";
+  trigger.className = "date-picker-trigger";
+  trigger.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"></rect><line x1="3" y1="10" x2="21" y2="10"></line><line x1="8" y1="3" x2="8" y2="7"></line><line x1="16" y1="3" x2="16" y2="7"></line></svg><span class="dp-trigger-label"></span>';
+
+  const popover = document.createElement("div");
+  popover.className = "date-picker-popover";
+
+  input.insertAdjacentElement("afterend", wrapper);
+  wrapper.appendChild(input);
+  wrapper.appendChild(trigger);
+  document.body.appendChild(popover);
+  input.classList.add("date-picker-native");
+
+  let selected = input.value || "";
+  let viewDate = selected ? new Date(selected + "T00:00:00") : new Date();
+
+  function refreshLabel() {
+    selected = input.value || "";
+    trigger.querySelector(".dp-trigger-label").textContent = dpFormatLabel(selected);
+  }
+
+  function render() {
+    const y = viewDate.getFullYear();
+    const m = viewDate.getMonth();
+    const startOffset = (new Date(y, m, 1).getDay() + 6) % 7;
+    const daysInMonth = new Date(y, m + 1, 0).getDate();
+    const todayIso = dpToIso(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+
+    let cells = "";
+    for (let i = 0; i < startOffset; i++) cells += '<span class="dp-day dp-day--empty"></span>';
+    for (let d = 1; d <= daysInMonth; d++) {
+      const iso = dpToIso(y, m, d);
+      const classes = ["dp-day"];
+      if (iso === selected) classes.push("dp-day--selected");
+      if (iso === todayIso) classes.push("dp-day--today");
+      cells += `<button type="button" class="${classes.join(" ")}" data-date="${iso}">${d}</button>`;
+    }
+
+    popover.innerHTML = `
+      <div class="dp-header">
+        <button type="button" class="dp-nav dp-prev" aria-label="Previous month">&#8249;</button>
+        <span class="dp-month-label">${DP_MONTHS[m]} ${y}</span>
+        <button type="button" class="dp-nav dp-next" aria-label="Next month">&#8250;</button>
+      </div>
+      <div class="dp-weekdays">${DP_WEEKDAYS.map(w => `<span>${w}</span>`).join("")}</div>
+      <div class="dp-grid">${cells}</div>
+      <div class="dp-footer">
+        <button type="button" class="dp-cancel">Cancel</button>
+        <button type="button" class="dp-apply">Apply</button>
+      </div>
+    `;
+
+    popover.querySelector(".dp-prev").onclick = () => { viewDate = new Date(y, m - 1, 1); render(); };
+    popover.querySelector(".dp-next").onclick = () => { viewDate = new Date(y, m + 1, 1); render(); };
+    popover.querySelectorAll(".dp-day[data-date]").forEach(btn => {
+      btn.onclick = () => { selected = btn.dataset.date; render(); };
+    });
+    popover.querySelector(".dp-cancel").onclick = closePopover;
+    popover.querySelector(".dp-apply").onclick = () => {
+      input.value = selected;
+      refreshLabel();
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+      closePopover();
+    };
+  }
+
+  function onOutsideClick(e) {
+    if (!wrapper.contains(e.target) && !popover.contains(e.target)) closePopover();
+  }
+
+  function onScrollOrResize() {
+    closePopover();
+  }
+
+  function positionPopover() {
+    const triggerRect = wrapper.getBoundingClientRect();
+    const popoverHeight = popover.offsetHeight;
+    const spaceBelow = window.innerHeight - triggerRect.bottom;
+    const flipUp = spaceBelow < popoverHeight + 16 && triggerRect.top > popoverHeight;
+
+    popover.style.left = `${Math.max(8, Math.min(triggerRect.left, window.innerWidth - popover.offsetWidth - 8))}px`;
+    popover.style.top = flipUp
+      ? `${triggerRect.top - popoverHeight - 6}px`
+      : `${triggerRect.bottom + 6}px`;
+  }
+
+  function openPopover() {
+    document.querySelectorAll(".date-picker-popover.open").forEach(p => p.classList.remove("open"));
+    selected = input.value || "";
+    viewDate = selected ? new Date(selected + "T00:00:00") : new Date();
+    render();
+    popover.classList.add("open");
+    positionPopover();
+
+    document.addEventListener("click", onOutsideClick, true);
+    window.addEventListener("scroll", onScrollOrResize, true);
+    window.addEventListener("resize", onScrollOrResize);
+  }
+
+  function closePopover() {
+    popover.classList.remove("open");
+    document.removeEventListener("click", onOutsideClick, true);
+    window.removeEventListener("scroll", onScrollOrResize, true);
+    window.removeEventListener("resize", onScrollOrResize);
+  }
+
+  trigger.onclick = () => {
+    if (popover.classList.contains("open")) closePopover();
+    else openPopover();
+  };
+
+  refreshLabel();
+  datePickerRefreshers.push(refreshLabel);
+}
+
+window.refreshDatePickers = () => datePickerRefreshers.forEach(fn => fn());
+
+document.querySelectorAll('input[type="date"]').forEach(attachDatePicker);
 </script>
 
 </body>

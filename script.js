@@ -4,6 +4,8 @@ const bg1 = document.querySelector('.bg1');
 const bg2 = document.querySelector('.bg2');
 
 if (bg1 && bg2) {
+    bg1.style.opacity = '1';
+
     setInterval(() => {
         bg1.style.opacity = current === 1 ? '1' : '0';
         bg2.style.opacity = current === 2 ? '1' : '0';

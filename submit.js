@@ -11,9 +11,31 @@ const SUPABASE_URL = "https://itldyciokbtzwufrrifh.supabase.co";
 const SITE_URL = "https://luxlanding.eu/";
 const SUPABASE_ANON_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml0bGR5Y2lva2J0end1ZnJyaWZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MTM5OTMsImV4cCI6MjA5NDA4OTk5M30.GPcmLPH9kkndW3VycqbR6yFoKERiY6URfH4SmpusJUg";
+const RECAPTCHA_SITE_KEY = "6Le7tsIsAAAAAPcPGZtFzwO-aZ-CUq11bhyQKIFd";
 
 const { createClient } = supabase;
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* =========================================================
+   RECAPTCHA V3
+
+   The script is skipped on localhost (see index.html), so grecaptcha
+   may not exist there — getRecaptchaToken() degrades to null and the
+   submit-lead function treats a missing token as score 0 in that case.
+========================================================= */
+
+function getRecaptchaToken() {
+  if (typeof grecaptcha === "undefined") return Promise.resolve(null);
+
+  return new Promise((resolve) => {
+    grecaptcha.ready(() => {
+      grecaptcha
+        .execute(RECAPTCHA_SITE_KEY, { action: "submit_lead" })
+        .then(resolve)
+        .catch(() => resolve(null));
+    });
+  });
+}
 
 
 /* =========================================================
@@ -106,39 +128,41 @@ function getSuccessMessage(lang) {
 
   return "Your request has been sent successfully!";
 }
-/* =========================================================
-   DUPLICATE CHECK
-========================================================= */
 
-async function findDuplicateLead(email, phone) {
-  let query = supabaseClient
-    .from("leads")
-    .select("*")
-    .limit(1);
+function getErrorMessage(lang) {
+  const cleanLang = String(lang || "en").toLowerCase();
 
-  if (email && phone) {
-    query = query.or(`contact_email.eq.${email},contact_phone.eq.${phone}`);
-  } else if (email) {
-    query = query.eq("contact_email", email);
-  } else if (phone) {
-    query = query.eq("contact_phone", phone);
-  } else {
-    return null;
+  if (cleanLang === "fr") {
+    return "Erreur lors de l'envoi : ";
   }
 
-  const { data, error } = await query;
-
-  if (error) {
-    console.error(error);
-    return null;
+  if (cleanLang === "es") {
+    return "Error al enviar la solicitud: ";
   }
 
-  return data && data.length ? data[0] : null;
+  if (cleanLang === "pt") {
+    return "Erro ao enviar o pedido: ";
+  }
+
+  return "Error sending your request: ";
 }
-
-
 /* =========================================================
    FORM SUBMISSION
+
+   Duplicate detection used to run client-side via a public
+   SELECT against the leads table. That required Supabase RLS
+   to allow anonymous SELECT on a table containing customer PII
+   (emails, phones, notes), which exposed every lead to anyone
+   opening devtools. Duplicate detection now happens server-side
+   inside the send-lead-notifications Edge Function, which uses
+   the service_role key and is never reachable from the browser.
+
+   The leads table also no longer accepts a direct anon INSERT —
+   that would let a bot bypass reCAPTCHA entirely by calling the
+   REST API directly. The insert now happens inside the submit-lead
+   Edge Function, which verifies the reCAPTCHA token server-side
+   (with the secret key, never exposed to the browser) before
+   writing anything.
 ========================================================= */
 
 async function submitLead(event) {
@@ -173,20 +197,6 @@ async function submitLead(event) {
 
   const score = calculateLeadScore(formData);
   const leadStatus = getLeadStatus(score);
-
-  const duplicate = await findDuplicateLead(
-    formData.contact_email,
-    formData.contact_phone
-  );
-
-  let duplicateStatus = "NEW";
-  let repeatCount = 1;
-
-  if (duplicate) {
-    duplicateStatus = "UPDATED DUPLICATE";
-    repeatCount = Number(duplicate.repeat_count || 1) + 1;
-  }
-
   const now = new Date().toISOString();
 
   const lead = {
@@ -195,8 +205,8 @@ async function submitLead(event) {
     last_updated: now,
     lead_score: score,
     lead_status: leadStatus,
-    repeat_count: repeatCount,
-    duplicate_status: duplicateStatus,
+    repeat_count: 1,
+    duplicate_status: "NEW",
     payment_status: "Unpaid",
     status: "New",
     sent_to: "",
@@ -207,19 +217,12 @@ async function submitLead(event) {
     ...formData
   };
 
-  const { error } = await supabaseClient
-    .from("leads")
-    .insert([lead]);
+  const recaptchaToken = await getRecaptchaToken();
 
-  if (error) {
-    console.error(error);
-    alert("Erreur lors de l’envoi : " + error.message);
-    return;
-  }
-
+  let submitResult;
   try {
-    const notificationResponse = await fetch(
-      "https://itldyciokbtzwufrrifh.supabase.co/functions/v1/send-lead-notifications",
+    const submitResponse = await fetch(
+      `${SUPABASE_URL}/functions/v1/submit-lead`,
       {
         method: "POST",
         headers: {
@@ -227,17 +230,33 @@ async function submitLead(event) {
           "apikey": SUPABASE_ANON_KEY,
           "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
         },
-        body: JSON.stringify({ lead })
+        body: JSON.stringify({ lead, recaptchaToken })
       }
     );
 
-    const notificationResult = await notificationResponse.json().catch(() => ({}));
+    submitResult = await submitResponse.json().catch(() => ({}));
 
-    if (!notificationResponse.ok) {
-      console.error("Lead notification failed:", notificationResult);
+    if (!submitResponse.ok) {
+      throw new Error(submitResult.error || "Could not submit your request.");
     }
-  } catch (notificationError) {
-    console.error("Lead notification exception:", notificationError);
+  } catch (submitError) {
+    console.error(submitError);
+    alert(getErrorMessage(formData.language) + submitError.message);
+    return;
+  }
+
+  // Fired only after the server confirms the lead was actually written —
+  // a client-side-only event here would count requests that reCAPTCHA or
+  // validation later rejected as conversions.
+  if (typeof gtag === "function") {
+    gtag("event", "generate_lead", {
+      lead_id: lead.lead_id,
+      profile: formData.profile,
+      needs: formData.needs,
+      lead_score: score,
+      lead_status: leadStatus,
+      language: formData.language
+    });
   }
 
   alert(getSuccessMessage(formData.language));

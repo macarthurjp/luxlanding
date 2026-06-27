@@ -58,7 +58,7 @@ body.modal-open {
     gap: 10px;
     padding: 10px 14px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.72);
     backdrop-filter: blur(18px) saturate(160%);
     -webkit-backdrop-filter: blur(18px) saturate(160%);
     box-shadow:
@@ -84,11 +84,11 @@ body.modal-open {
 }
 
 .lang-switch a:hover {
-    color: #ffffff;
-    background: rgba(255,255,255,0.12);
+    color: #0d6efd;
+    background: rgba(255,255,255,0.55);
     transform: translateY(-2px) scale(1.06);
     box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,0.35),
+        inset 0 0 0 1px rgba(255,255,255,0.6),
         0 4px 12px rgba(106,169,255,0.45);
 }
 
@@ -407,6 +407,23 @@ body.modal-open {
     border-color: rgba(74, 144, 226, 0.24);
 }
 
+.card-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: rgba(74, 144, 226, 0.1);
+    color: var(--blue-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 18px;
+}
+
+.card-icon svg {
+    width: 26px;
+    height: 26px;
+}
+
 .step h3,
 .value-card h3 {
     font-size: 1.48rem;
@@ -437,6 +454,19 @@ body.modal-open {
     line-height: 1.7;
 }
 
+.seo-eyebrow {
+    display: inline-block;
+    margin-bottom: 14px;
+    padding: 7px 16px;
+    border-radius: 999px;
+    background: rgba(74, 144, 226, 0.1);
+    color: var(--blue-dark);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
 .seo-text h2 {
     font-weight: 800;
     font-size: clamp(2rem, 3.4vw, 3rem);
@@ -455,6 +485,31 @@ body.modal-open {
     margin-right: auto;
 }
 
+.seo-lead {
+    font-size: 1.16rem;
+    font-weight: 500;
+    color: #1c2433;
+}
+
+.seo-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 28px;
+}
+
+.seo-tag {
+    padding: 9px 18px;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid rgba(74, 144, 226, 0.22);
+    color: var(--blue-dark);
+    font-size: 0.92rem;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+}
+
 /* ---------------------------------------------------------
    FORM SECTION
 --------------------------------------------------------- */
@@ -462,7 +517,7 @@ body.modal-open {
 .lead-form {
     position: relative;
     text-align: center;
-    padding: 96px 20px;
+    padding: 60px 20px;
     background: linear-gradient(180deg, #f8fbff 0%, #eef4fb 100%);
 }
 
@@ -585,6 +640,14 @@ body.modal-open {
 .reveal.visible {
     opacity: 1;
     transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
 }
 
 .fade-lang {
@@ -775,6 +838,11 @@ body.modal-open {
         line-height: 1.12;
     }
 
+    .final-cta h2 {
+        padding-right: 75px;
+        box-sizing: border-box;
+    }
+
     .lang-switch {
         top: 14px;
         right: 14px;
@@ -785,7 +853,7 @@ body.modal-open {
         padding: 6px;
         gap: 4px;
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.22);
+        background: rgba(255, 255, 255, 0.72);
     }
 
     .lang-switch a {
@@ -797,7 +865,7 @@ body.modal-open {
         justify-content: center;
         border-radius: 14px;
         font-size: 0.88rem;
-        color: rgba(255, 255, 255, 0.72);
+        color: rgba(53, 122, 189, 0.85);
     }
 
     .lang-switch a.active,
@@ -821,25 +889,30 @@ body.modal-open {
 --------------------------------------------------------- */
 
 .faq-minimal {
-    padding: 18px 20px 0;
+    padding: 48px 20px 0;
     text-align: center;
     background: #f6f8fb;
 }
 
 .faq-toggle,
 .privacy-toggle {
-    border: none;
-    background: transparent;
+    border: 1px solid rgba(74, 144, 226, 0.2);
+    background: rgba(74, 144, 226, 0.07);
+    border-radius: 999px;
+    padding: 13px 26px;
     font-size: 15px;
     font-weight: 700;
-    color: #6b7280;
+    color: #334155;
     cursor: pointer;
-    transition: color 0.2s ease;
+    transition: all 0.25s ease;
 }
 
 .faq-toggle:hover,
 .privacy-toggle:hover {
     color: #111827;
+    background: rgba(74, 144, 226, 0.14);
+    border-color: rgba(74, 144, 226, 0.36);
+    transform: translateY(-2px);
 }
 
 .faq-modal,
@@ -1016,7 +1089,7 @@ body.modal-open {
 }
 
 .privacy-minimal {
-    padding: 8px 20px 70px;
+    padding: 20px 20px 70px;
     text-align: center;
     background: #f6f8fb;
 }
@@ -1105,5 +1178,82 @@ body.modal-open {
     .faq-item p {
         padding: 0 20px 22px;
         font-size: 0.98rem;
+    }
+}
+
+/* ---------------------------------------------------------
+   FOOTER
+--------------------------------------------------------- */
+
+.site-footer {
+    background: var(--navy);
+    color: rgba(255, 255, 255, 0.78);
+    padding: 56px 20px 36px;
+}
+
+.footer-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.footer-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 28px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    padding-bottom: 28px;
+}
+
+.footer-brand strong {
+    display: block;
+    color: #fff;
+    font-family: 'Sora', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+}
+
+.footer-brand p {
+    margin: 0;
+    max-width: 360px;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.62);
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+    color: #fff;
+}
+
+.footer-copy {
+    margin: 18px 0 0;
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 640px) {
+    .footer-row {
+        flex-direction: column;
+    }
+
+    .site-footer {
+        padding: 44px 20px 28px;
     }
 }

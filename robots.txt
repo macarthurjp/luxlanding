@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://macarthurjp.github.io/luxlanding/sitemap.xml
+Sitemap: https://luxlanding.eu/sitemap.xml
