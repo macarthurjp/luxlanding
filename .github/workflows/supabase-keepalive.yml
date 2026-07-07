@@ -11,7 +11,8 @@ jobs:
     steps:
       - name: Ping Supabase REST API
         run: |
-          curl -sf "https://itldyciokbtzwufrrifh.supabase.co/rest/v1/leads?select=id&limit=1" \
+          curl -sf --retry 3 --retry-delay 10 --retry-all-errors \
+            "https://itldyciokbtzwufrrifh.supabase.co/rest/v1/leads?select=id&limit=1" \
             -H "apikey: ${SUPABASE_ANON_KEY}" \
             -o /dev/null
         env:
