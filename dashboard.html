@@ -4025,66 +4025,125 @@ function openLeadModal(lead) {
   scoreBar.style.background =
     statusNorm === "HOT" ? "#dc2626" : statusNorm === "WARM" ? "#d97706" : "#9ca3af";
 
-  function mval(v) {
+  // ── helpers ──────────────────────────────────────────────────────────────
+  function mv(v) {
     const s = String(v ?? "").trim();
-    return s && s !== "—" && s !== "null" ? s : null;
+    return s && s !== "—" && s !== "null" && s !== "undefined" ? s : null;
+  }
+  function yn(v) {
+    const s = String(v ?? "").toLowerCase().trim();
+    if (s === "yes" || s === "true") return "Yes";
+    if (s === "no"  || s === "false") return "No";
+    return mv(v);
+  }
+  function lbl(map, val) {
+    const v = String(val || "").trim();
+    return map[v] || mv(v);
+  }
+  function hasNeed(key) {
+    return String(lead.needs || "").toLowerCase().includes(key);
+  }
+  function mRow(label, value) {
+    if (!value) return "";
+    return `<tr>
+      <td style="padding:7px 16px 7px 0;color:#6b7280;font-size:13px;vertical-align:top;width:42%;">${escapeHtml(label)}</td>
+      <td style="padding:7px 0;color:#1a1a2e;font-size:13px;font-weight:600;">${escapeHtml(String(value))}</td>
+    </tr>`;
+  }
+  function mSec(title, rows) {
+    const content = rows.join("");
+    if (!content) return "";
+    return `<div style="margin-bottom:20px;">
+      <div style="font-size:15px;font-weight:700;color:#1a1a2e;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid #e5e7eb;">${title}</div>
+      <table style="width:100%;border-collapse:collapse;">${content}</table>
+    </div>`;
   }
 
-  const fields = [
-    // Identity & timing
-    ["Lead ID",           mval(getLeadId(lead))],
-    ["Received",          mval(lead.timestamp_display || formatDate(getTimestamp(lead)))],
-    ["Language",          mval(lead.language_label || formatLanguageLabel(lead.language || ""))],
-    ["Profile",           mval(lead.profile)],
-    ["Profile (other)",   mval(lead.profile_other)],
-    ["Needs",             mval(getLeadNeeds(lead))],
-    ["Needs (other)",     mval(lead.needs_other)],
-    ["Move timing",       mval(lead.move_timing_label || formatMoveTiming(lead.move_timing || ""))],
-    ["Support readiness", mval(lead.support_readiness)],
-    // Housing
-    ["Housing budget",    mval(lead.housing_budget)],
-    ["Bedrooms",          mval(lead.housing_bedrooms)],
-    ["Housing contract",  mval(lead.housing_contract)],
-    // Schools
-    ["Children count",    mval(lead.schools_children_count)],
-    ["Children ages",     mval(lead.schools_children_ages)],
-    ["School type",       mval(lead.schools_type)],
-    // Admin
-    ["Job contract",      mval(lead.admin_job_contract)],
-    ["Lux. address",      mval(lead.admin_address)],
-    // Health
-    ["Health provider",   mval(lead.health_provider)],
-    ["CNS registration",  mval(lead.health_cns)],
-    // Banking
-    ["Bank account",      mval(lead.bank_account)],
-    ["Bank employed",     mval(lead.bank_employed)],
-    // Moving
-    ["Moving help",       mval(lead.moving_help)],
-    ["Current country",   mval(lead.moving_country)],
-    // Language
-    ["Target language",   mval(lead.language_target)],
-    ["Language level",    mval(lead.language_level)],
-    // Job
-    ["CV help",           mval(lead.job_cv_help)],
-    ["Interview help",    mval(lead.job_interview)],
-    // Freelancer
-    ["Register company",  mval(lead.freelancer_register)],
-    ["Tax setup",         mval(lead.freelancer_tax)],
-    // Meta
-    ["Sent to",           mval(getSentToDisplay(lead))],
-    ["Notes",             mval(lead.situation_notes)],
-    ["Privacy consent",   mval(lead.privacy_consent)]
-  ];
+  // ── label maps ────────────────────────────────────────────────────────────
+  const LANG_M    = { en:"English", fr:"French", es:"Spanish", pt:"Portuguese", de:"German", lu:"Luxembourgish", lb:"Luxembourgish" };
+  const PROF_M    = { moving_job:"Moving for a job", moving_family:"Moving with family", student:"Student", freelancer:"Freelancer / Self-employed", looking_job:"Looking for a job", other:"Other" };
+  const TIME_M    = { "30_days":"Within 30 days", "1_3_months":"1–3 months", "3_6_months":"3–6 months", "6_12_months":"6–12 months", exploring:"Just exploring" };
+  const READ_M    = { yes:"Yes, ready to invest in support", maybe:"Maybe, depends on what's offered", no:"No, just looking for information" };
+  const BED_M     = { studio:"Studio", "1":"1 bedroom", "2":"2 bedrooms", "3":"3 bedrooms", "4plus":"4+ bedrooms" };
+  const SCHOOL_M  = { public:"Public", private:"Private", international:"International" };
+  const LTGT_M    = { fr:"French", lu:"Luxembourgish", lb:"Luxembourgish", de:"German", en:"English" };
+  const LEVEL_M   = { beginner:"Beginner", intermediate:"Intermediate", advanced:"Advanced" };
+  const NEEDS_M   = { housing:"Housing / apartment search", admin:"Administrative paperwork", schools:"Schools / childcare", health:"Health insurance", banking:"Banking", moving:"Moving services", language:"Language courses", job:"Job search / CV", freelancer:"Freelancer / self-employed" };
 
-  document.getElementById("modalGrid").innerHTML = fields
-    .filter(([, value]) => value !== null)
-    .map(([label, value]) => `
-      <div class="detail-item">
-        <div class="detail-label">${escapeHtml(label)}</div>
-        <div class="detail-value">${escapeHtml(value)}</div>
-      </div>
-    `).join("");
+  const needsFormatted = mv(lead.needs)
+    ? String(lead.needs).split(/[,\s]+/).filter(Boolean).map(n => NEEDS_M[n.trim()] || n.trim()).join(", ")
+    : null;
 
+  const budget = mv(lead.housing_budget) ? `€${mv(lead.housing_budget)}/mo` : null;
+
+  const html = [
+    mSec("Contact", [
+      mRow("Name",           mv(getLeadName(lead))),
+      mRow("Email",          mv(getLeadEmail(lead))),
+      mRow("Phone / WhatsApp", mv(getLeadPhone(lead))),
+    ]),
+    mSec("Lead Summary", [
+      mRow("Lead ID",          mv(getLeadId(lead))),
+      mRow("Received",         mv(lead.timestamp_display || formatDate(getTimestamp(lead)))),
+      mRow("Language",         lbl(LANG_M, lead.language)),
+      mRow("Profile",          lbl(PROF_M, lead.profile)),
+      mRow("Profile (other)",  mv(lead.profile_other)),
+      mRow("Needs",            needsFormatted),
+      mRow("Needs (other)",    mv(lead.needs_other)),
+      mRow("Move timing",      lbl(TIME_M, lead.move_timing) || mv(lead.move_timing_label)),
+      mRow("Support readiness", lbl(READ_M, lead.support_readiness) || mv(lead.support_readiness)),
+    ]),
+    hasNeed("housing") ? mSec("Housing", [
+      mRow("Monthly budget",    budget),
+      mRow("Bedrooms needed",   lbl(BED_M, lead.housing_bedrooms)),
+      mRow("Has work contract", yn(lead.housing_contract)),
+    ]) : "",
+    hasNeed("schools") ? mSec("Schools & Childcare", [
+      mRow("Number of children", mv(lead.schools_children_count)),
+      mRow("Ages",               mv(lead.schools_children_ages)),
+      mRow("School preference",  lbl(SCHOOL_M, lead.schools_type)),
+    ]) : "",
+    hasNeed("admin") ? mSec("Admin Paperwork", [
+      mRow("Already has job contract",       yn(lead.admin_job_contract)),
+      mRow("Already has Luxembourg address", yn(lead.admin_address)),
+    ]) : "",
+    hasNeed("health") ? mSec("Health Insurance", [
+      mRow("Needs help choosing provider", yn(lead.health_provider)),
+      mRow("Already registered with CNS",  yn(lead.health_cns)),
+    ]) : "",
+    hasNeed("banking") ? mSec("Banking", [
+      mRow("Needs help opening bank account", yn(lead.bank_account)),
+      mRow("Already employed in Luxembourg",  yn(lead.bank_employed)),
+    ]) : "",
+    hasNeed("moving") ? mSec("Moving Logistics", [
+      mRow("Needs help with moving company", yn(lead.moving_help)),
+      mRow("Moving from",                    mv(lead.moving_country)),
+    ]) : "",
+    hasNeed("language") ? mSec("Language Courses", [
+      mRow("Language to learn", lbl(LTGT_M, lead.language_target)),
+      mRow("Current level",     lbl(LEVEL_M, lead.language_level)),
+    ]) : "",
+    hasNeed("job") ? mSec("Job Search", [
+      mRow("Needs help with CV",       yn(lead.job_cv_help)),
+      mRow("Needs interview prep",     yn(lead.job_interview)),
+    ]) : "",
+    hasNeed("freelancer") ? mSec("Freelancer Setup", [
+      mRow("Needs help registering business", yn(lead.freelancer_register)),
+      mRow("Needs tax guidance",              yn(lead.freelancer_tax)),
+    ]) : "",
+    mv(lead.situation_notes) ? `<div style="margin-bottom:20px;">
+      <div style="font-size:15px;font-weight:700;color:#1a1a2e;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid #e5e7eb;">Situation Notes</div>
+      <div style="background:#f9fafb;border-left:3px solid #1a1a2e;padding:12px 16px;font-size:13px;color:#374151;line-height:1.6;border-radius:0 6px 6px 0;">${escapeHtml(mv(lead.situation_notes))}</div>
+    </div>` : "",
+    mSec("Privacy", [
+      mRow("Consent", yn(lead.privacy_consent)),
+    ]),
+    mv(getSentToDisplay(lead)) ? mSec("Sent to", [
+      mRow("Partner", mv(getSentToDisplay(lead))),
+    ]) : "",
+  ].join("");
+
+  document.getElementById("modalGrid").innerHTML = html;
   document.getElementById("leadModal").style.display = "flex";
 }
 
@@ -4102,7 +4161,7 @@ function setLeadModalEditMode(isEditing) {
   const saveBtn = document.getElementById("modalSaveBtn");
   const cancelBtn = document.getElementById("modalCancelEditBtn");
 
-  if (grid) grid.style.display = isEditing ? "none" : "grid";
+  if (grid) grid.style.display = isEditing ? "none" : "block";
   if (form) form.classList.toggle("active", isEditing);
   if (editBtn) editBtn.style.display = isEditing ? "none" : "inline-flex";
   if (saveBtn) saveBtn.style.display = isEditing ? "inline-flex" : "none";
