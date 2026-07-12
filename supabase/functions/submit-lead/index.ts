@@ -302,6 +302,103 @@ async function sendNotification(lead: Record<string, unknown>): Promise<void> {
   });
 }
 
+// ── Confirmation email to lead ────────────────────────────────────────────────
+
+const CONFIRM_COPY: Record<string, { subject: string; title: string; body: string; closing: string }> = {
+  en: {
+    subject: "We've received your request — LuxLanding",
+    title: "Thank you!",
+    body: "We've received your relocation request and will get back to you within 24 hours with clear next steps.",
+    closing: "The LuxLanding Team",
+  },
+  fr: {
+    subject: "Nous avons reçu votre demande — LuxLanding",
+    title: "Merci !",
+    body: "Nous avons bien reçu votre demande de relocation et reviendrons vers vous dans les 24 heures avec les prochaines étapes.",
+    closing: "L'équipe LuxLanding",
+  },
+  es: {
+    subject: "Hemos recibido tu solicitud — LuxLanding",
+    title: "¡Gracias!",
+    body: "Hemos recibido tu solicitud de reubicación y te contactaremos en menos de 24 horas con los próximos pasos.",
+    closing: "El equipo de LuxLanding",
+  },
+  pt: {
+    subject: "Recebemos o seu pedido — LuxLanding",
+    title: "Obrigado!",
+    body: "Recebemos o seu pedido de relocalização e entraremos em contacto em 24 horas com os próximos passos.",
+    closing: "A equipa LuxLanding",
+  },
+  de: {
+    subject: "Wir haben Ihre Anfrage erhalten — LuxLanding",
+    title: "Vielen Dank!",
+    body: "Wir haben Ihre Relokationsanfrage erhalten und melden uns innerhalb von 24 Stunden mit den nächsten Schritten.",
+    closing: "Das LuxLanding-Team",
+  },
+};
+
+async function sendConfirmation(lead: Record<string, unknown>): Promise<void> {
+  const to = str(lead.contact_email);
+  if (!to) return;
+
+  const lang = str(lead.language).toLowerCase().slice(0, 2);
+  const copy = CONFIRM_COPY[lang] || CONFIRM_COPY.en;
+  const name = str(lead.contact_name) || to;
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background:#f3f4f6;font-family:Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;padding:24px 0;">
+<tr><td align="center">
+<table width="560" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08);">
+
+  <tr><td style="background:#1a1a2e;padding:28px 32px;">
+    <div style="color:#fff;font-size:22px;font-weight:700;">LuxLanding</div>
+    <div style="color:#9ca3af;font-size:12px;margin-top:4px;">Luxembourg Relocation Services</div>
+  </td></tr>
+
+  <tr><td style="padding:32px;">
+    <div style="font-size:22px;font-weight:700;color:#1a1a2e;margin-bottom:16px;">${copy.title}</div>
+    <div style="font-size:14px;color:#374151;line-height:1.7;margin-bottom:24px;">
+      ${copy.body}
+    </div>
+    <div style="background:#f9fafb;border-radius:10px;padding:16px 20px;font-size:13px;color:#6b7280;">
+      <strong style="color:#1a1a2e;">${escapeHtml(name)}</strong> · ${str(lead.lead_id)}
+    </div>
+  </td></tr>
+
+  <tr><td style="background:#f9fafb;padding:16px 32px;border-top:1px solid #e5e7eb;text-align:center;color:#9ca3af;font-size:11px;">
+    ${copy.closing} · <a href="https://luxlanding.eu" style="color:#9ca3af;">luxlanding.eu</a>
+  </td></tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>`;
+
+  await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${RESEND_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: FROM_EMAIL,
+      to: [to],
+      reply_to: NOTIFY_EMAIL,
+      subject: copy.subject,
+      html,
+    }),
+  });
+}
+
+function escapeHtml(s: string): string {
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
 // ── Handler ───────────────────────────────────────────────────────────────────
 
 Deno.serve(async (req) => {
@@ -327,7 +424,10 @@ Deno.serve(async (req) => {
     }
 
     sendNotification({ ...lead, _recaptcha_score: score }).catch((e) =>
-      console.error("Email error:", e)
+      console.error("Notification email error:", e)
+    );
+    sendConfirmation(lead).catch((e) =>
+      console.error("Confirmation email error:", e)
     );
 
     return new Response(
