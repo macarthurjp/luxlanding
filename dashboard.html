@@ -3895,29 +3895,65 @@ function openLeadModal(lead) {
   document.getElementById("modalName").textContent = getLeadName(lead);
   document.getElementById("modalSub").textContent = `${getLeadEmail(lead)} · ${getLeadPhone(lead)}`;
 
+  function mval(v) {
+    const s = String(v ?? "").trim();
+    return s && s !== "—" && s !== "null" ? s : null;
+  }
+
   const fields = [
-    ["Lead ID", getLeadId(lead)],
-    ["Received", lead.timestamp_display || formatDate(getTimestamp(lead))],
-    ["Language", lead.language_label || formatLanguageLabel(lead.language || "en")],
-    ["Profile", lead.profile || ""],
-    ["Needs", getLeadNeeds(lead)],
-    ["Move timing", lead.move_timing_label || formatMoveTiming(lead.move_timing || "")],
-    ["Support readiness", lead.support_readiness || ""],
-    ["Housing budget", lead.housing_budget || ""],
-    ["Bedrooms", lead.housing_bedrooms || ""],
-    ["Job contract", lead.admin_job_contract || lead.housing_contract || ""],
-    ["Current country", lead.moving_country || ""],
-    ["Sent to", getSentToDisplay(lead)],
-    ["Notes", lead.situation_notes || ""],
-    ["Privacy consent", lead.privacy_consent || ""]
+    // Identity & timing
+    ["Lead ID",           mval(getLeadId(lead))],
+    ["Received",          mval(lead.timestamp_display || formatDate(getTimestamp(lead)))],
+    ["Language",          mval(lead.language_label || formatLanguageLabel(lead.language || ""))],
+    ["Profile",           mval(lead.profile)],
+    ["Profile (other)",   mval(lead.profile_other)],
+    ["Needs",             mval(getLeadNeeds(lead))],
+    ["Needs (other)",     mval(lead.needs_other)],
+    ["Move timing",       mval(lead.move_timing_label || formatMoveTiming(lead.move_timing || ""))],
+    ["Support readiness", mval(lead.support_readiness)],
+    // Housing
+    ["Housing budget",    mval(lead.housing_budget)],
+    ["Bedrooms",          mval(lead.housing_bedrooms)],
+    ["Housing contract",  mval(lead.housing_contract)],
+    // Schools
+    ["Children count",    mval(lead.schools_children_count)],
+    ["Children ages",     mval(lead.schools_children_ages)],
+    ["School type",       mval(lead.schools_type)],
+    // Admin
+    ["Job contract",      mval(lead.admin_job_contract)],
+    ["Lux. address",      mval(lead.admin_address)],
+    // Health
+    ["Health provider",   mval(lead.health_provider)],
+    ["CNS registration",  mval(lead.health_cns)],
+    // Banking
+    ["Bank account",      mval(lead.bank_account)],
+    ["Bank employed",     mval(lead.bank_employed)],
+    // Moving
+    ["Moving help",       mval(lead.moving_help)],
+    ["Current country",   mval(lead.moving_country)],
+    // Language
+    ["Target language",   mval(lead.language_target)],
+    ["Language level",    mval(lead.language_level)],
+    // Job
+    ["CV help",           mval(lead.job_cv_help)],
+    ["Interview help",    mval(lead.job_interview)],
+    // Freelancer
+    ["Register company",  mval(lead.freelancer_register)],
+    ["Tax setup",         mval(lead.freelancer_tax)],
+    // Meta
+    ["Sent to",           mval(getSentToDisplay(lead))],
+    ["Notes",             mval(lead.situation_notes)],
+    ["Privacy consent",   mval(lead.privacy_consent)]
   ];
 
-  document.getElementById("modalGrid").innerHTML = fields.map(([label, value]) => `
-    <div class="detail-item">
-      <div class="detail-label">${escapeHtml(label)}</div>
-      <div class="detail-value">${escapeHtml(value || "—")}</div>
-    </div>
-  `).join("");
+  document.getElementById("modalGrid").innerHTML = fields
+    .filter(([, value]) => value !== null)
+    .map(([label, value]) => `
+      <div class="detail-item">
+        <div class="detail-label">${escapeHtml(label)}</div>
+        <div class="detail-value">${escapeHtml(value)}</div>
+      </div>
+    `).join("");
 
   document.getElementById("leadModal").style.display = "flex";
 }
