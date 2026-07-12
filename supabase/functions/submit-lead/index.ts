@@ -15,12 +15,11 @@ const corsHeaders = {
 // ── Label maps ────────────────────────────────────────────────────────────────
 
 const PROFILE_LABELS: Record<string, string> = {
-  employee: "Employee",
-  job_seeker: "Job seeker",
-  freelancer: "Freelancer / Self-employed",
+  moving_job: "Moving for a job",
+  moving_family: "Moving with family",
   student: "Student",
-  family: "Family / Partner join",
-  entrepreneur: "Entrepreneur",
+  freelancer: "Freelancer / Self-employed",
+  looking_job: "Looking for a job",
   other: "Other",
 };
 
@@ -39,25 +38,26 @@ const READINESS_LABELS: Record<string, string> = {
 };
 
 const NEEDS_LABELS: Record<string, string> = {
-  housing: "Housing",
-  schools: "Schools & childcare",
-  admin: "Admin paperwork",
+  housing: "Housing / apartment search",
+  admin: "Administrative paperwork",
+  schools: "Schools / childcare",
   health: "Health insurance",
   banking: "Banking",
-  moving: "Moving logistics",
+  moving: "Moving services",
   language: "Language courses",
-  job: "Job search",
-  freelancer: "Freelancer setup",
+  job: "Job search / CV",
+  freelancer: "Freelancer / self-employed",
 };
 
 const SCHOOL_TYPE_LABELS: Record<string, string> = {
-  public: "Public (free)",
-  international: "International / Private",
-  both: "Both options",
+  public: "Public",
+  private: "Private",
+  international: "International",
 };
 
 const LANG_LABELS: Record<string, string> = {
   fr: "French",
+  lu: "Luxembourgish",
   lb: "Luxembourgish",
   de: "German",
   en: "English",
@@ -70,13 +70,15 @@ const LEVEL_LABELS: Record<string, string> = {
 };
 
 const BEDROOMS_LABELS: Record<string, string> = {
+  studio: "Studio",
   "1": "1 bedroom",
   "2": "2 bedrooms",
-  "3": "3+ bedrooms",
+  "3": "3 bedrooms",
+  "4plus": "4+ bedrooms",
   "1br": "1 bedroom",
   "2br": "2 bedrooms",
-  "3br": "3+ bedrooms",
-  studio: "Studio",
+  "3br": "3 bedrooms",
+  "3plus": "3+ bedrooms",
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -124,8 +126,8 @@ function section(title: string, rows: string): string {
   const content = rows.trim();
   if (!content) return "";
   return `
-    <div style="margin-bottom:20px;">
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#9ca3af;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #e5e7eb;">${title}</div>
+    <div style="margin-bottom:24px;">
+      <div style="font-size:15px;font-weight:700;color:#1a1a2e;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #e5e7eb;">${title}</div>
       <table style="width:100%;border-collapse:collapse;">
         ${content}
       </table>
@@ -215,50 +217,50 @@ async function sendNotification(lead: Record<string, unknown>): Promise<void> {
     ].join(""))}
 
     ${hasNeeds(lead.needs, "housing") ? section("Housing", [
-      row("Budget (€/mo)", lead.housing_budget),
-      row("Bedrooms", label(BEDROOMS_LABELS, lead.housing_bedrooms)),
-      row("Contract type", lead.housing_contract),
+      row("Monthly budget", has(lead.housing_budget) ? `€${str(lead.housing_budget)}/mo` : null),
+      row("Bedrooms needed", label(BEDROOMS_LABELS, lead.housing_bedrooms)),
+      row("Has work contract", yesNo(lead.housing_contract)),
     ].join("")) : ""}
 
     ${hasNeeds(lead.needs, "schools") ? section("Schools & Childcare", [
       row("Number of children", lead.schools_children_count),
       row("Ages", lead.schools_children_ages),
-      row("School type", label(SCHOOL_TYPE_LABELS, lead.schools_type)),
+      row("School preference", label(SCHOOL_TYPE_LABELS, lead.schools_type)),
     ].join("")) : ""}
 
     ${hasNeeds(lead.needs, "admin") ? section("Admin Paperwork", [
-      row("Job contract type", lead.admin_job_contract),
-      row("Luxembourg address", yesNo(lead.admin_address)),
+      row("Already has job contract", yesNo(lead.admin_job_contract)),
+      row("Already has Luxembourg address", yesNo(lead.admin_address)),
     ].join("")) : ""}
 
     ${hasNeeds(lead.needs, "health") ? section("Health Insurance", [
-      row("Has private provider", yesNo(lead.health_provider)),
-      row("CNS registration needed", yesNo(lead.health_cns)),
+      row("Needs help choosing provider", yesNo(lead.health_provider)),
+      row("Already registered with CNS", yesNo(lead.health_cns)),
     ].join("")) : ""}
 
     ${hasNeeds(lead.needs, "banking") ? section("Banking", [
-      row("Has Luxembourg account", yesNo(lead.bank_account)),
-      row("Employed in Luxembourg", yesNo(lead.bank_employed)),
+      row("Needs help opening bank account", yesNo(lead.bank_account)),
+      row("Already employed in Luxembourg", yesNo(lead.bank_employed)),
     ].join("")) : ""}
 
     ${hasNeeds(lead.needs, "moving") ? section("Moving Logistics", [
-      row("Needs moving help", yesNo(lead.moving_help)),
+      row("Needs help with moving company", yesNo(lead.moving_help)),
       row("Moving from", lead.moving_country),
     ].join("")) : ""}
 
     ${hasNeeds(lead.needs, "language") ? section("Language Courses", [
-      row("Target language", label(LANG_LABELS, lead.language_target)),
+      row("Language to learn", label(LANG_LABELS, lead.language_target)),
       row("Current level", label(LEVEL_LABELS, lead.language_level)),
     ].join("")) : ""}
 
     ${hasNeeds(lead.needs, "job") ? section("Job Search", [
-      row("CV adaptation help", yesNo(lead.job_cv_help)),
-      row("Interview coaching", yesNo(lead.job_interview)),
+      row("Needs help with CV", yesNo(lead.job_cv_help)),
+      row("Needs interview preparation", yesNo(lead.job_interview)),
     ].join("")) : ""}
 
     ${hasNeeds(lead.needs, "freelancer") ? section("Freelancer Setup", [
-      row("Register company", yesNo(lead.freelancer_register)),
-      row("Tax setup help", yesNo(lead.freelancer_tax)),
+      row("Needs help registering business", yesNo(lead.freelancer_register)),
+      row("Needs tax guidance", yesNo(lead.freelancer_tax)),
     ].join("")) : ""}
 
     ${has(lead.situation_notes) ? `
