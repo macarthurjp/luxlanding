@@ -304,36 +304,79 @@ async function sendNotification(lead: Record<string, unknown>): Promise<void> {
 
 // ── Confirmation email to lead ────────────────────────────────────────────────
 
-const CONFIRM_COPY: Record<string, { subject: string; title: string; body: string; closing: string }> = {
+interface ConfirmCopy {
+  subject: string;
+  greeting: string;
+  intro: string;
+  nextTitle: string;
+  step1: string;
+  step2: string;
+  step3: string;
+  reply: string;
+  regards: string;
+  footer: string;
+}
+
+const CONFIRM_COPY: Record<string, ConfirmCopy> = {
   en: {
-    subject: "We've received your request — LuxLanding",
-    title: "Thank you!",
-    body: "We've received your relocation request and will get back to you within 24 hours with clear next steps.",
-    closing: "The LuxLanding Team",
+    subject:    "We've received your request — LuxLanding",
+    greeting:   "Hi {name},",
+    intro:      "Thank you for contacting LuxLanding. We received your relocation request and will review your situation shortly.",
+    nextTitle:  "What happens next",
+    step1:      "We review your needs.",
+    step2:      "We identify the right expert or service for your case.",
+    step3:      "We contact you with the next step.",
+    reply:      "We usually reply within 24 hours.",
+    regards:    "Best regards,",
+    footer:     "You received this email because you submitted a relocation request through LuxLanding.",
   },
   fr: {
-    subject: "Nous avons reçu votre demande — LuxLanding",
-    title: "Merci !",
-    body: "Nous avons bien reçu votre demande de relocation et reviendrons vers vous dans les 24 heures avec les prochaines étapes.",
-    closing: "L'équipe LuxLanding",
+    subject:    "Nous avons reçu votre demande — LuxLanding",
+    greeting:   "Bonjour {name},",
+    intro:      "Merci de contacter LuxLanding. Nous avons bien reçu votre demande de relocation et examinerons votre situation très prochainement.",
+    nextTitle:  "Prochaines étapes",
+    step1:      "Nous analysons vos besoins.",
+    step2:      "Nous identifions l'expert ou le service adapté à votre situation.",
+    step3:      "Nous vous contactons avec la prochaine étape.",
+    reply:      "Nous répondons généralement sous 24 heures.",
+    regards:    "Cordialement,",
+    footer:     "Vous avez reçu cet e-mail car vous avez soumis une demande de relocation via LuxLanding.",
   },
   es: {
-    subject: "Hemos recibido tu solicitud — LuxLanding",
-    title: "¡Gracias!",
-    body: "Hemos recibido tu solicitud de reubicación y te contactaremos en menos de 24 horas con los próximos pasos.",
-    closing: "El equipo de LuxLanding",
+    subject:    "Hemos recibido tu solicitud — LuxLanding",
+    greeting:   "Hola {name},",
+    intro:      "Gracias por contactar con LuxLanding. Hemos recibido tu solicitud de reubicación y revisaremos tu situación en breve.",
+    nextTitle:  "¿Qué pasa ahora?",
+    step1:      "Revisamos tus necesidades.",
+    step2:      "Identificamos al experto o servicio adecuado para tu caso.",
+    step3:      "Te contactamos con el siguiente paso.",
+    reply:      "Solemos responder en menos de 24 horas.",
+    regards:    "Un saludo,",
+    footer:     "Recibiste este correo porque enviaste una solicitud de reubicación a través de LuxLanding.",
   },
   pt: {
-    subject: "Recebemos o seu pedido — LuxLanding",
-    title: "Obrigado!",
-    body: "Recebemos o seu pedido de relocalização e entraremos em contacto em 24 horas com os próximos passos.",
-    closing: "A equipa LuxLanding",
+    subject:    "Recebemos o seu pedido — LuxLanding",
+    greeting:   "Olá {name},",
+    intro:      "Obrigado por contactar a LuxLanding. Recebemos o seu pedido de relocalização e iremos analisar a sua situação em breve.",
+    nextTitle:  "O que acontece a seguir",
+    step1:      "Analisamos as suas necessidades.",
+    step2:      "Identificamos o especialista ou serviço certo para o seu caso.",
+    step3:      "Entramos em contacto com o próximo passo.",
+    reply:      "Respondemos normalmente em 24 horas.",
+    regards:    "Com os melhores cumprimentos,",
+    footer:     "Recebeu este e-mail porque submeteu um pedido de relocalização através da LuxLanding.",
   },
   de: {
-    subject: "Wir haben Ihre Anfrage erhalten — LuxLanding",
-    title: "Vielen Dank!",
-    body: "Wir haben Ihre Relokationsanfrage erhalten und melden uns innerhalb von 24 Stunden mit den nächsten Schritten.",
-    closing: "Das LuxLanding-Team",
+    subject:    "Wir haben Ihre Anfrage erhalten — LuxLanding",
+    greeting:   "Hallo {name},",
+    intro:      "Vielen Dank, dass Sie LuxLanding kontaktiert haben. Wir haben Ihre Relokationsanfrage erhalten und werden Ihre Situation in Kürze prüfen.",
+    nextTitle:  "Was als Nächstes passiert",
+    step1:      "Wir prüfen Ihre Bedürfnisse.",
+    step2:      "Wir ermitteln den richtigen Experten oder Service für Ihren Fall.",
+    step3:      "Wir melden uns mit dem nächsten Schritt.",
+    reply:      "Wir antworten in der Regel innerhalb von 24 Stunden.",
+    regards:    "Mit freundlichen Grüßen,",
+    footer:     "Sie erhalten diese E-Mail, weil Sie über LuxLanding eine Relokationsanfrage gestellt haben.",
   },
 };
 
@@ -342,35 +385,69 @@ async function sendConfirmation(lead: Record<string, unknown>): Promise<void> {
   if (!to) return;
 
   const lang = str(lead.language).toLowerCase().slice(0, 2);
-  const copy = CONFIRM_COPY[lang] || CONFIRM_COPY.en;
+  const c = CONFIRM_COPY[lang] || CONFIRM_COPY.en;
   const name = str(lead.contact_name) || to;
+  const greeting = c.greeting.replace("{name}", escapeHtml(name));
 
   const html = `
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"></head>
-<body style="margin:0;padding:0;background:#f3f4f6;font-family:Arial,sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;padding:24px 0;">
+<body style="margin:0;padding:0;background:#f0f2f5;font-family:Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f0f2f5;padding:32px 16px;">
 <tr><td align="center">
-<table width="560" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08);">
+<table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
 
-  <tr><td style="background:#1a1a2e;padding:28px 32px;">
-    <div style="color:#fff;font-size:22px;font-weight:700;">LuxLanding</div>
-    <div style="color:#9ca3af;font-size:12px;margin-top:4px;">Luxembourg Relocation Services</div>
+  <!-- Header -->
+  <tr><td style="background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);padding:32px 40px;">
+    <div style="color:#fff;font-size:28px;font-weight:800;letter-spacing:-0.5px;">LuxLanding</div>
+    <div style="color:#9ca3af;font-size:14px;margin-top:6px;">Luxembourg relocation support</div>
   </td></tr>
 
-  <tr><td style="padding:32px;">
-    <div style="font-size:22px;font-weight:700;color:#1a1a2e;margin-bottom:16px;">${copy.title}</div>
-    <div style="font-size:14px;color:#374151;line-height:1.7;margin-bottom:24px;">
-      ${copy.body}
+  <!-- Body -->
+  <tr><td style="padding:40px;">
+
+    <div style="font-size:22px;font-weight:700;color:#111827;margin-bottom:20px;">${greeting}</div>
+
+    <div style="font-size:18px;color:#4b5563;line-height:1.7;margin-bottom:32px;">
+      ${c.intro}
     </div>
-    <div style="background:#f9fafb;border-radius:10px;padding:16px 20px;font-size:13px;color:#6b7280;">
-      <strong style="color:#1a1a2e;">${escapeHtml(name)}</strong> · ${str(lead.lead_id)}
+
+    <!-- What happens next card -->
+    <div style="background:#f8fafc;border:1px solid #e5e7eb;border-radius:14px;padding:24px 28px;margin-bottom:32px;">
+      <div style="font-size:16px;font-weight:700;color:#111827;margin-bottom:16px;">${c.nextTitle}</div>
+      <table cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+          <td style="vertical-align:top;padding-bottom:12px;">
+            <span style="color:#3b82f6;font-weight:700;font-size:15px;">1.&nbsp;</span>
+            <span style="font-size:15px;color:#374151;">${c.step1}</span>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align:top;padding-bottom:12px;">
+            <span style="color:#3b82f6;font-weight:700;font-size:15px;">2.&nbsp;</span>
+            <span style="font-size:15px;color:#374151;">${c.step2}</span>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align:top;">
+            <span style="color:#3b82f6;font-weight:700;font-size:15px;">3.&nbsp;</span>
+            <span style="font-size:15px;color:#374151;">${c.step3}</span>
+          </td>
+        </tr>
+      </table>
     </div>
+
+    <div style="font-size:18px;color:#4b5563;line-height:1.7;margin-bottom:32px;">${c.reply}</div>
+
+    <div style="font-size:14px;color:#6b7280;">${c.regards}</div>
+    <div style="font-size:15px;font-weight:700;color:#111827;">LuxLanding</div>
+
   </td></tr>
 
-  <tr><td style="background:#f9fafb;padding:16px 32px;border-top:1px solid #e5e7eb;text-align:center;color:#9ca3af;font-size:11px;">
-    ${copy.closing} · <a href="https://luxlanding.eu" style="color:#9ca3af;">luxlanding.eu</a>
+  <!-- Footer -->
+  <tr><td style="padding:20px 40px;border-top:1px solid #e5e7eb;text-align:center;">
+    <div style="font-size:13px;color:#9ca3af;line-height:1.6;">${c.footer}</div>
   </td></tr>
 
 </table>
@@ -389,7 +466,7 @@ async function sendConfirmation(lead: Record<string, unknown>): Promise<void> {
       from: FROM_EMAIL,
       to: [to],
       reply_to: NOTIFY_EMAIL,
-      subject: copy.subject,
+      subject: c.subject,
       html,
     }),
   });
