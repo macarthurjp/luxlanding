@@ -628,7 +628,7 @@ body {
                 </section>
 
                 <label class="privacy-consent">
-                    <input type="checkbox" name="privacy_consent" value="yes" id="privacy-consent-checkbox" required disabled>
+                    <input type="checkbox" name="privacy_consent" value="yes" id="privacy-consent-checkbox" required>
                     <span>
                         <span data-i18n="privacy.consent">I agree to be contacted about my request and accept the privacy notice.</span>
                         <a href="#privacy" class="privacy-inline-link" data-i18n="privacy.link">Privacy notice</a>
@@ -980,9 +980,6 @@ body {
         modal.classList.add("active");
         document.body.classList.add("modal-open");
 
-        if (consentCheckbox) {
-            consentCheckbox.disabled = false;
-        }
     }
 
     toggle.addEventListener("click", openPrivacyModal);
