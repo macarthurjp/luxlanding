@@ -1111,19 +1111,106 @@ PREMIUM DATE PICKER
 .modal{
   width:100%;
   max-width:720px;
-  background:rgba(255,255,255,.88);
+  background:rgba(255,255,255,.92);
   border:1px solid rgba(255,255,255,.66);
   border-radius:28px;
-  padding:24px;
+  padding:0;
   max-height:90vh;
   overflow:auto;
   backdrop-filter:var(--glass);
   box-shadow:var(--shadow-strong);
 }
 
-.modal h2{
-  font-size:24px;
-  margin-bottom:8px;
+.modal-body{
+  padding:20px 24px 24px;
+}
+
+.modal-lead-hero{
+  background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);
+  padding:24px 28px 22px;
+  border-radius:28px 28px 0 0;
+}
+
+.modal-hero-eyebrow{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:#6b7280;
+  margin-bottom:6px;
+}
+
+.modal-hero-name{
+  font-size:26px;
+  font-weight:800;
+  color:#fff;
+  letter-spacing:0.3px;
+  margin-bottom:4px;
+}
+
+.modal-hero-sub{
+  font-size:12px;
+  color:#9ca3af;
+}
+
+.modal-status-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin:16px 0;
+}
+
+.modal-status-card,.modal-score-card{
+  border-radius:16px;
+  padding:14px 16px;
+}
+
+.modal-score-card{
+  background:#f1f5f9;
+}
+
+.modal-status-card.s-hot{ background:#fff1f2; }
+.modal-status-card.s-warm{ background:#fefce8; }
+.modal-status-card.s-cold{ background:#f1f5f9; }
+
+.msc-label{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  margin-bottom:5px;
+  color:#6b7280;
+}
+
+.msc-value{
+  font-size:22px;
+  font-weight:800;
+  line-height:1.1;
+}
+
+.modal-status-card.s-hot .msc-value{ color:#dc2626; }
+.modal-status-card.s-warm .msc-value{ color:#d97706; }
+.modal-status-card.s-cold .msc-value{ color:#6b7280; }
+.modal-score-card .msc-value{ color:#1a1a2e; }
+
+.msc-sub{
+  font-size:11px;
+  color:#9ca3af;
+  margin-top:3px;
+}
+
+.score-bar-track{
+  background:rgba(0,0,0,0.08);
+  border-radius:4px;
+  height:6px;
+  margin-top:10px;
+  overflow:hidden;
+}
+
+.score-bar-fill{
+  height:100%;
+  border-radius:4px;
+  transition:width .4s ease;
 }
 
 .confirm-modal{
@@ -2617,10 +2704,31 @@ RESPONSIVE + DASHBOARD FIXES
 
 <div class="lead-detail" id="leadModal">
   <div class="modal">
-    <h2 id="modalName">Lead details</h2>
-    <p id="modalSub" style="color:var(--muted);font-size:13px;"></p>
 
-    <div class="detail-grid" id="modalGrid"></div>
+    <!-- Hero header -->
+    <div class="modal-lead-hero">
+      <div class="modal-hero-eyebrow">LUXLANDING LEAD DASHBOARD</div>
+      <div class="modal-hero-name" id="modalName">Lead details</div>
+      <div class="modal-hero-sub" id="modalSub"></div>
+    </div>
+
+    <div class="modal-body">
+
+      <!-- Status + Score cards -->
+      <div class="modal-status-row">
+        <div class="modal-status-card" id="modalStatusCard">
+          <div class="msc-label">LEAD STATUS</div>
+          <div class="msc-value" id="modalStatusValue">—</div>
+          <div class="msc-sub" id="modalStatusSub"></div>
+        </div>
+        <div class="modal-score-card">
+          <div class="msc-label">LEAD SCORE</div>
+          <div class="msc-value" id="modalScoreValue">—</div>
+          <div class="score-bar-track"><div class="score-bar-fill" id="modalScoreBar"></div></div>
+        </div>
+      </div>
+
+      <div class="detail-grid" id="modalGrid"></div>
 
     <div class="modal-edit-form" id="modalEditForm">
       <label>
@@ -2684,15 +2792,17 @@ RESPONSIVE + DASHBOARD FIXES
       </label>
     </div>
 
-    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin-top:18px;">
-      <button class="btn btn-outline" id="modalCloseBtn">Close</button>
-      <button class="btn btn-primary" id="modalEditBtn">Edit</button>
-      <button class="btn btn-success" id="modalSaveBtn" style="display:none;">Save changes</button>
-      <button class="btn btn-outline" id="modalCancelEditBtn" style="display:none;">Cancel edit</button>
-      <button class="btn btn-danger" id="modalDeleteBtn">Delete</button>
-      <button class="btn btn-primary" id="modalWhatsAppBtn">WhatsApp</button>
-      <button class="btn btn-outline" id="modalEmailBtn">Email</button>
-    </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin-top:18px;">
+        <button class="btn btn-outline" id="modalCloseBtn">Close</button>
+        <button class="btn btn-primary" id="modalEditBtn">Edit</button>
+        <button class="btn btn-success" id="modalSaveBtn" style="display:none;">Save changes</button>
+        <button class="btn btn-outline" id="modalCancelEditBtn" style="display:none;">Cancel edit</button>
+        <button class="btn btn-danger" id="modalDeleteBtn">Delete</button>
+        <button class="btn btn-primary" id="modalWhatsAppBtn">WhatsApp</button>
+        <button class="btn btn-outline" id="modalEmailBtn">Email</button>
+      </div>
+
+    </div><!-- /modal-body -->
   </div>
 </div>
 
@@ -3892,8 +4002,28 @@ function openLeadModal(lead) {
   selectedLead = lead;
   setLeadModalEditMode(false);
 
+  // Hero header
   document.getElementById("modalName").textContent = getLeadName(lead);
-  document.getElementById("modalSub").textContent = `${getLeadEmail(lead)} · ${getLeadPhone(lead)}`;
+  document.getElementById("modalSub").textContent = `Lead ID: ${getLeadId(lead)}`;
+
+  // Status card
+  const leadStatus = getLeadStatus(lead) || "New";
+  const statusNorm = String(leadStatus).toUpperCase();
+  const statusCard = document.getElementById("modalStatusCard");
+  statusCard.className = "modal-status-card " +
+    (statusNorm === "HOT" ? "s-hot" : statusNorm === "WARM" ? "s-warm" : "s-cold");
+  document.getElementById("modalStatusValue").textContent = statusNorm;
+  document.getElementById("modalStatusSub").textContent =
+    statusNorm === "HOT"  ? "High priority — contact now" :
+    statusNorm === "WARM" ? "Follow up soon" : "Low priority";
+
+  // Score card
+  const score = Number(lead.lead_score ?? 0);
+  document.getElementById("modalScoreValue").textContent = score;
+  const scoreBar = document.getElementById("modalScoreBar");
+  scoreBar.style.width = `${score}%`;
+  scoreBar.style.background =
+    statusNorm === "HOT" ? "#dc2626" : statusNorm === "WARM" ? "#d97706" : "#9ca3af";
 
   function mval(v) {
     const s = String(v ?? "").trim();
