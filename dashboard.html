@@ -642,6 +642,192 @@ body{
   font-size:12px;
 }
 
+.select-all-field{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:12px;
+  font-weight:800;
+  color:var(--muted);
+}
+
+.lead-card-list{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.lead-card{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  background:var(--card-strong);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:14px 16px;
+  box-shadow:0 10px 24px rgba(15,23,42,.06);
+  flex-wrap:wrap;
+  transition:.18s ease;
+}
+
+.lead-card:hover{
+  box-shadow:0 16px 32px rgba(15,23,42,.10);
+}
+
+.lead-card-icon{
+  width:52px;
+  height:52px;
+  border-radius:16px;
+  background:#111827;
+  color:#fbbf24;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+
+.lead-card-icon svg{
+  width:24px;
+  height:24px;
+}
+
+.lead-card-identity{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  min-width:170px;
+  flex:1 1 190px;
+}
+
+.lead-card-id{
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--warning);
+}
+
+.lead-card-name{
+  font-size:15px;
+  font-weight:900;
+  color:var(--text);
+}
+
+.lead-card-sub{
+  font-size:12px;
+  color:var(--muted);
+  font-weight:700;
+}
+
+.lead-card-stats{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  flex-wrap:wrap;
+  flex:2 1 380px;
+  background:rgba(238,244,255,.5);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:10px 16px;
+}
+
+.stat-pill{
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+  min-width:74px;
+}
+
+.stat-pill-label{
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+.stat-pill-value{
+  font-size:13px;
+  font-weight:800;
+  color:var(--text);
+}
+
+.stat-pill-value.is-highlight{
+  display:inline-flex;
+  align-self:flex-start;
+  padding:4px 10px;
+  border-radius:999px;
+}
+
+.lead-card-actions{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin-left:auto;
+}
+
+.icon-btn{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  border:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:.18s ease;
+  flex-shrink:0;
+}
+
+.icon-btn svg{
+  width:17px;
+  height:17px;
+}
+
+.icon-btn:hover{
+  transform:translateY(-1px);
+}
+
+.icon-btn:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+  transform:none;
+}
+
+.icon-view{
+  background:#111827;
+  color:#fff;
+  box-shadow:0 8px 18px rgba(15,23,42,.18);
+}
+
+.icon-qualified{
+  background:linear-gradient(135deg,#6aa9ff,#357abd);
+  color:#fff;
+  box-shadow:0 8px 18px rgba(53,122,189,.28);
+}
+
+.icon-contacted{
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:#fff;
+  box-shadow:0 8px 18px rgba(22,163,74,.26);
+}
+
+@media(max-width:720px){
+  .lead-card{
+    align-items:stretch;
+  }
+  .lead-card-stats{
+    order:3;
+    width:100%;
+  }
+  .lead-card-actions{
+    order:4;
+    margin-left:0;
+    width:100%;
+    justify-content:flex-start;
+  }
+}
+
 .partner-list{
   display:grid;
   gap:10px;
@@ -2464,32 +2650,16 @@ RESPONSIVE + DASHBOARD FIXES
       </div>
 
       <div class="selection-bar">
+        <label class="select-all-field">
+          <input type="checkbox" id="selectAllLeads" aria-label="Select all leads">
+          Select all visible
+        </label>
         <div class="selection-copy" id="selectionCopy">No leads selected</div>
         <input type="search" id="searchInput" class="search-lead-input" placeholder="Search lead by name, email, phone, ID, needs...">
         <button class="btn btn-primary" id="sendSelectedBtnInline" disabled>Send selected to partners</button>
       </div>
 
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th class="check-cell"><input type="checkbox" id="selectAllLeads" aria-label="Select all leads"></th>
-              <th>Lead ID</th>
-              <th>Received</th>
-              <th>Name</th>
-              <th>Contact</th>
-              <th>Profile</th>
-              <th>Needs</th>
-              <th>Timing</th>
-              <th>Priority</th>
-              <th>Status</th>
-              <th>Sent to</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="leadsBody"></tbody>
-        </table>
-      </div>
+      <div class="lead-card-list" id="leadsBody"></div>
 
       <div class="pagination-bar" id="leadsPagination">
         <span class="pagination-summary" id="paginationSummary"></span>
@@ -3075,6 +3245,16 @@ function emptyStateRow(colspan, { icon = "tray", title, subtitle = "", tone = ""
   `;
 }
 
+function emptyStateCard({ icon = "tray", title, subtitle = "", tone = "" } = {}) {
+  return `
+    <div class="empty-state${tone ? ` empty-state--${tone}` : ""}">
+      <div class="empty-state-icon">${EMPTY_STATE_ICONS[icon] || EMPTY_STATE_ICONS.tray}</div>
+      <p class="empty-state-title">${escapeHtml(title)}</p>
+      ${subtitle ? `<p class="empty-state-sub">${escapeHtml(subtitle)}</p>` : ""}
+    </div>
+  `;
+}
+
 function normalize(value) {
   return (value || "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
@@ -3350,7 +3530,7 @@ API (Supabase v2)
 
 async function loadLeads() {
   const tbody = document.getElementById("leadsBody");
-  tbody.innerHTML = emptyStateRow(12, { icon: "tray", title: "Loading leads…" });
+  tbody.innerHTML = emptyStateCard({ icon: "tray", title: "Loading leads…" });
 
   try {
     const { data, error } = await supabaseClient
@@ -3367,7 +3547,7 @@ async function loadLeads() {
     showToast("Leads loaded");
   } catch (err) {
     console.error(err);
-    tbody.innerHTML = emptyStateRow(12, {
+    tbody.innerHTML = emptyStateCard({
       icon: "alert",
       tone: "danger",
       title: "Could not load leads",
@@ -3502,12 +3682,12 @@ function renderTable() {
     );
 
     tbody.innerHTML = hasActiveFilters
-      ? emptyStateRow(12, {
+      ? emptyStateCard({
           icon: "tray",
           title: "No leads match the current filters",
           subtitle: "Click Clear filters to see all leads."
         })
-      : emptyStateRow(12, {
+      : emptyStateCard({
           icon: "tray",
           title: "No leads yet",
           subtitle: "New relocation requests will show up here automatically."
@@ -3535,38 +3715,69 @@ function renderTable() {
     const leadKey = getLeadKey(lead);
     const sentTo = getSentToDisplay(lead);
     const isSelected = selectedLeadKeys.has(leadKey);
-    const tr = document.createElement("tr");
+    const card = document.createElement("div");
+    card.className = "lead-card";
 
-    tr.innerHTML = `
-      <td class="check-cell"><input type="checkbox" class="lead-checkbox" data-key="${escapeHtml(leadKey)}" ${isSelected ? "checked" : ""} aria-label="Select lead"></td>
-      <td><strong>${escapeHtml(getLeadId(lead))}</strong></td>
-      <td>${escapeHtml(lead.timestamp_display || formatDate(getTimestamp(lead)))}</td>
-      <td><strong>${escapeHtml(name)}</strong><br><span style="color:var(--muted);font-size:12px;">${escapeHtml(lead.language_label || formatLanguageLabel(lead.language || "en"))}</span></td>
-      <td>${escapeHtml(email)}<br><span style="color:var(--muted);">${escapeHtml(phone)}</span></td>
-      <td>${escapeHtml(lead.profile || "")}</td>
-      <td>${escapeHtml(needs)}</td>
-      <td>${escapeHtml(lead.move_timing_label || formatMoveTiming(lead.move_timing || ""))}</td>
-      <td class="${getPriorityClass(priority)}">${priority}</td>
-      <td><span class="badge ${getBadgeClass(status)}">${escapeHtml(status)}</span></td>
-      <td>${sentTo ? `<span class="sent-pill" title="${escapeHtml(sentTo)}">${escapeHtml(sentTo)}</span>` : `<span class="sent-empty">Not sent</span>`}</td>
-      <td>
-        <button class="btn btn-outline" data-action="view">View</button>
-        <button class="btn btn-primary" data-action="qualified">Qualified</button>
-        <button class="btn btn-success" data-action="contacted">Contacted</button>
-      </td>
+    card.innerHTML = `
+      <input type="checkbox" class="lead-checkbox" data-key="${escapeHtml(leadKey)}" ${isSelected ? "checked" : ""} aria-label="Select lead">
+      <div class="lead-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"></path></svg>
+      </div>
+      <div class="lead-card-identity">
+        <span class="lead-card-id">${escapeHtml(getLeadId(lead))}</span>
+        <span class="lead-card-name">${escapeHtml(name)}</span>
+        <span class="lead-card-sub">${escapeHtml(email)} · ${escapeHtml(phone)}</span>
+      </div>
+      <div class="lead-card-stats">
+        <div class="stat-pill">
+          <span class="stat-pill-label">Received</span>
+          <span class="stat-pill-value">${escapeHtml(lead.timestamp_display || formatDate(getTimestamp(lead)))}</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-pill-label">Needs</span>
+          <span class="stat-pill-value">${escapeHtml(needs)}</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-pill-label">Timing</span>
+          <span class="stat-pill-value">${escapeHtml(lead.move_timing_label || formatMoveTiming(lead.move_timing || ""))}</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-pill-label">Priority</span>
+          <span class="stat-pill-value ${getPriorityClass(priority)}">${priority}</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-pill-label">Status</span>
+          <span class="stat-pill-value badge ${getBadgeClass(status)}">${escapeHtml(status)}</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-pill-label">Sent to</span>
+          <span class="stat-pill-value">${sentTo ? `<span class="sent-pill" title="${escapeHtml(sentTo)}">${escapeHtml(sentTo)}</span>` : `<span class="sent-empty">Not sent</span>`}</span>
+        </div>
+      </div>
+      <div class="lead-card-actions">
+        <button class="icon-btn icon-view" type="button" data-action="view" title="View lead">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+        </button>
+        <button class="icon-btn icon-qualified" type="button" data-action="qualified" title="Mark qualified">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        </button>
+        <button class="icon-btn icon-contacted" type="button" data-action="contacted" title="Mark contacted">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z"></path></svg>
+        </button>
+      </div>
     `;
 
-    tr.querySelector(".lead-checkbox").onchange = (e) => {
+    card.querySelector(".lead-checkbox").onchange = (e) => {
       if (e.target.checked) selectedLeadKeys.add(leadKey);
       else selectedLeadKeys.delete(leadKey);
       updateSelectionUi();
     };
 
-    tr.querySelector('[data-action="view"]').onclick = () => openLeadModal(lead);
-    tr.querySelector('[data-action="qualified"]').onclick = () => updateLeadStatus(lead, "Qualified");
-    tr.querySelector('[data-action="contacted"]').onclick = () => updateLeadStatus(lead, "Contacted");
+    card.querySelector('[data-action="view"]').onclick = () => openLeadModal(lead);
+    card.querySelector('[data-action="qualified"]').onclick = () => updateLeadStatus(lead, "Qualified");
+    card.querySelector('[data-action="contacted"]').onclick = () => updateLeadStatus(lead, "Contacted");
 
-    tbody.appendChild(tr);
+    tbody.appendChild(card);
   });
 
   updateSelectionUi();
