@@ -812,19 +812,158 @@ body{
   box-shadow:0 8px 18px rgba(22,163,74,.26);
 }
 
+.lead-card-mobile{
+  display:none;
+  width:100%;
+  flex-direction:column;
+}
+
+.lead-card-mobile-header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.lead-card-avatar{
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  font-size:15px;
+  flex-shrink:0;
+}
+
+.lead-card-mobile-id{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  min-width:0;
+}
+
+.lead-card-mobile-date{
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--warning);
+}
+
+.lead-card-mobile-name{
+  font-size:15px;
+  font-weight:900;
+  color:var(--text);
+}
+
+.lead-card-mobile-email{
+  font-size:12px;
+  color:var(--muted);
+  font-weight:600;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.lead-card-mobile-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px 16px;
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+  width:100%;
+}
+
+.mobile-field{
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+  min-width:0;
+}
+
+.mobile-field-label{
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+.mobile-field-value{
+  font-size:13px;
+  font-weight:800;
+  color:var(--text);
+}
+
+.mobile-field-value.badge{
+  display:inline-flex;
+  align-self:flex-start;
+}
+
+.mobile-field-full{
+  grid-column:1 / -1;
+}
+
+.lead-card-mobile-expanded{
+  display:none;
+  grid-template-columns:1fr;
+  gap:12px;
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px solid var(--line);
+  width:100%;
+}
+
+.lead-card.is-expanded .lead-card-mobile-expanded{
+  display:grid;
+}
+
+.lead-card-mobile-actions{
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  margin-top:4px;
+}
+
+.lead-card-expand-toggle{
+  margin:12px auto 0;
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  border:1px solid var(--line);
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  color:var(--muted);
+  transition:.18s ease;
+}
+
+.lead-card-expand-toggle svg{
+  width:16px;
+  height:16px;
+  transition:.18s ease;
+}
+
+.lead-card.is-expanded .lead-card-expand-toggle svg{
+  transform:rotate(180deg);
+}
+
 @media(max-width:720px){
   .lead-card{
     align-items:stretch;
   }
-  .lead-card-stats{
-    order:3;
-    width:100%;
-  }
+  .lead-card-icon,
+  .lead-card-identity,
+  .lead-card-stats,
   .lead-card-actions{
-    order:4;
-    margin-left:0;
-    width:100%;
-    justify-content:flex-start;
+    display:none;
+  }
+  .lead-card-mobile{
+    display:flex;
   }
 }
 
@@ -3402,6 +3541,27 @@ function getPriorityClass(priority) {
   return "priority-low";
 }
 
+const AVATAR_COLORS = [
+  { bg: "#dbeafe", fg: "#1d4ed8" },
+  { bg: "#dcfce7", fg: "#15803d" },
+  { bg: "#fef3c7", fg: "#b45309" },
+  { bg: "#fee2e2", fg: "#b91c1c" },
+  { bg: "#ede9fe", fg: "#6d28d9" }
+];
+
+function getInitials(name) {
+  const parts = (name || "").trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return "?";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function getAvatarColor(seed) {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
+  return AVATAR_COLORS[hash % AVATAR_COLORS.length];
+}
+
 function getLeadName(lead) {
   return lead.contact_name || lead.name || lead.Name || "Unknown";
 }
@@ -3715,8 +3875,23 @@ function renderTable() {
     const leadKey = getLeadKey(lead);
     const sentTo = getSentToDisplay(lead);
     const isSelected = selectedLeadKeys.has(leadKey);
+    const receivedDate = escapeHtml(lead.timestamp_display || formatDate(getTimestamp(lead)));
+    const timing = escapeHtml(lead.move_timing_label || formatMoveTiming(lead.move_timing || ""));
+    const avatarColor = getAvatarColor(leadKey || name);
     const card = document.createElement("div");
     card.className = "lead-card";
+
+    const actionButtonsHtml = `
+      <button class="icon-btn icon-view" type="button" data-action="view" title="View lead">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+      </button>
+      <button class="icon-btn icon-qualified" type="button" data-action="qualified" title="Mark qualified">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+      </button>
+      <button class="icon-btn icon-contacted" type="button" data-action="contacted" title="Mark contacted">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z"></path></svg>
+      </button>
+    `;
 
     card.innerHTML = `
       <input type="checkbox" class="lead-checkbox" data-key="${escapeHtml(leadKey)}" ${isSelected ? "checked" : ""} aria-label="Select lead">
@@ -3731,7 +3906,7 @@ function renderTable() {
       <div class="lead-card-stats">
         <div class="stat-pill">
           <span class="stat-pill-label">Received</span>
-          <span class="stat-pill-value">${escapeHtml(lead.timestamp_display || formatDate(getTimestamp(lead)))}</span>
+          <span class="stat-pill-value">${receivedDate}</span>
         </div>
         <div class="stat-pill">
           <span class="stat-pill-label">Needs</span>
@@ -3739,7 +3914,7 @@ function renderTable() {
         </div>
         <div class="stat-pill">
           <span class="stat-pill-label">Timing</span>
-          <span class="stat-pill-value">${escapeHtml(lead.move_timing_label || formatMoveTiming(lead.move_timing || ""))}</span>
+          <span class="stat-pill-value">${timing}</span>
         </div>
         <div class="stat-pill">
           <span class="stat-pill-label">Priority</span>
@@ -3755,14 +3930,51 @@ function renderTable() {
         </div>
       </div>
       <div class="lead-card-actions">
-        <button class="icon-btn icon-view" type="button" data-action="view" title="View lead">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-        </button>
-        <button class="icon-btn icon-qualified" type="button" data-action="qualified" title="Mark qualified">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
-        </button>
-        <button class="icon-btn icon-contacted" type="button" data-action="contacted" title="Mark contacted">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z"></path></svg>
+        ${actionButtonsHtml}
+      </div>
+
+      <div class="lead-card-mobile">
+        <div class="lead-card-mobile-header">
+          <div class="lead-card-avatar" style="background:${avatarColor.bg};color:${avatarColor.fg};">${escapeHtml(getInitials(name))}</div>
+          <div class="lead-card-mobile-id">
+            <span class="lead-card-mobile-date">${receivedDate}</span>
+            <span class="lead-card-mobile-name">${escapeHtml(name)}</span>
+            <span class="lead-card-mobile-email">${escapeHtml(email)}</span>
+          </div>
+        </div>
+        <div class="lead-card-mobile-grid">
+          <div class="mobile-field">
+            <span class="mobile-field-label">Teléfono</span>
+            <span class="mobile-field-value">${escapeHtml(phone)}</span>
+          </div>
+          <div class="mobile-field">
+            <span class="mobile-field-label">Prioridad</span>
+            <span class="mobile-field-value ${getPriorityClass(priority)}">${priority}</span>
+          </div>
+          <div class="mobile-field">
+            <span class="mobile-field-label">Timing</span>
+            <span class="mobile-field-value">${timing}</span>
+          </div>
+          <div class="mobile-field">
+            <span class="mobile-field-label">Estado</span>
+            <span class="mobile-field-value badge ${getBadgeClass(status)}">${escapeHtml(status)}</span>
+          </div>
+        </div>
+        <div class="lead-card-mobile-expanded">
+          <div class="mobile-field mobile-field-full">
+            <span class="mobile-field-label">Necesidades</span>
+            <span class="mobile-field-value">${escapeHtml(needs)}</span>
+          </div>
+          <div class="mobile-field mobile-field-full">
+            <span class="mobile-field-label">Enviado a</span>
+            <span class="mobile-field-value">${sentTo ? `<span class="sent-pill" title="${escapeHtml(sentTo)}">${escapeHtml(sentTo)}</span>` : `<span class="sent-empty">Not sent</span>`}</span>
+          </div>
+          <div class="lead-card-mobile-actions">
+            ${actionButtonsHtml}
+          </div>
+        </div>
+        <button class="lead-card-expand-toggle" type="button" aria-expanded="false" aria-label="Show more">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
         </button>
       </div>
     `;
@@ -3773,9 +3985,15 @@ function renderTable() {
       updateSelectionUi();
     };
 
-    card.querySelector('[data-action="view"]').onclick = () => openLeadModal(lead);
-    card.querySelector('[data-action="qualified"]').onclick = () => updateLeadStatus(lead, "Qualified");
-    card.querySelector('[data-action="contacted"]').onclick = () => updateLeadStatus(lead, "Contacted");
+    card.querySelectorAll('[data-action="view"]').forEach((btn) => { btn.onclick = () => openLeadModal(lead); });
+    card.querySelectorAll('[data-action="qualified"]').forEach((btn) => { btn.onclick = () => updateLeadStatus(lead, "Qualified"); });
+    card.querySelectorAll('[data-action="contacted"]').forEach((btn) => { btn.onclick = () => updateLeadStatus(lead, "Contacted"); });
+
+    const expandToggle = card.querySelector(".lead-card-expand-toggle");
+    expandToggle.onclick = () => {
+      const isExpanded = card.classList.toggle("is-expanded");
+      expandToggle.setAttribute("aria-expanded", isExpanded ? "true" : "false");
+    };
 
     tbody.appendChild(card);
   });
