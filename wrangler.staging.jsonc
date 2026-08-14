@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "luxlanding-migration-platform",
-  "compatibility_date": "2026-08-13",
+  "name": "luxlanding-migration-platform-staging",
+  "compatibility_date": "2026-08-14",
   "observability": {
     "enabled": true
   },
@@ -10,14 +10,8 @@
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "none"
   },
-  "workers_dev": false,
+  "workers_dev": true,
   "preview_urls": false,
-  "routes": [
-    {
-      "pattern": "luxlanding.eu",
-      "custom_domain": true
-    }
-  ],
   "compatibility_flags": [
     "nodejs_compat"
   ]

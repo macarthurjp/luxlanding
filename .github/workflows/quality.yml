@@ -1,0 +1,33 @@
+name: Quality
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Verify project
+        run: npm run ci
+      - name: Validate Cloudflare package without deploying
+        run: npm run check:cloudflare
+        env:
+          WRANGLER_SEND_METRICS: "false"
+          WRANGLER_LOG_PATH: ${{ runner.temp }}/wrangler.log

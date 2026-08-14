@@ -24,6 +24,47 @@ const profileOtherWrap = document.getElementById("profile-other-wrap");
 const profileOtherInput = document.getElementById("profile-other-input");
 const needsOtherWrap = document.getElementById("needs-other-wrap");
 const needsOtherInput = document.getElementById("needs-other-input");
+const mainFormMessage = document.getElementById("main-form-message");
+const progressStatus = document.getElementById("form-progress-status");
+
+const VALIDATION_MESSAGES = {
+  en: {
+    profile: "Please select the option that best describes your situation.",
+    profileOther: "Please specify your situation.",
+    needs: "Please select at least one area where you need help.",
+    needsOther: "Please specify the other type of help you need.",
+    progress: step => `Step ${step} of 3`,
+    remaining: step => step === 1 ? "About 2 minutes remaining" : step === 2 ? "About 1 minute remaining" : "Final step",
+    progressLabel: "Form progress"
+  },
+  fr: {
+    profile: "Veuillez sélectionner l’option qui décrit le mieux votre situation.",
+    profileOther: "Veuillez préciser votre situation.",
+    needs: "Veuillez sélectionner au moins un domaine dans lequel vous avez besoin d’aide.",
+    needsOther: "Veuillez préciser l’autre type d’aide souhaité.",
+    progress: step => `Étape ${step} sur 3`,
+    remaining: step => step === 1 ? "Environ 2 minutes restantes" : step === 2 ? "Environ 1 minute restante" : "Dernière étape",
+    progressLabel: "Progression du formulaire"
+  },
+  es: {
+    profile: "Selecciona la opción que mejor describe tu situación.",
+    profileOther: "Especifica tu situación.",
+    needs: "Selecciona al menos un área en la que necesitas ayuda.",
+    needsOther: "Especifica el otro tipo de ayuda que necesitas.",
+    progress: step => `Paso ${step} de 3`,
+    remaining: step => step === 1 ? "Aproximadamente 2 minutos" : step === 2 ? "Aproximadamente 1 minuto" : "Paso final",
+    progressLabel: "Progreso del formulario"
+  },
+  pt: {
+    profile: "Selecione a opção que melhor descreve a sua situação.",
+    profileOther: "Especifique a sua situação.",
+    needs: "Selecione pelo menos uma área em que precisa de ajuda.",
+    needsOther: "Especifique o outro tipo de ajuda de que necessita.",
+    progress: step => `Etapa ${step} de 3`,
+    remaining: step => step === 1 ? "Cerca de 2 minutos restantes" : step === 2 ? "Cerca de 1 minuto restante" : "Etapa final",
+    progressLabel: "Progresso do formulário"
+  }
+};
 
 const NEED_BLOCK_MAP = {
   housing: "block-housing",
@@ -39,6 +80,42 @@ const NEED_BLOCK_MAP = {
 
 const ALWAYS_SHOW_BLOCKS = ["block-context", "block-final", "block-contact"];
 
+function getValidationCopy() {
+  return VALIDATION_MESSAGES[window.currentLang] || VALIDATION_MESSAGES.en;
+}
+
+function setMainMessage(message = "") {
+  if (!mainFormMessage) return;
+  mainFormMessage.textContent = message;
+  mainFormMessage.hidden = !message;
+  if (message) mainFormMessage.focus({ preventScroll: true });
+}
+
+function updateProgress(pageId) {
+  const step = pageId === "page-language" ? 1 : pageId === "page-main" ? 2 : 3;
+  const isComplete = pageId === "page-thankyou";
+  const steps = document.querySelectorAll("[data-progress-step]");
+  const lines = document.querySelectorAll(".progress-line");
+  const progress = document.getElementById("form-progress");
+
+  steps.forEach((element, index) => {
+    const number = index + 1;
+    element.classList.toggle("active", !isComplete && number === step);
+    element.classList.toggle("completed", isComplete || number < step);
+    element.removeAttribute("aria-current");
+    if (!isComplete && number === step) element.setAttribute("aria-current", "step");
+  });
+
+  lines.forEach((line, index) => {
+    line.classList.toggle("active", isComplete || index + 1 < step);
+  });
+
+  if (progressStatus) {
+    progressStatus.textContent = isComplete ? "" : `${getValidationCopy().progress(step)} · ${getValidationCopy().remaining(step)}`;
+  }
+  if (progress) progress.setAttribute("aria-label", getValidationCopy().progressLabel);
+}
+
 function goToPage(pageId) {
   [pageLanguage, pageMain, intakeForm, pageThankyou].forEach(page => {
     if (page) page.hidden = true;
@@ -48,6 +125,8 @@ function goToPage(pageId) {
   if (target) {
     target.hidden = false;
   }
+  updateProgress(pageId);
+  setMainMessage();
 }
 
 function scrollToFormSafe() {
@@ -129,23 +208,23 @@ function validateMainPage() {
   const needs = getSelectedNeeds();
 
   if (!profile) {
-    alert("Please select the option that best describes your situation.");
+    setMainMessage(getValidationCopy().profile);
     return false;
   }
 
   if (profile === "other" && profileOtherInput && !profileOtherInput.value.trim()) {
-    alert("Please specify your situation.");
+    setMainMessage(getValidationCopy().profileOther);
     profileOtherInput.focus();
     return false;
   }
 
   if (needs.length === 0) {
-    alert("Please select at least one area where you need help.");
+    setMainMessage(getValidationCopy().needs);
     return false;
   }
 
   if (needs.includes("other") && needsOtherInput && !needsOtherInput.value.trim()) {
-    alert("Please specify the other type of help you need.");
+    setMainMessage(getValidationCopy().needsOther);
     needsOtherInput.focus();
     return false;
   }
@@ -174,12 +253,22 @@ langButtons.forEach(btn => {
 
 // Profile "other"
 document.querySelectorAll('input[name="profile"]').forEach(input => {
-  input.addEventListener("change", toggleProfileOther);
+  input.addEventListener("change", () => {
+    toggleProfileOther();
+    setMainMessage();
+  });
 });
 
 // Needs "other"
 document.querySelectorAll('input[name="needs"]').forEach(input => {
-  input.addEventListener("change", toggleNeedsOther);
+  input.addEventListener("change", () => {
+    toggleNeedsOther();
+    setMainMessage();
+  });
+});
+
+[profileOtherInput, needsOtherInput].forEach(input => {
+  input?.addEventListener("input", () => setMainMessage());
 });
 
 // Main next

@@ -2,12 +2,11 @@
 <html lang="en" prefix="og: https://ogp.me/ns#">
 <head>
     <meta charset="UTF-8">
-    <title>Relocation Services Luxembourg | LuxLanding for Expats & Families</title>
+    <title>Relocation Services Luxembourg | LuxLanding for Expats &amp; Families</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- SEO -->
     <meta name="description" content="Relocation services in Luxembourg for expats and families. Get help with housing, paperwork, banking, schools and moving support.">
-    <meta name="keywords" content="relocation services Luxembourg, move to Luxembourg, Luxembourg relocation for expats, Luxembourg housing expats, Luxembourg paperwork, Luxembourg banking, Luxembourg schools, expat relocation Luxembourg">
     <meta name="author" content="LuxLanding">
     <meta name="geo.region" content="LU">
     <meta name="geo.placename" content="Luxembourg">
@@ -16,6 +15,10 @@
     <meta name="google" content="notranslate">
     <link rel="canonical" href="https://luxlanding.eu/">
     <meta name="theme-color" content="#0f172a">
+    <link rel="icon" type="image/png" href="/images/favicon-64.png">
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="preload" as="image" href="/images/hero-luxembourg-premium-v1.webp" type="image/webp" fetchpriority="high">
 
     <link rel="alternate" hreflang="en" href="https://luxlanding.eu/">
     <link rel="alternate" hreflang="fr" href="https://luxlanding.eu/?lang=fr">
@@ -26,7 +29,9 @@
     <!-- Open Graph -->
     <meta property="og:title" content="Relocation Services Luxembourg | LuxLanding">
     <meta property="og:description" content="Get expert relocation help in Luxembourg. Housing, paperwork, banking, schools and full support for expats moving to Luxembourg.">
-    <meta property="og:image" content="https://luxlanding.eu/images/preview-v2.jpg">
+    <meta property="og:image" content="https://luxlanding.eu/images/preview-v3.jpg">
+    <meta property="og:image:secure_url" content="https://luxlanding.eu/images/preview-v3.jpg">
+    <meta property="og:image:alt" content="LuxLanding relocation support in Luxembourg">
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -42,33 +47,13 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Relocation Services Luxembourg | LuxLanding">
     <meta name="twitter:description" content="Expert relocation services in Luxembourg for expats. Housing, paperwork, banking and full support for your move.">
-    <meta name="twitter:image" content="https://luxlanding.eu/images/preview-v2.jpg">
-    <meta name="twitter:site" content="@luxlanding">
+    <meta name="twitter:image" content="https://luxlanding.eu/images/preview-v3.jpg">
+    <meta name="twitter:image:alt" content="LuxLanding relocation support in Luxembourg">
 
     <!-- Fonts & Styles -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-    <style>
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
-               "Helvetica Neue", Arial, sans-serif;
-}
-</style>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        h1,
-        h2,
-        h3 {
-            font-family: 'Sora', sans-serif;
-            letter-spacing: -0.02em;
-        }
-    </style>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="form.css">
+    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="vendor/intl-tel-input/css/intlTelInput.min.css?v=29.2.3">
+    <link rel="stylesheet" href="form.css?v=8">
 
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -80,7 +65,13 @@ body {
           "@id": "https://luxlanding.eu/#organization",
           "name": "LuxLanding",
           "url": "https://luxlanding.eu/",
-          "logo": "https://luxlanding.eu/images/preview-v2.jpg",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://luxlanding.eu/images/favicon.png",
+            "width": 1024,
+            "height": 1024
+          },
+          "image": "https://luxlanding.eu/images/preview-v3.jpg",
           "description": "Relocation services in Luxembourg for expats, families, students and professionals.",
           "contactPoint": {
             "@type": "ContactPoint",
@@ -162,110 +153,78 @@ body {
     }
     </script>
 
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C1Z4FMBPBK"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-C1Z4FMBPBK');
-    </script>
 </head>
 
 <body>
+    <header class="site-header">
+        <a class="site-brand" href="#top" aria-label="LuxLanding home">
+            <svg aria-hidden="true" viewBox="0 0 32 32" fill="none"><path d="M3 18.5 28 8l-7.5 16-5.1-6.1-5.7 4.2 1.6-7.2L3 18.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m11.3 14.9 9.2-3.4-5.1 6.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <span>LuxLanding</span>
+        </a>
 
-    <!-- LANGUAGE SWITCH -->
-    <nav class="lang-switch" aria-label="Language switch">
-        <a href="#" data-lang="en" class="active" aria-label="English">EN</a>
-        <a href="#" data-lang="fr" aria-label="Français">FR</a>
-        <a href="#" data-lang="es" aria-label="Español">ES</a>
-        <a href="#" data-lang="pt" aria-label="Português">PT</a>
-    </nav>
+        <nav class="site-nav" aria-label="Primary navigation">
+            <a href="#how-it-works" data-i18n="nav.how">How it works</a>
+            <a href="#services" data-i18n="nav.services">Services</a>
+            <a href="#lead-form" data-i18n="nav.start">Start your request</a>
+        </nav>
 
-    <main>
+        <div class="header-actions">
+            <a class="header-cta" href="#lead-form" data-i18n="nav.cta">Get relocation help</a>
+            <nav class="lang-switch" aria-label="Language switch">
+                <a href="#" data-lang="en" class="active" aria-label="English">EN</a>
+                <a href="#" data-lang="fr" aria-label="Français">FR</a>
+                <a href="#" data-lang="es" aria-label="Español">ES</a>
+                <a href="#" data-lang="pt" aria-label="Português">PT</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="top">
 
     <!-- HERO -->
     <section class="hero reveal">
         <div class="hero-bg bg1"></div>
-        <div class="hero-bg bg2"></div>
         <div class="hero-overlay"></div>
         <div class="hero-glow"></div>
 
         <div class="hero-content">
 
-            <!-- EN -->
-            <div class="hero-text lang-en">
-                <span class="hero-badge">Luxembourg relocation support</span>
-                <h1>Relocation Services in Luxembourg for Expats, Families & Professionals</h1>
-                <p>Get expert relocation help in Luxembourg for housing, paperwork, banking, schools and moving support tailored to your situation.</p>
+            <div class="hero-text">
+                <span class="hero-badge" data-i18n="hero.badge">Luxembourg relocation support</span>
+                <h1 data-i18n="hero.title">Relocation Services in Luxembourg for Expats, Families &amp; Professionals</h1>
+                <p data-i18n="hero.text">Get expert relocation help in Luxembourg for housing, paperwork, banking, schools and moving support tailored to your situation.</p>
 
                 <div class="cta-group">
-                    <a href="#lead-form" class="btn-primary">Get relocation help</a>
-                    <a href="https://wa.me/352000000000" class="btn-secondary">Chat on WhatsApp</a>
+                    <a href="#lead-form" class="btn-primary" data-i18n="hero.cta">Get relocation help</a>
+                    <a href="#how-it-works" class="btn-secondary" data-i18n="hero.secondary">See how it works</a>
                 </div>
 
                 <div class="hero-meta">
-                    <p class="hero-proof">Support tailored to expats, families, students and professionals</p>
-                    <p class="hero-urgency">Quick request • Clear next steps • Reply within 24h</p>
-                </div>
-            </div>
-
-            <!-- FR -->
-            <div class="hero-text lang-fr" style="display:none;">
-                <span class="hero-badge">Accompagnement relocation Luxembourg</span>
-                <h1>Installez-vous au Luxembourg avec le bon accompagnement dès le départ</h1>
-                <p>Trouvez les bons experts pour le logement, les démarches, la banque, les écoles et votre installation — selon votre situation exacte.</p>
-
-                <div class="cta-group">
-                    <a href="#lead-form" class="btn-primary">Trouver mon accompagnement</a>
-                    <a href="https://wa.me/352000000000" class="btn-secondary">WhatsApp</a>
-                </div>
-
-                <div class="hero-meta">
-                    <p class="hero-proof">Un accompagnement adapté aux expatriés, familles, étudiants et professionnels</p>
-                    <p class="hero-urgency">Demande rapide • Étapes claires • Réponse sous 24h</p>
-                </div>
-            </div>
-
-            <!-- ES -->
-            <div class="hero-text lang-es" style="display:none;">
-                <span class="hero-badge">Apoyo relocation en Luxemburgo</span>
-                <h1>Múdate a Luxemburgo con la ayuda correcta desde el primer día</h1>
-                <p>Te conectamos con expertos de confianza en vivienda, trámites, banca, escuelas y relocation — según tu situación exacta.</p>
-
-                <div class="cta-group">
-                    <a href="#lead-form" class="btn-primary">Quiero ayuda ahora</a>
-                    <a href="https://wa.me/352000000000" class="btn-secondary">Hablar por WhatsApp</a>
-                </div>
-
-                <div class="hero-meta">
-                    <p class="hero-proof">Apoyo personalizado para expatriados, familias, estudiantes y profesionales</p>
-                    <p class="hero-urgency">Solicitud rápida • Pasos claros • Respuesta en 24h</p>
-                </div>
-            </div>
-
-            <!-- PT -->
-            <div class="hero-text lang-pt" style="display:none;">
-                <span class="hero-badge">Suporte relocation em Luxemburgo</span>
-                <h1>Mude para Luxemburgo com a ajuda certa desde o primeiro dia</h1>
-                <p>Conectamos você com especialistas de confiança em moradia, documentação, banco, escolas e relocation — de acordo com sua situação.</p>
-
-                <div class="cta-group">
-                    <a href="#lead-form" class="btn-primary">Quero ajuda agora</a>
-                    <a href="https://wa.me/352000000000" class="btn-secondary">Falar no WhatsApp</a>
-                </div>
-
-                <div class="hero-meta">
-                    <p class="hero-proof">Suporte personalizado para expatriados, famílias, estudantes e profissionais</p>
-                    <p class="hero-urgency">Pedido rápido • Próximos passos claros • Resposta em 24h</p>
+                    <p class="hero-proof" data-i18n="hero.proof">Support tailored to expats, families, students and professionals</p>
+                    <p class="hero-urgency" data-i18n="hero.urgency">Quick request • Clear next steps • Reply within 24h</p>
                 </div>
             </div>
 
         </div>
     </section>
 
+    <section class="trust-strip" aria-label="LuxLanding service commitments">
+        <div class="trust-item">
+            <strong data-i18n="trust.personal.title">Personalized guidance</strong>
+            <span data-i18n="trust.personal.text">Support based on your situation</span>
+        </div>
+        <div class="trust-item">
+            <strong data-i18n="trust.languages.title">4 languages</strong>
+            <span data-i18n="trust.languages.text">English, French, Spanish and Portuguese</span>
+        </div>
+        <div class="trust-item">
+            <strong data-i18n="trust.response.title">Reply within 24h</strong>
+            <span data-i18n="trust.response.text">Clear next steps after your request</span>
+        </div>
+    </section>
+
     <!-- HOW IT WORKS -->
-    <section class="how-it-works reveal">
+    <section class="how-it-works reveal" id="how-it-works">
         <h2 data-i18n="how.title">How it works</h2>
         <div class="steps">
             <div class="step">
@@ -295,10 +254,18 @@ body {
     <!-- FORM -->
     <section id="lead-form" class="lead-form reveal" data-nosnippet>
         <div id="form-container">
+            <div class="form-progress" id="form-progress" aria-label="Form progress">
+                <span class="progress-step active" data-progress-step="1" aria-current="step">1</span>
+                <span class="progress-line" aria-hidden="true"></span>
+                <span class="progress-step" data-progress-step="2">2</span>
+                <span class="progress-line" aria-hidden="true"></span>
+                <span class="progress-step" data-progress-step="3">3</span>
+            </div>
+            <p class="form-progress-copy" id="form-progress-status" aria-live="polite"></p>
 
             <!-- LANGUAGE PAGE -->
             <section class="page" id="page-language">
-                <h1 data-i18n="lang.title">Choose your language</h1>
+                <h2 data-i18n="lang.title">Choose your language</h2>
                 <div class="options">
                     <button type="button" class="btn-lang" data-lang="en">English</button>
                     <button type="button" class="btn-lang" data-lang="fr">Français</button>
@@ -348,20 +315,24 @@ body {
                     <input type="text" name="needs_other" id="needs-other-input" placeholder="Please specify">
                 </label>
 
+                <div class="form-message form-message-error" id="main-form-message" role="alert" tabindex="-1" hidden></div>
+
                 <button type="button" id="btn-main-next" class="btn-primary" data-i18n="main.next">Next</button>
             </section>
 
             <!-- DYNAMIC FORM -->
-            <form id="intake-form" class="page" hidden>
+            <form id="intake-form" class="page" novalidate hidden>
                 <button type="button" class="btn-back">← Back</button>
+                <p class="form-requirements-note" data-i18n="form.requirements">Fields marked required must be completed. All other fields are optional.</p>
 
                 <!-- HOUSING -->
                 <section class="block" id="block-housing" hidden>
                     <h2 data-i18n="housing.title"></h2>
 
-                    <label>
+                    <label for="housing-budget-display">
                         <span data-i18n="housing.q1"></span>
-                        <input type="number" name="housing_budget" placeholder="€">
+                        <input id="housing-budget-display" type="text" inputmode="numeric" placeholder="€2,000.00" autocomplete="off" aria-label="Monthly budget in euros">
+                        <input id="housing-budget-value" type="hidden" name="housing_budget">
                     </label>
 
                     <label>
@@ -612,18 +583,37 @@ body {
                     <h2 data-i18n="contact.title"></h2>
 
                     <label class="field-clean">
-                        <span data-i18n="contact.name">Your name</span>
-                        <input type="text" name="contact_name" placeholder="Your name" required>
+                        <span data-i18n="contact.name.required">Your name (required)</span>
+                        <input type="text" name="contact_name" placeholder="Your name" autocomplete="name" maxlength="120" data-i18n="contact.name" required>
                     </label>
 
                     <label class="field-clean">
-                        <span data-i18n="contact.email">Your email</span>
-                        <input type="email" name="contact_email" placeholder="Your email" required>
+                        <span data-i18n="contact.email.required">Your email (required)</span>
+                        <input type="email" name="contact_email" placeholder="Your email" autocomplete="email" inputmode="email" maxlength="254" data-i18n="contact.email" required>
                     </label>
 
-                    <label class="field-clean">
-                        <span data-i18n="contact.phone">Your phone (WhatsApp recommended)</span>
-                        <input type="tel" name="contact_phone" placeholder="Your phone (WhatsApp)" inputmode="tel" autocomplete="tel" pattern="^[+0-9 \(\)\-]{6,20}$" title="Please enter a valid phone number" oninput="this.value = this.value.replace(/[^0-9+()\s-]/g, '')">
+                    <div class="field-clean phone-field">
+                        <label for="contact-phone" data-i18n="contact.phone.optional">Your phone (optional)</label>
+                        <input id="contact-phone" type="tel" name="contact_phone" inputmode="tel" autocomplete="tel" maxlength="24" aria-describedby="contact-phone-help contact-phone-error">
+                        <small id="contact-phone-help" class="phone-help" data-i18n="contact.phone.help">Choose your country and enter the number without the international prefix.</small>
+                        <small id="contact-phone-error" class="phone-error" aria-live="polite" hidden></small>
+                    </div>
+
+                    <fieldset class="contact-preference">
+                        <legend data-i18n="contact.method.required">How should we contact you? (required)</legend>
+                        <label><input type="radio" name="contact_method" value="whatsapp" required><span data-i18n="contact.method.whatsapp">WhatsApp</span></label>
+                        <label><input type="radio" name="contact_method" value="email" required><span data-i18n="contact.method.email">Email</span></label>
+                        <label><input type="radio" name="contact_method" value="phone" required><span data-i18n="contact.method.phone">Phone call</span></label>
+                    </fieldset>
+
+                    <label class="field-clean" for="contact-time">
+                        <span data-i18n="contact.time.optional">Best time to contact you (optional)</span>
+                        <select id="contact-time" name="contact_time">
+                            <option value="" data-i18n="contact.time.any">Any time</option>
+                            <option value="morning" data-i18n="contact.time.morning">Morning</option>
+                            <option value="afternoon" data-i18n="contact.time.afternoon">Afternoon</option>
+                            <option value="evening" data-i18n="contact.time.evening">Evening</option>
+                        </select>
                     </label>
                 </section>
 
@@ -635,13 +625,51 @@ body {
                     </span>
                 </label>
 
-                <button type="submit" class="btn-primary" data-i18n="form.submit">Send</button>
+                <div class="form-error-summary" id="form-error-summary" role="alert" tabindex="-1" hidden></div>
+                <div class="form-message" id="form-status" role="status" aria-live="polite" tabindex="-1" hidden></div>
+                <button type="submit" class="btn-primary" id="submit-lead-button">
+                    <span data-i18n="form.review">Review request</span>
+                    <span class="button-spinner" aria-hidden="true"></span>
+                </button>
+
+                <section class="review-panel" id="review-panel" aria-labelledby="review-title" hidden>
+                    <span class="review-kicker" data-i18n="review.kicker">Final check</span>
+                    <h2 id="review-title" tabindex="-1" data-i18n="review.title">Review your request</h2>
+                    <p data-i18n="review.help">Confirm that the details below are correct before sending.</p>
+                    <dl id="review-summary"></dl>
+                    <div class="review-actions">
+                        <button type="button" class="btn-secondary" id="review-edit" data-i18n="review.edit">Edit details</button>
+                        <button type="button" class="btn-primary" id="review-confirm" data-i18n="review.confirm">Confirm and send</button>
+                    </div>
+                </section>
+                <div class="submit-assurance" aria-label="Submission assurances">
+                    <span data-i18n="form.assurance.private">🔒 Your information is protected</span>
+                    <span data-i18n="form.assurance.reply">✓ Reply within 24 hours</span>
+                    <span data-i18n="form.assurance.commitment">✓ No commitment</span>
+                </div>
+                <p class="recaptcha-notice">
+                    This site is protected by reCAPTCHA and the Google
+                    <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and
+                    <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a> apply.
+                </p>
             </form>
 
             <!-- THANK YOU -->
             <section class="page" id="page-thankyou" hidden>
+                <div class="thank-icon" aria-hidden="true">✓</div>
                 <h2 data-i18n="thank.title"></h2>
                 <p data-i18n="thank.text"></p>
+                <p class="thank-reference"><span data-i18n="thank.reference">Request reference:</span> <strong id="thank-reference-value"></strong></p>
+                <div class="thank-next">
+                    <h3 data-i18n="thank.next.title">What happens next?</h3>
+                    <ol>
+                        <li data-i18n="thank.next.review">We review your situation and selected needs.</li>
+                        <li data-i18n="thank.next.match">We identify the most relevant next step or specialist.</li>
+                        <li data-i18n="thank.next.contact">You receive a reply by email, usually within 24 hours.</li>
+                    </ol>
+                </div>
+                <p class="thank-contact-method" id="thank-contact-method"></p>
+                <p class="thank-email-note" data-i18n="thank.email_note">If you do not see our reply, please check your spam folder.</p>
             </section>
 
         </div>
@@ -675,7 +703,7 @@ body {
     </section>
 
     <!-- SERVICES -->
-    <section class="services-section public-section reveal">
+    <section class="services-section public-section reveal" id="services">
         <section class="values">
             <div class="section-intro">
                 <h2 data-i18n="services.title">Relocation services in Luxembourg: everything you need to settle</h2>
@@ -778,6 +806,7 @@ body {
             </button>
 
             <h2 id="privacy-modal-title" data-i18n="privacy.notice.title">Privacy notice</h2>
+            <p class="privacy-updated"><span data-i18n="privacy.notice.updated">Last updated</span>: <time datetime="2026-08-13">13 August 2026</time></p>
 
             <p data-i18n="privacy.notice.p1">
                 LuxLanding collects the information you submit through this form so we can review your relocation request and contact you with relevant support.
@@ -790,6 +819,10 @@ body {
             <p data-i18n="privacy.notice.p3">
                 You can request access, correction or deletion of your information by contacting LuxLanding directly.
             </p>
+
+            <p data-i18n="privacy.notice.p4"></p>
+            <p data-i18n="privacy.notice.p5"></p>
+            <p data-i18n="privacy.notice.p6"></p>
 
             <p class="privacy-contact">
                 <a href="mailto:contact@luxlanding.eu" data-i18n="privacy.notice.contact">
@@ -821,227 +854,10 @@ body {
     </footer>
 
     <!-- SCRIPTS -->
-    <script src="script.js?v=13"></script>
-    <script src="languages.js?v=15"></script>
-    <script src="logic.js?v=13"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-    <script src="submit.js?v=20"></script>
-
-    <script>
-        // Load reCAPTCHA only outside localhost
-        if (!["localhost", "127.0.0.1"].includes(window.location.hostname)) {
-            const s = document.createElement("script");
-            s.src = "https://www.google.com/recaptcha/api.js?render=6Le7tsIsAAAAAPcPGZtFzwO-aZ-CUq11bhyQKIFd";
-            document.head.appendChild(s);
-        }
-    </script>
-
-    <script>
-        const footerYear = document.getElementById("footer-year");
-        if (footerYear) footerYear.textContent = new Date().getFullYear();
-    </script>
-
-    <script>
-        document.querySelectorAll('a[href="#lead-form"]').forEach(link => {
-            link.addEventListener("click", function (e) {
-                e.preventDefault();
-                const target = document.getElementById("lead-form");
-                if (target) {
-                    target.scrollIntoView({ behavior: "smooth", block: "start" });
-                }
-            });
-        });
-    </script>
-
-    <!-- FINAL LANGUAGE SYNC FIX -->
-    <script>
-        (function () {
-            const supportedLangs = ["en", "fr", "es", "pt"];
-            const langSwitch = document.querySelector(".lang-switch");
-
-            function forceTranslate(lang) {
-                if (!supportedLangs.includes(lang)) lang = "en";
-
-                window.currentLang = lang;
-                document.documentElement.lang = lang;
-
-                document.querySelectorAll(".lang-switch a").forEach(a => {
-                    a.classList.toggle("active", a.dataset.lang === lang);
-                });
-
-                document.querySelectorAll(".hero-text").forEach(el => {
-                    el.style.display = "none";
-                });
-
-                const hero = document.querySelector(`.hero-text.lang-${lang}`);
-                if (hero) hero.style.display = "block";
-
-                if (typeof window.applyLanguage === "function") {
-                    window.applyLanguage(lang);
-                }
-
-                const dict = window.translations && window.translations[lang];
-                if (dict) {
-                    document.querySelectorAll("[data-i18n]").forEach(el => {
-                        const key = el.dataset.i18n;
-                        if (!key || !dict[key]) return;
-                        el.textContent = dict[key];
-                    });
-                }
-
-                keepPublicSectionsVisible();
-            }
-
-            function keepPublicSectionsVisible() {
-                const sections = [
-                    [".seo-text", "block"],
-                    [".services-section", "block"],
-                    [".values", "flex"],
-                    [".final-cta", "block"],
-                    [".privacy-minimal", "block"]
-                ];
-
-                sections.forEach(([selector, display]) => {
-                    const el = document.querySelector(selector);
-                    if (!el) return;
-                    el.hidden = false;
-                    el.removeAttribute("hidden");
-                    el.style.setProperty("display", display, "important");
-                    el.style.setProperty("visibility", "visible", "important");
-                    if (!el.classList.contains("reveal")) {
-                        el.style.setProperty("opacity", "1", "important");
-                    }
-                });
-            }
-
-            document.addEventListener("click", function (e) {
-                const langLink = e.target.closest(".lang-switch a[data-lang]");
-                if (!langLink) return;
-
-                e.preventDefault();
-                e.stopImmediatePropagation();
-
-                const lang = langLink.dataset.lang;
-
-                if (langLink.classList.contains("active")) {
-                    langSwitch.classList.toggle("open");
-                    return;
-                }
-
-                forceTranslate(lang);
-                langSwitch.classList.remove("open");
-            }, true);
-
-            document.addEventListener("click", function (e) {
-                const formLangBtn = e.target.closest(".btn-lang[data-lang]");
-                if (!formLangBtn) return;
-
-                forceTranslate(formLangBtn.dataset.lang);
-            }, true);
-
-            document.addEventListener("click", function (e) {
-                if (langSwitch && !langSwitch.contains(e.target)) {
-                    langSwitch.classList.remove("open");
-                }
-            });
-
-            window.addEventListener("load", function () {
-                const params = new URLSearchParams(window.location.search);
-                const urlLang = params.get("lang");
-                forceTranslate(supportedLangs.includes(urlLang) ? urlLang : window.currentLang || "en");
-
-                setTimeout(() => forceTranslate(window.currentLang || "en"), 200);
-                setTimeout(() => forceTranslate(window.currentLang || "en"), 600);
-            });
-
-            const observer = new MutationObserver(() => {
-                keepPublicSectionsVisible();
-            });
-
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true,
-                attributes: true,
-                attributeFilter: ["hidden", "style", "class"]
-            });
-        })();
-    </script>
-    <script>
-(() => {
-
-    const toggle = document.getElementById("privacy-toggle");
-    const modal = document.getElementById("privacy-modal");
-    const close = document.getElementById("privacy-close");
-    const consentCheckbox = document.getElementById("privacy-consent-checkbox");
-
-    if (!toggle || !modal || !close) return;
-
-    function openPrivacyModal() {
-        modal.classList.add("active");
-        document.body.classList.add("modal-open");
-
-    }
-
-    toggle.addEventListener("click", openPrivacyModal);
-
-    document.querySelectorAll('a[href="#privacy"], .privacy-inline-link').forEach(link => {
-        link.addEventListener("click", (e) => {
-            e.preventDefault();
-            openPrivacyModal();
-        });
-    });
-
-    close.addEventListener("click", () => {
-        modal.classList.remove("active");
-        document.body.classList.remove("modal-open");
-    });
-
-    modal.addEventListener("click", (e) => {
-        if (e.target === modal) {
-            modal.classList.remove("active");
-            document.body.classList.remove("modal-open");
-        }
-    });
-
-})();
-</script>
-
-    <script>
-(() => {
-    const toggle = document.getElementById("faq-toggle");
-    const modal = document.getElementById("faq-modal");
-    const close = document.getElementById("faq-close");
-
-    if (!toggle || !modal || !close) return;
-
-    function openFaq() {
-        modal.classList.add("active");
-        document.body.classList.add("modal-open");
-    }
-
-    function closeFaq() {
-        modal.classList.remove("active");
-        document.body.classList.remove("modal-open");
-    }
-
-    toggle.addEventListener("click", openFaq);
-    close.addEventListener("click", closeFaq);
-
-    document.querySelectorAll('a[href="#faq"]').forEach(link => {
-        link.addEventListener("click", (e) => {
-            e.preventDefault();
-            openFaq();
-        });
-    });
-
-    modal.addEventListener("click", (e) => {
-        if (e.target === modal) closeFaq();
-    });
-
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") closeFaq();
-    });
-})();
-</script>
+    <script defer src="script.js?v=17"></script>
+    <script defer src="languages.js?v=18"></script>
+    <script defer src="logic.js?v=15"></script>
+    <script defer src="vendor/intl-tel-input/intlTelInput.min.js?v=29.2.3"></script>
+    <script defer src="submit.js?v=34"></script>
 </body>
 </html>

@@ -7,35 +7,14 @@
 <link rel="apple-touch-icon" href="images/favicon.png">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Sora:wght@600;700;800;900&display=swap" rel="stylesheet">
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.2"></script>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-  import {
-    getAuth,
-    signInWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged
-  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-
-  window.firebaseAuthModules = {
-    initializeApp,
-    getAuth,
-    signInWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged
-  };
-</script>
-
-
 <style>
+@font-face{font-family:"Inter";src:url("fonts/inter-latin-variable.woff2") format("woff2");font-style:normal;font-weight:400 900;font-display:swap}
+@font-face{font-family:"Sora";src:url("fonts/sora-latin-variable.woff2") format("woff2");font-style:normal;font-weight:600 800;font-display:swap}
 :root {
   --bg:#eef4ff;
   --bg-cream:#fff6d8;
@@ -75,7 +54,7 @@ body{
 }
 
 
-#loginScreen{
+.auth-screen{
   position:fixed;
   inset:0;
   background:
@@ -88,6 +67,24 @@ body{
   justify-content:center;
   z-index:9999;
   overflow:hidden;
+}
+
+.auth-screen[hidden]{
+  display:none;
+}
+
+.recovery-title{
+  margin:0 0 10px;
+  color:var(--text);
+  font-family:"Sora",sans-serif;
+  font-size:24px;
+}
+
+.recovery-copy{
+  margin:0 0 22px;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.55;
 }
 
 
@@ -164,6 +161,22 @@ body{
   cursor:pointer;
   margin-top:4px;
   box-shadow:0 16px 32px rgba(53,122,189,.28);
+}
+
+.forgot-password-btn{
+  margin-top:14px;
+  border:0;
+  background:transparent;
+  color:var(--primary);
+  font:inherit;
+  font-size:14px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.forgot-password-btn:disabled{
+  cursor:wait;
+  opacity:.65;
 }
 
 .login-error{
@@ -1025,7 +1038,7 @@ body{
 
 .stats-grid{
   display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-columns:repeat(3,minmax(0,1fr));
   gap:16px;
   margin-bottom:0;
 }
@@ -1060,6 +1073,20 @@ body{
   color:var(--muted);
   font-size:12px;
 }
+
+.stat-card.is-alert{
+  border-color:rgba(220,38,38,.24);
+  background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(254,242,242,.92));
+}
+
+.stat-card.is-alert .stat-value{color:#b91c1c;}
+
+.stat-card.is-warning{
+  border-color:rgba(217,119,6,.24);
+  background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(255,251,235,.92));
+}
+
+.stat-card.is-warning .stat-value{color:#b45309;}
 
 .card{
   background:var(--card);
@@ -1462,6 +1489,11 @@ PREMIUM DATE PICKER
   box-shadow:var(--shadow-strong);
 }
 
+#partnerModal .modal,
+#confirmModal .modal{
+  padding:24px;
+}
+
 .modal-body{
   padding:20px 24px 24px;
 }
@@ -1649,12 +1681,12 @@ PREMIUM DATE PICKER
 @media(max-width:520px){
   body{padding:16px 10px}
 
-  #loginScreen::before{
+  .auth-screen::before{
     background-size:150px auto;
     opacity:.042;
   }
 
-  #loginScreen::after{
+  .auth-screen::after{
     background-size:230px auto;
     opacity:.026;
   }
@@ -1966,6 +1998,63 @@ th,td{
 .revenue-table th:last-child,
 .revenue-table td:last-child{
   min-width:120px;
+}
+
+/* CRM density refinement */
+@media(min-width:1201px){
+  body{padding:20px;background:linear-gradient(135deg,#f1f6fd 0%,#f8fbff 54%,#f3f2fb 100%)}
+  .page{max-width:1680px;grid-template-columns:210px minmax(0,1fr);gap:18px}
+  .sidebar{top:20px;min-height:calc(100vh - 40px);padding:22px 16px;border-radius:24px;gap:22px;box-shadow:0 18px 50px rgba(15,23,42,.10)}
+  .sidebar-logo{height:60px;padding:0;overflow:hidden}
+  .sidebar-logo img{width:175px;filter:none}
+  .sidebar-hero{gap:8px}
+  .sidebar-title{font-size:25px;line-height:1.05;letter-spacing:-.045em}
+  .sidebar-subtitle{font-size:10px;letter-spacing:.1em}
+  .sidebar-nav{gap:7px}
+  .sidebar-link{min-height:44px;padding:11px 14px;border-radius:13px;background:#111827;color:#fff}
+  .sidebar-link:hover{transform:none;background:#202a3a}
+  .sidebar-link.active{color:#fff;box-shadow:0 9px 22px rgba(53,122,189,.24)}
+  .sidebar-panel{padding:14px;border-radius:18px;gap:12px;box-shadow:none;border:1px solid var(--line)}
+  .sidebar-field input,.sidebar-field select{height:42px;border-radius:12px}
+  .dashboard-main{gap:14px}
+  .header{padding:20px 22px;border-radius:24px;align-items:center;box-shadow:0 12px 32px rgba(15,23,42,.07)}
+  .top-title{font-size:30px}
+  .top-subtitle{font-size:13px;margin-top:4px}
+  .top-accent-line{display:none}
+  .stats-grid{gap:10px}
+  .stat-card{min-height:110px;padding:17px;border-radius:18px}
+  .stat-value{font-size:34px}
+  .card{padding:18px;border-radius:22px}
+  .selection-bar{padding:11px 12px;border-radius:15px;gap:12px}
+  .search-lead-input{height:42px;max-width:430px}
+  .lead-card-list{gap:7px}
+  .lead-card{display:grid;grid-template-columns:22px minmax(210px,1.15fr) minmax(520px,2.8fr) auto;gap:12px;padding:11px 12px;border-radius:15px;box-shadow:none;align-items:center}
+  .lead-card:hover{border-color:#bcd2ec;background:#fbfdff;box-shadow:0 8px 22px rgba(15,23,42,.06)}
+  .lead-card-icon{display:none}
+  .lead-card-identity{min-width:0;gap:2px}
+  .lead-card-id{font-size:9px;color:#357abd}
+  .lead-card-name{font-size:14px}
+  .lead-card-sub{font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .lead-card-phone{overflow:visible;text-overflow:clip;color:#334155;font-variant-numeric:tabular-nums}
+  .lead-card-stats{display:grid;grid-template-columns:1.15fr 1.35fr .8fr .65fr .65fr;gap:10px;padding:8px 11px;border-radius:12px;background:#f7f9fc;border-color:#e5ebf3}
+  .stat-pill{min-width:0;gap:1px}
+  .stat-pill:nth-child(6){display:none}
+  .stat-pill-label{font-size:8px;letter-spacing:.08em}
+  .stat-pill-value{font-size:11px;padding-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .lead-card-actions{gap:5px}
+  .icon-btn{width:auto;height:34px;border-radius:10px;padding:0 10px;gap:6px;font-size:10px;font-weight:800}
+  .icon-btn svg{width:14px;height:14px}
+  .icon-btn span{display:inline}
+}
+
+.icon-btn span{display:none}
+@media(min-width:1201px){.icon-btn span{display:inline}}
+
+@media(max-width:620px){
+  .mobile-nav-card .sidebar-title{font-size:28px;line-height:1}
+  .mobile-nav-card .sidebar-subtitle{font-size:10px;letter-spacing:.08em}
+  .lead-card-mobile-actions .icon-btn{flex:1;width:auto;border-radius:14px;gap:7px;font-size:11px;font-weight:800}
+  .lead-card-mobile-actions .icon-btn span{display:inline}
 }
 </style>
 <style>
@@ -2449,10 +2538,8 @@ RESPONSIVE + DASHBOARD FIXES
     border-radius:28px;
   }
 
-  .stats-grid,
-  .revenue-summary-grid{
-    grid-template-columns:1fr;
-  }
+  .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .revenue-summary-grid{grid-template-columns:1fr;}
 
   .management-grid{
     grid-template-columns:1fr;
@@ -2470,6 +2557,52 @@ RESPONSIVE + DASHBOARD FIXES
 
 @media(max-width:620px){
   body{padding:12px}
+
+  .lead-detail{
+    align-items:flex-end;
+    padding:8px;
+  }
+
+  .modal{
+    max-height:92dvh;
+    border-radius:24px 24px 16px 16px;
+  }
+
+  .modal-body{
+    padding:18px;
+  }
+
+  .modal-lead-hero{
+    padding:22px 20px 20px;
+    border-radius:24px 24px 0 0;
+  }
+
+  #partnerModal .modal,
+  #confirmModal .modal{
+    padding:20px;
+  }
+
+  .icon-btn,
+  .lead-card-expand-toggle{
+    width:44px;
+    height:44px;
+  }
+
+  .partner-option{
+    min-height:56px;
+  }
+
+  .table-wrapper{
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-inline:contain;
+  }
+
+  .toast{
+    right:12px;
+    bottom:12px;
+    left:12px;
+    text-align:center;
+  }
 
   .sidebar,
   .header,
@@ -2564,14 +2697,16 @@ RESPONSIVE + DASHBOARD FIXES
     order:2;
     display:grid;
     grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:12px;
+    gap:8px;
     margin-top:0;
   }
 
   .mobile-nav-card .sidebar-link{
     justify-content:center;
     text-align:center;
-    padding:16px 12px;
+    min-height:48px;
+    padding:14px 8px;
+    font-size:12px;
     border-radius:22px;
     background:#111827;
     color:#ffffff;
@@ -2623,18 +2758,82 @@ RESPONSIVE + DASHBOARD FIXES
 
 }
 </style>
+<style>
+/* Final responsive contract: desktop CRM, tablet cards, mobile touch layout */
+@media(min-width:1201px){
+  .page{max-width:1680px;grid-template-columns:210px minmax(0,1fr);gap:18px}
+  .sidebar{padding:22px 16px}
+  .sidebar-logo img{width:175px;max-height:60px}
+  .sidebar-title{font-size:25px;line-height:1.05;letter-spacing:-.045em}
+  .sidebar-subtitle{font-size:10px;letter-spacing:.1em}
+}
+
+@media(max-width:1024px){
+  body{padding:14px}
+  .page{display:block;max-width:100%}
+  .page > .sidebar{display:none !important}
+  .mobile-nav-card{display:flex !important;flex-direction:column;gap:16px;order:2}
+  .mobile-nav-card .sidebar-hero{gap:6px}
+  .mobile-nav-card .sidebar-title{font-size:26px;line-height:1}
+  .mobile-nav-card .sidebar-subtitle{font-size:10px;letter-spacing:.08em}
+  .mobile-nav-card .sidebar-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0}
+  .mobile-nav-card .sidebar-link{justify-content:center;min-height:46px;padding:12px 8px;border-radius:14px;background:#111827;color:#fff;text-align:center}
+  .mobile-nav-card .sidebar-link.active{background:linear-gradient(135deg,#6aa9ff,#357abd)}
+  .lead-card{align-items:stretch;padding:14px}
+  .lead-card-icon,.lead-card-identity,.lead-card-stats,.lead-card-actions{display:none}
+  .lead-card-mobile{display:flex}
+  .selection-bar{display:grid;grid-template-columns:1fr 1fr;align-items:center}
+  .search-lead-input{width:100%;max-width:none;grid-column:1/-1}
+  #sendSelectedBtnInline{width:100%;grid-column:1/-1}
+  .lead-card-mobile-email{white-space:normal;overflow-wrap:anywhere}
+  .mobile-field-value{overflow-wrap:anywhere}
+}
+
+@media(max-width:620px){
+  body{padding:8px}
+  .header,.card,.stat-card{border-radius:18px}
+  .header{padding:18px}
+  .top-title{font-size:28px}
+  .top-subtitle{font-size:13px}
+  .header .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .header .actions .btn{width:100%;padding:12px 8px}
+  .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .stats-grid .stat-card{padding:14px 12px}
+  .stats-grid .stat-value{font-size:32px}
+  .selection-bar{grid-template-columns:1fr;padding:12px}
+  .selection-copy,.select-all-field,.search-lead-input,#sendSelectedBtnInline{grid-column:1}
+  .lead-card-mobile-grid{gap:12px 10px}
+  .lead-card-mobile-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  .lead-card-mobile-actions .icon-btn{min-width:0;padding:0 6px;font-size:10px}
+  .pagination-bar{align-items:stretch}
+  .pagination-summary{width:100%;text-align:center}
+  .pagination-controls{width:100%;justify-content:space-between;gap:6px}
+  .pagination-controls .btn{padding:10px 12px}
+  .modal-edit-form,.detail-grid{grid-template-columns:1fr}
+  .modal-edit-form .field-full{grid-column:auto}
+}
+
+@media(max-width:390px){
+  .mobile-nav-card .sidebar-nav{grid-template-columns:1fr}
+  .header .actions{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .lead-card-mobile-actions{grid-template-columns:1fr}
+  .lead-card-mobile-actions .icon-btn{height:42px}
+}
+</style>
 </head>
 
 <body>
 
-<div id="loginScreen">
+<div id="loginScreen" class="auth-screen">
   <div class="login-box">
     <div class="login-logo-wrap">
       <img src="images/luxlanding-logo-clean.png" alt="LuxLanding logo" class="login-logo">
     </div>
-    <input type="email" id="emailInput" class="login-email" placeholder="Admin email" autocomplete="off" autocapitalize="none" spellcheck="false">
-    <input type="password" id="passwordInput" class="login-input" placeholder="Password" autocomplete="new-password">
+    <input type="email" id="emailInput" class="login-email" placeholder="Admin email" autocomplete="email" autocapitalize="none" spellcheck="false">
+    <input type="password" id="passwordInput" class="login-input" placeholder="Password" autocomplete="current-password">
     <button id="loginBtn" class="login-btn">Sign in</button>
+    <button id="forgotPasswordBtn" class="forgot-password-btn" type="button">Forgot password?</button>
 
     <button id="biometricLoginBtn" class="biometric-btn" type="button" hidden>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 11a4 4 0 0 0-4 4v1"></path><path d="M16 16v-1a4 4 0 0 0-2.5-3.71"></path><path d="M8 7.5A4 4 0 0 1 12 4a4 4 0 0 1 4 4v1.5"></path><path d="M4 12v1a8 8 0 0 0 .3 2.2"></path><path d="M20 12v1a8 8 0 0 1-1 3.87"></path><path d="M12 16v2"></path></svg>
@@ -2645,20 +2844,33 @@ RESPONSIVE + DASHBOARD FIXES
   </div>
 </div>
 
+<div id="passwordRecoveryScreen" class="auth-screen" hidden>
+  <div class="login-box">
+    <div class="login-logo-wrap">
+      <img src="images/luxlanding-logo-clean.png" alt="LuxLanding logo" class="login-logo">
+    </div>
+    <h1 class="recovery-title">Create a new password</h1>
+    <p class="recovery-copy">Use at least 12 characters. This will become your new dashboard password.</p>
+    <input type="password" id="newPasswordInput" class="login-input" placeholder="New password" autocomplete="new-password">
+    <input type="password" id="confirmPasswordInput" class="login-input" placeholder="Confirm new password" autocomplete="new-password">
+    <button id="updatePasswordBtn" class="login-btn" type="button">Update password</button>
+    <div id="recoveryError" class="login-error" role="alert"></div>
+  </div>
+</div>
+
 <div id="dashboard" style="display:none;">
   <div class="page">
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="sidebar-hero">
+        <div class="sidebar-logo"><img src="images/luxlanding-logo-clean.png" alt="LuxLanding"></div>
         <div class="sidebar-title">
-          Relocation<br>
-          Leads<br>
-          Dashboard
+          Lead workspace
         </div>
 
         <div class="sidebar-subtitle">
-          LEADS · FOLLOW-UP · CONVERSION
+          RELOCATION CRM
         </div>
       </div>
 
@@ -2775,6 +2987,18 @@ RESPONSIVE + DASHBOARD FIXES
         <div class="stat-label">Contacted</div>
         <div class="stat-value" id="statContacted">0</div>
         <div class="stat-sub">Already followed up</div>
+      </div>
+
+      <div class="stat-card" id="statEmailFailuresCard">
+        <div class="stat-label">Email Failures</div>
+        <div class="stat-value" id="statEmailFailures">0</div>
+        <div class="stat-sub">Internal or client delivery failed</div>
+      </div>
+
+      <div class="stat-card" id="statOverdueCard">
+        <div class="stat-label">Overdue New</div>
+        <div class="stat-value" id="statOverdue">0</div>
+        <div class="stat-sub">Awaiting first contact for 24h+</div>
       </div>
     </section>
 
@@ -3167,6 +3391,9 @@ RESPONSIVE + DASHBOARD FIXES
 CONFIG (Supabase v2)
 ========================= */
 
+// Migration copies must remain disconnected from production by default.
+const MIGRATION_SAFE_MODE = false;
+
 const SUPABASE_URL = "https://itldyciokbtzwufrrifh.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml0bGR5Y2lva2J0end1ZnJyaWZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MTM5OTMsImV4cCI6MjA5NDA4OTk5M30.GPcmLPH9kkndW3VycqbR6yFoKERiY6URfH4SmpusJUg";
 
@@ -3193,14 +3420,147 @@ LOGIN (Supabase Auth v2)
 ========================= */
 
 const loginScreen = document.getElementById("loginScreen");
+const passwordRecoveryScreen = document.getElementById("passwordRecoveryScreen");
+const newPasswordInput = document.getElementById("newPasswordInput");
+const confirmPasswordInput = document.getElementById("confirmPasswordInput");
+const updatePasswordBtn = document.getElementById("updatePasswordBtn");
+const recoveryError = document.getElementById("recoveryError");
 const dashboard = document.getElementById("dashboard");
 const emailInput = document.getElementById("emailInput");
 const passwordInput = document.getElementById("passwordInput");
 const loginBtn = document.getElementById("loginBtn");
+const forgotPasswordBtn = document.getElementById("forgotPasswordBtn");
 const loginError = document.getElementById("loginError");
 const logoutBtn = document.getElementById("logoutBtn");
 const authUser = document.getElementById("authUser");
 const authUserEmail = document.getElementById("authUserEmail");
+let activeDashboardUserId = null;
+let isPasswordRecoveryFlow = false;
+const ADMIN_IDLE_TIMEOUT_MS = 30 * 60 * 1000;
+const ADMIN_IDLE_WARNING_MS = 25 * 60 * 1000;
+let adminIdleTimer = null;
+let adminIdleWarningTimer = null;
+let lastAdminActivityReset = 0;
+
+function clearAdminSessionTimers() {
+  clearTimeout(adminIdleTimer);
+  clearTimeout(adminIdleWarningTimer);
+  adminIdleTimer = null;
+  adminIdleWarningTimer = null;
+}
+
+async function expireAdminSession() {
+  clearAdminSessionTimers();
+  await supabaseClient.auth.signOut();
+  showLoginScreen("Your session expired after 30 minutes of inactivity.");
+}
+
+function startAdminSessionTimers() {
+  clearAdminSessionTimers();
+  lastAdminActivityReset = Date.now();
+  adminIdleWarningTimer = setTimeout(() => {
+    showToast("Your session will expire in 5 minutes due to inactivity.");
+  }, ADMIN_IDLE_WARNING_MS);
+  adminIdleTimer = setTimeout(expireAdminSession, ADMIN_IDLE_TIMEOUT_MS);
+}
+
+function recordAdminActivity() {
+  if (!activeDashboardUserId || document.hidden) return;
+  const idleDuration = Date.now() - lastAdminActivityReset;
+  if (idleDuration >= ADMIN_IDLE_TIMEOUT_MS) {
+    expireAdminSession();
+    return;
+  }
+  if (idleDuration < 15_000) return;
+  startAdminSessionTimers();
+}
+
+function isAdminSession(session) {
+  const appMetadata = session?.user?.app_metadata || {};
+  return appMetadata.role === "admin" ||
+    (Array.isArray(appMetadata.roles) && appMetadata.roles.includes("admin"));
+}
+
+function showLoginScreen(message = "") {
+  clearAdminSessionTimers();
+  activeDashboardUserId = null;
+  dashboard.style.display = "none";
+  authUser.style.display = "none";
+  authUserEmail.textContent = "";
+  loginScreen.style.display = "flex";
+  passwordRecoveryScreen.hidden = true;
+  passwordRecoveryScreen.style.display = "none";
+  if (message) showLoginError(message);
+}
+
+function showPasswordRecoveryScreen() {
+  isPasswordRecoveryFlow = true;
+  loginScreen.style.display = "none";
+  dashboard.style.display = "none";
+  passwordRecoveryScreen.hidden = false;
+  passwordRecoveryScreen.style.display = "flex";
+  recoveryError.style.display = "none";
+  newPasswordInput.focus();
+}
+
+async function handlePasswordUpdate() {
+  const password = newPasswordInput.value;
+  const confirmation = confirmPasswordInput.value;
+  recoveryError.style.display = "none";
+
+  if (password.length < 12) {
+    recoveryError.textContent = "Use at least 12 characters.";
+    recoveryError.style.display = "block";
+    return;
+  }
+  if (password !== confirmation) {
+    recoveryError.textContent = "The passwords do not match.";
+    recoveryError.style.display = "block";
+    return;
+  }
+
+  updatePasswordBtn.disabled = true;
+  updatePasswordBtn.textContent = "Updating…";
+  const { error } = await supabaseClient.auth.updateUser({ password });
+  updatePasswordBtn.disabled = false;
+  updatePasswordBtn.textContent = "Update password";
+
+  if (error) {
+    recoveryError.textContent = error.message || "Could not update the password.";
+    recoveryError.style.display = "block";
+    return;
+  }
+
+  isPasswordRecoveryFlow = false;
+  history.replaceState(null, "", window.location.pathname);
+  newPasswordInput.value = "";
+  confirmPasswordInput.value = "";
+  passwordRecoveryScreen.hidden = true;
+  passwordRecoveryScreen.style.display = "none";
+  const { data } = await supabaseClient.auth.getSession();
+  if (data.session) await showAuthorizedDashboard(data.session);
+  else showLoginScreen("Password updated. Sign in with your new password.");
+}
+
+async function showAuthorizedDashboard(session) {
+  if (!isAdminSession(session)) {
+    await supabaseClient.auth.signOut();
+    showLoginScreen("This account does not have administrator access.");
+    return;
+  }
+
+  loginError.style.display = "none";
+  loginScreen.style.display = "none";
+  dashboard.style.display = "block";
+  authUserEmail.textContent = session.user.email || "Administrator";
+  authUser.style.display = "block";
+  startAdminSessionTimers();
+
+  if (activeDashboardUserId !== session.user.id) {
+    activeDashboardUserId = session.user.id;
+    await initializeDashboard();
+  }
+}
 
 // -----------------------------
 // LOGIN
@@ -3219,7 +3579,7 @@ async function handleLogin() {
   loginBtn.disabled = true;
   loginBtn.textContent = "Signing in...";
 
-  const { data, error } = await supabaseClient.auth.signInWithPassword({
+  const { error } = await supabaseClient.auth.signInWithPassword({
     email,
     password
   });
@@ -3232,16 +3592,37 @@ async function handleLogin() {
     return;
   }
 
-  // LOGIN OK → mostrar dashboard
-  loginScreen.style.display = "none";
-  dashboard.style.display = "block";
+  // The auth-state listener validates the admin claim before revealing data.
+}
 
-  authUserEmail.textContent = email;
-  authUser.style.display = "block";
+async function handleForgotPassword() {
+  const email = emailInput.value.trim();
+  loginError.style.display = "none";
 
-  if (typeof initializeDashboard === "function") {
-    initializeDashboard();
+  if (!email) {
+    showLoginError("Enter your admin email first.");
+    emailInput.focus();
+    return;
   }
+
+  forgotPasswordBtn.disabled = true;
+  forgotPasswordBtn.textContent = "Sending recovery link…";
+  const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/`,
+  });
+  forgotPasswordBtn.disabled = false;
+  forgotPasswordBtn.textContent = "Forgot password?";
+
+  if (error) {
+    const rateLimited = /rate limit|too many/i.test(error.message || "");
+    showLoginError(rateLimited
+      ? "Too many recovery requests. Please wait before trying again."
+      : "Could not send the recovery email. Please try again later.");
+    return;
+  }
+
+  showLoginError("If this administrator account exists, a recovery link has been sent. Check spam too.");
+  loginError.style.color = "var(--success)";
 }
 
 // -----------------------------
@@ -3256,43 +3637,51 @@ async function handleLogout() {
   authUserEmail.textContent = "";
   authUser.style.display = "none";
 
-  dashboard.style.display = "none";
-  loginScreen.style.display = "flex";
+  showLoginScreen();
 }
 
 // -----------------------------
 // AUTH STATE LISTENER
 // -----------------------------
-supabaseClient.auth.onAuthStateChange(async (event, session) => {
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  if (event === "PASSWORD_RECOVERY") {
+    showPasswordRecoveryScreen();
+    return;
+  }
+  if (isPasswordRecoveryFlow) return;
   if (!session) {
-    // No logueado
-    dashboard.style.display = "none";
-    loginScreen.style.display = "flex";
+    showLoginScreen();
     return;
   }
 
-  // Logueado
-  loginScreen.style.display = "none";
-  dashboard.style.display = "block";
-
-  authUserEmail.textContent = session.user.email;
-  authUser.style.display = "block";
-
-  if (typeof initializeDashboard === "function") {
-    initializeDashboard();
-  }
+  // Keep async Supabase calls outside the auth callback's internal lock.
+  setTimeout(() => {
+    showAuthorizedDashboard(session).catch((error) => {
+      console.error("Dashboard authorization failed:", error);
+      showLoginScreen("Could not verify administrator access.");
+    });
+  }, 0);
 });
 
 // -----------------------------
 // EVENT LISTENERS
 // -----------------------------
 loginBtn.addEventListener("click", handleLogin);
+forgotPasswordBtn.addEventListener("click", handleForgotPassword);
+updatePasswordBtn.addEventListener("click", handlePasswordUpdate);
+confirmPasswordInput.addEventListener("keydown", e => { if (e.key === "Enter") handlePasswordUpdate(); });
 emailInput.addEventListener("keydown", e => { if (e.key === "Enter") handleLogin(); });
 passwordInput.addEventListener("keydown", e => { if (e.key === "Enter") handleLogin(); });
 logoutBtn.addEventListener("click", handleLogout);
+document.addEventListener("pointerdown", recordAdminActivity, { passive: true });
+document.addEventListener("keydown", recordAdminActivity);
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) recordAdminActivity();
+});
 
 function showLoginError(msg) {
   loginError.textContent = msg;
+  loginError.style.color = "var(--danger)";
   loginError.style.display = "block";
 }
 
@@ -3827,11 +4216,23 @@ function renderStats() {
   const newCount = allLeads.filter(l => getLeadStatus(l) === "New").length;
   const qualified = allLeads.filter(l => getLeadStatus(l) === "Qualified").length;
   const contacted = allLeads.filter(l => getLeadStatus(l) === "Contacted").length;
+  const emailFailures = allLeads.filter(lead =>
+    lead.notification_email_status === "failed" || lead.confirmation_email_status === "failed"
+  ).length;
+  const overdueCutoff = Date.now() - 24 * 60 * 60 * 1000;
+  const overdue = allLeads.filter(lead => {
+    const receivedAt = new Date(getTimestamp(lead)).getTime();
+    return getLeadStatus(lead) === "New" && Number.isFinite(receivedAt) && receivedAt < overdueCutoff;
+  }).length;
 
   document.getElementById("statTotal").textContent = total;
   document.getElementById("statNew").textContent = newCount;
   document.getElementById("statQualified").textContent = qualified;
   document.getElementById("statContacted").textContent = contacted;
+  document.getElementById("statEmailFailures").textContent = emailFailures;
+  document.getElementById("statOverdue").textContent = overdue;
+  document.getElementById("statEmailFailuresCard")?.classList.toggle("is-alert", emailFailures > 0);
+  document.getElementById("statOverdueCard")?.classList.toggle("is-warning", overdue > 0);
 }
 
 function renderTable() {
@@ -3900,12 +4301,15 @@ function renderTable() {
     const actionButtonsHtml = `
       <button class="icon-btn icon-view" type="button" data-action="view" title="View lead">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+        <span>View</span>
       </button>
       <button class="icon-btn icon-qualified" type="button" data-action="qualified" title="Mark qualified">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        <span>Qualify</span>
       </button>
       <button class="icon-btn icon-contacted" type="button" data-action="contacted" title="Mark contacted">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z"></path></svg>
+        <span>Contacted</span>
       </button>
     `;
 
@@ -3917,7 +4321,8 @@ function renderTable() {
       <div class="lead-card-identity">
         <span class="lead-card-id">${escapeHtml(getLeadId(lead))}</span>
         <span class="lead-card-name">${escapeHtml(name)}</span>
-        <span class="lead-card-sub">${escapeHtml(email)} · ${escapeHtml(phone)}</span>
+        <span class="lead-card-sub lead-card-email" title="${escapeHtml(email)}">${escapeHtml(email)}</span>
+        <span class="lead-card-sub lead-card-phone">${escapeHtml(phone)}</span>
       </div>
       <div class="lead-card-stats">
         <div class="stat-pill">
@@ -4519,16 +4924,32 @@ function openLeadModal(lead) {
     ? String(lead.needs).split(/[,\s]+/).filter(Boolean).map(n => NEEDS_M[n.trim()] || n.trim()).join(", ")
     : null;
 
-  const budget = mv(lead.housing_budget) ? `€${mv(lead.housing_budget)}/mo` : null;
+  const budgetAmount = Number(lead.housing_budget);
+  const budget = mv(lead.housing_budget) && Number.isFinite(budgetAmount)
+    ? `${new Intl.NumberFormat("en-US", { style:"currency", currency:"EUR" }).format(budgetAmount)}/mo`
+    : null;
 
   const html = [
     mSec("Contact", [
       mRow("Name",           mv(getLeadName(lead))),
       mRow("Email",          mv(getLeadEmail(lead))),
       mRow("Phone / WhatsApp", mv(getLeadPhone(lead))),
+      mRow("Preferred channel", mv(lead.contact_method)),
+      mRow("Best contact time", mv(lead.contact_time)),
+      mRow("Client timezone", mv(lead.client_timezone)),
+    ]),
+    mSec("Attribution", [
+      mRow("UTM source", mv(lead.utm_source)),
+      mRow("UTM medium", mv(lead.utm_medium)),
+      mRow("UTM campaign", mv(lead.utm_campaign)),
+      mRow("UTM term", mv(lead.utm_term)),
+      mRow("UTM content", mv(lead.utm_content)),
+      mRow("Landing page", mv(lead.landing_page)),
+      mRow("Referrer", mv(lead.referrer)),
     ]),
     mSec("Lead Summary", [
       mRow("Lead ID",          mv(getLeadId(lead))),
+      mRow("Submission reference", mv(lead.submission_id ? `LL-${String(lead.submission_id).replace(/-/g, "").slice(0, 8).toUpperCase()}` : null)),
       mRow("Received",         mv(lead.timestamp_display || formatDate(getTimestamp(lead)))),
       mRow("Language",         lbl(LANG_M, lead.language)),
       mRow("Profile",          lbl(PROF_M, lead.profile)),
@@ -4582,6 +5003,13 @@ function openLeadModal(lead) {
     </div>` : "",
     mSec("Privacy", [
       mRow("Consent", yn(lead.privacy_consent)),
+      mRow("Consent recorded", mv(lead.consented_at ? formatDate(lead.consented_at) : null)),
+      mRow("Privacy notice version", mv(lead.privacy_notice_version)),
+    ]),
+    mSec("Email Delivery", [
+      mRow("Internal notification", mv(lead.notification_email_status || "pending")),
+      mRow("Client confirmation", mv(lead.confirmation_email_status || "pending")),
+      mRow("Last checked", mv(lead.email_delivery_checked_at ? formatDate(lead.email_delivery_checked_at) : null)),
     ]),
     mv(getSentToDisplay(lead)) ? mSec("Sent to", [
       mRow("Partner", mv(getSentToDisplay(lead))),
@@ -4759,6 +5187,9 @@ PARTNER SEND
 ========================= */
 
 const partnerModal = document.getElementById("partnerModal");
+const MAX_PARTNER_SEND_LEADS = 25;
+const MAX_PARTNER_RECIPIENTS = 10;
+let activePartnerRequestId = null;
 
 document.getElementById("sendSelectedBtn").onclick = openPartnerModal;
 document.getElementById("sendSelectedBtnInline").onclick = openPartnerModal;
@@ -4772,6 +5203,15 @@ document.getElementById("partnerModal").addEventListener("click", e => {
 });
 
 document.getElementById("confirmSendPartnersBtn").onclick = sendSelectedLeadsToPartners;
+document.getElementById("partnerList").addEventListener("change", event => {
+  if (!event.target.matches(".partner-checkbox")) return;
+  const checked = document.querySelectorAll(".partner-checkbox:checked");
+  if (checked.length > MAX_PARTNER_RECIPIENTS) {
+    event.target.checked = false;
+    showToast(`You can select up to ${MAX_PARTNER_RECIPIENTS} partners per send`);
+  }
+  updatePartnerSendSummary();
+});
 
 document.getElementById("selectAllLeads").addEventListener("change", (e) => {
   const checked = e.target.checked;
@@ -4796,19 +5236,28 @@ function openPartnerModal() {
     return showToast("Select at least one lead");
   }
 
-  document.getElementById("sendSummary").textContent =
-    `${selected.length} lead${selected.length > 1 ? "s" : ""} selected`;
+  if (selected.length > MAX_PARTNER_SEND_LEADS) {
+    return showToast(`Select no more than ${MAX_PARTNER_SEND_LEADS} leads per send`);
+  }
+
+  activePartnerRequestId = crypto.randomUUID();
 
   const list = document.getElementById("partnerList");
-  const partners = allPartners.filter(partner => partner.email);
+  const sendButton = document.getElementById("confirmSendPartnersBtn");
+  const partners = allPartners.filter(partner =>
+    partner.email && partner.partner_id && partner.active !== false
+  );
 
   if (!partners.length) {
     list.innerHTML = `<div class="send-summary">No active partners found. Add partners in the Partners section.</div>`;
+    document.getElementById("sendSummary").textContent =
+      `${selected.length} lead${selected.length === 1 ? "" : "s"} selected`;
+    sendButton.disabled = true;
     partnerModal.style.display = "flex";
     return;
   }
 
-  list.innerHTML = partners.map((partner, index) => `
+  list.innerHTML = partners.map((partner) => `
     <label class="partner-option">
       <div>
         <div class="partner-name">${escapeHtml(partner.name || partner.company || partner.email)}</div>
@@ -4820,23 +5269,41 @@ function openPartnerModal() {
       <input
         type="checkbox"
         class="partner-checkbox"
-        value="${index}"
+        value="${escapeHtml(partner.partner_id || "")}"
       >
     </label>
   `).join("");
 
+  sendButton.disabled = false;
+  updatePartnerSendSummary();
   partnerModal.style.display = "flex";
+}
+
+function updatePartnerSendSummary() {
+  const leadCount = getSelectedLeads().length;
+  const partnerCount = document.querySelectorAll(".partner-checkbox:checked").length;
+  const deliveries = leadCount * partnerCount;
+  document.getElementById("sendSummary").textContent = partnerCount
+    ? `${leadCount} lead${leadCount === 1 ? "" : "s"} will be shared with ${partnerCount} partner${partnerCount === 1 ? "" : "s"} (${deliveries} referral${deliveries === 1 ? "" : "s"}).`
+    : `${leadCount} lead${leadCount === 1 ? "" : "s"} selected. Choose up to ${MAX_PARTNER_RECIPIENTS} partners.`;
 }
 
 function closePartnerModal() {
   partnerModal.style.display = "none";
+  activePartnerRequestId = null;
 }
 
 async function sendSelectedLeadsToPartners() {
+  const sendButton = document.getElementById("confirmSendPartnersBtn");
   const selectedLeads = getSelectedLeads();
 
   if (!selectedLeads.length) {
     showToast("Select at least one lead");
+    return;
+  }
+
+  if (selectedLeads.length > MAX_PARTNER_SEND_LEADS) {
+    showToast(`Select no more than ${MAX_PARTNER_SEND_LEADS} leads per send`);
     return;
   }
 
@@ -4847,72 +5314,44 @@ async function sendSelectedLeadsToPartners() {
     return;
   }
 
-  const selectedPartners = partnerCheckboxes
-    .map(input => allPartners[Number(input.value)])
-    .filter(Boolean);
 
-  const sentToNames = selectedPartners
-    .map(partner => partner.name || partner.company || partner.email)
-    .filter(Boolean)
-    .join(", ");
-
-  const sentToEmails = selectedPartners
-    .map(partner => partner.email)
-    .filter(Boolean)
-    .join(", ");
-
-  const sentAt = new Date().toISOString();
-
-try {
-  const emailResponse = await fetch(
-    `${SUPABASE_URL}/functions/v1/send-leads-to-partners`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "apikey": SUPABASE_ANON_KEY,
-        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
-      },
-      body: JSON.stringify({
-        leads: selectedLeads,
-        partners: selectedPartners
-      })
-    }
-  );
-
-  const emailResult = await emailResponse.json().catch(() => ({}));
-
-  if (!emailResponse.ok || emailResult.success === false) {
-    console.error("Partner email send failed:", emailResult);
-    showToast(emailResult.error || "Partner email send failed");
+  if (partnerCheckboxes.length > MAX_PARTNER_RECIPIENTS) {
+    showToast(`Select no more than ${MAX_PARTNER_RECIPIENTS} partners per send`);
     return;
   }
 
-  for (const lead of selectedLeads) {
-      const leadId = lead.lead_id || "";
+  const selectedPartners = partnerCheckboxes
+    .map(input => allPartners.find(partner => partner.partner_id === input.value))
+    .filter(Boolean);
 
-      if (!leadId) {
-        console.warn("Skipping lead without lead_id", lead);
-        continue;
-      }
+  const leadIds = selectedLeads.map(lead => lead.lead_id).filter(Boolean);
+  const partnerIds = selectedPartners.map(partner => partner.partner_id).filter(Boolean);
 
-      const { data, error } = await db
-        .from("leads")
-        .update({
-          sent_to: sentToNames,
-          sent_to_emails: sentToEmails,
-          sent_at: sentAt,
-          last_updated: sentAt,
-          updated_at: sentAt
-        })
-        .eq("lead_id", leadId)
-        .select()
-        .single();
+  if (leadIds.length !== selectedLeads.length || partnerIds.length !== selectedPartners.length) {
+    showToast("Some selected records are missing a secure ID");
+    return;
+  }
 
-      if (error) throw error;
+  sendButton.disabled = true;
+  sendButton.textContent = "Sending…";
 
-      Object.assign(lead, hydrateLead(data));
-      setSentTo(lead, selectedPartners, sentAt);
+  try {
+    const requestId = activePartnerRequestId || crypto.randomUUID();
+    activePartnerRequestId = requestId;
+    const { data: emailResult, error: emailError } = await supabaseClient.functions.invoke(
+      "send-leads-to-partners",
+      { body: { requestId, leadIds, partnerIds } }
+    );
+
+    if (emailError || emailResult?.success === false) {
+      throw new Error(emailResult?.error || emailError?.message || "Partner email send failed");
+    }
+
+    for (const lead of selectedLeads) {
+      lead.sent_to = emailResult.sentToNames;
+      lead.sent_to_emails = emailResult.sentToEmails;
+      lead.sent_at = emailResult.sentAt;
+      setSentTo(lead, selectedPartners, emailResult.sentAt);
     }
 
     selectedLeadKeys.clear();
@@ -4921,7 +5360,10 @@ try {
     showToast("Partner emails sent");
   } catch (err) {
     console.error(err);
-    showToast("Could not send leads to partners");
+    showToast(err.message || "Could not send leads to partners");
+  } finally {
+    sendButton.disabled = false;
+    sendButton.textContent = "Send to partners";
   }
 }
 
@@ -5012,6 +5454,9 @@ document.getElementById("exportCsvBtn").onclick = () => {
     "name",
     "email",
     "phone",
+    "contact_method",
+    "contact_time",
+    "client_timezone",
     "language",
     "profile",
     "needs",
@@ -5030,6 +5475,9 @@ document.getElementById("exportCsvBtn").onclick = () => {
       getLeadName(lead),
       getLeadEmail(lead),
       getLeadPhone(lead),
+      lead.contact_method || "",
+      lead.contact_time || "",
+      lead.client_timezone || "",
       lead.language_label || formatLanguageLabel(lead.language || ""),
       lead.profile || "",
       getLeadNeeds(lead),

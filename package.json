@@ -1,0 +1,21 @@
+{
+  "name": "luxlanding-migration-platform",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:staging": "node scripts/build-staging.mjs",
+    "build:admin": "node scripts/build-admin.mjs",
+    "check": "node --check script.js && node --check languages.js && node --check logic.js && node --check submit.js && node scripts/check-dashboard.mjs && node scripts/check-security.mjs && node scripts/check-seo.mjs && deno check --frozen --node-modules-dir=none supabase/functions/*/index.ts && deno lint supabase/functions && node scripts/check-migrations.mjs",
+    "check:cloudflare": "wrangler deploy --dry-run && wrangler deploy --dry-run --config wrangler.www.jsonc && npm run build:staging && wrangler deploy --dry-run --config wrangler.staging.jsonc && npm run build:admin && wrangler deploy --dry-run --config wrangler.admin.jsonc && npm run build",
+    "ci": "npm run check && npm run build && node scripts/check-dist.mjs",
+    "preview": "npm run build && wrangler dev"
+  },
+  "devDependencies": {
+    "wrangler": "^4.123.0"
+  },
+  "dependencies": {
+    "intl-tel-input": "29.2.3"
+  }
+}

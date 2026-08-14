@@ -1,18 +1,17 @@
-name: Supabase keep-alive
+name: Supabase keep-alive (disabled in migration copy)
 
 on:
-  schedule:
-    - cron: "0 8 * * *"
   workflow_dispatch: {}
 
 jobs:
   ping:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
       - name: Ping Supabase REST API
         run: |
           curl -sf --retry 3 --retry-delay 10 --retry-all-errors \
-            "https://itldyciokbtzwufrrifh.supabase.co/rest/v1/leads?select=id&limit=1" \
+            "https://example.invalid/rest/v1/leads?select=id&limit=1" \
             -H "apikey: ${SUPABASE_ANON_KEY}" \
             -o /dev/null
         env:

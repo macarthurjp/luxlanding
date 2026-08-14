@@ -1,12 +1,12 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "luxlanding-migration-platform",
-  "compatibility_date": "2026-08-13",
+  "name": "luxlanding-admin",
+  "compatibility_date": "2026-08-14",
   "observability": {
     "enabled": true
   },
   "assets": {
-    "directory": "./dist",
+    "directory": "./dist-admin",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "none"
   },
@@ -14,7 +14,7 @@
   "preview_urls": false,
   "routes": [
     {
-      "pattern": "luxlanding.eu",
+      "pattern": "admin.luxlanding.eu",
       "custom_domain": true
     }
   ],
