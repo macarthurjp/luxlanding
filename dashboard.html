@@ -1990,6 +1990,68 @@ PREMIUM DATE PICKER
     font-size:clamp(38px,13vw,58px);
   }
 }
+
+/* Partner referral reporting */
+#partnersSection > .card:first-of-type .panel-title-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:end;
+  gap:24px;
+}
+
+.partner-report-filters{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(150px,180px)) auto;
+  align-items:end;
+  gap:10px;
+}
+
+.partner-report-filters .field{margin:0;min-width:0;}
+.partner-report-filters input{width:100%;min-height:44px;}
+.partner-report-filters .btn{min-height:44px;white-space:nowrap;}
+
+.partner-report-stats{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  margin:20px 0;
+}
+
+.partner-report-stat{
+  min-height:108px;
+  padding:20px;
+  border:1px solid #dce6f2;
+  border-radius:18px;
+  background:linear-gradient(145deg,#ffffff 0%,#f3f7fc 100%);
+  box-shadow:0 8px 22px rgba(15,23,42,.045);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.partner-report-stat strong{display:block;font-size:34px;line-height:1;color:#17233d;}
+.partner-report-stat span{display:block;margin-top:9px;color:var(--muted);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;}
+
+.partner-report-table{min-width:720px !important;}
+.partner-report-table td:nth-child(2),
+.partner-report-table td:nth-child(3){font-variant-numeric:tabular-nums;font-weight:800;}
+
+@media(max-width:1050px){
+  #partnersSection > .card:first-of-type .panel-title-row{grid-template-columns:1fr;align-items:start;}
+  .partner-report-filters{width:100%;grid-template-columns:repeat(2,minmax(0,1fr)) auto;}
+}
+
+@media(max-width:700px){
+  .partner-report-filters{grid-template-columns:1fr 1fr;}
+  .partner-report-filters .btn{grid-column:1/-1;width:100%;}
+  .partner-report-stats{grid-template-columns:1fr;}
+  .partner-report-stat{min-height:88px;padding:16px 18px;}
+}
+
+@media(max-width:430px){
+  .partner-report-filters{grid-template-columns:1fr;}
+  .partner-report-filters .btn{grid-column:auto;}
+}
 .page{
   max-width:1520px;
   grid-template-columns:330px minmax(0,1fr);
@@ -2560,16 +2622,48 @@ RESPONSIVE + DASHBOARD FIXES
     max-width:100%;
   }
 
-  .dashboard-main{
+  .page > .sidebar{
+    display:flex;
     order:-1;
-  }
-
-  .sidebar{
-    order:2;
     position:relative;
     top:auto;
     min-height:auto;
     overflow:visible;
+  }
+
+  .page:has(#dashboardSection.active) > .sidebar{display:none !important;}
+
+  .mobile-nav-card{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+    order:0;
+  }
+
+  .mobile-nav-card .sidebar-hero{
+    display:grid;
+    grid-template-columns:auto minmax(0,1fr);
+    grid-template-areas:"logo title" "logo subtitle";
+    align-items:center;
+    column-gap:22px;
+  }
+
+  .mobile-nav-card .sidebar-logo{grid-area:logo;margin:0;}
+  .mobile-nav-card .sidebar-logo img{width:180px;max-height:74px;}
+  .mobile-nav-card .sidebar-title{grid-area:title;font-size:38px;line-height:1;}
+  .mobile-nav-card .sidebar-subtitle{grid-area:subtitle;margin-top:6px;}
+
+  .mobile-nav-card .sidebar-nav{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:10px;
+  }
+
+  .mobile-nav-card .mobile-lead-filters{
+    padding:18px;
+    border:1px solid var(--line);
+    border-radius:20px;
+    background:rgba(255,255,255,.76);
   }
 
   .sidebar-title{
@@ -2731,22 +2825,26 @@ RESPONSIVE + DASHBOARD FIXES
 
 @media(max-width:620px){
 
-  /* ocultar sidebar original */
-  .page > .sidebar{
-    display:none !important;
-  }
+  /* The original navigation remains available in Partners and Revenue. */
+  .page:has(#dashboardSection.active) > .sidebar{display:none !important;}
 
   /* mostrar bloque mobile en el orden correcto */
   .mobile-nav-card{
     display:flex !important;
     flex-direction:column;
     gap:26px;
-    order:2;
+    order:0;
   }
 
   .mobile-nav-card .sidebar-hero{
     order:1;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:8px;
   }
+
+  .mobile-nav-card .sidebar-logo img{width:170px;max-height:70px;}
 
   .mobile-nav-card .sidebar-nav{
     order:2;
@@ -2755,6 +2853,8 @@ RESPONSIVE + DASHBOARD FIXES
     gap:8px;
     margin-top:0;
   }
+
+  .mobile-nav-card .mobile-lead-filters{order:3;padding:14px;}
 
   .mobile-nav-card .sidebar-link{
     justify-content:center;
@@ -2826,8 +2926,9 @@ RESPONSIVE + DASHBOARD FIXES
 @media(max-width:1024px){
   body{padding:14px}
   .page{display:block;max-width:100%}
-  .page > .sidebar{display:none !important}
-  .mobile-nav-card{display:flex !important;flex-direction:column;gap:16px;order:2}
+  .page > .sidebar{display:flex !important;position:relative;top:auto;margin-bottom:14px}
+  .page:has(#dashboardSection.active) > .sidebar{display:none !important}
+  .mobile-nav-card{display:flex !important;flex-direction:column;gap:16px;order:0}
   .mobile-nav-card .sidebar-hero{gap:6px}
   .mobile-nav-card .sidebar-title{font-size:26px;line-height:1}
   .mobile-nav-card .sidebar-subtitle{font-size:10px;letter-spacing:.08em}
@@ -3001,14 +3102,13 @@ RESPONSIVE + DASHBOARD FIXES
     <!-- Mobile nav card for small screens -->
     <section class="card mobile-nav-card">
       <div class="sidebar-hero">
+        <div class="sidebar-logo"><img src="images/luxlanding-logo-clean.png" alt="LuxLanding"></div>
         <div class="sidebar-title">
-          Relocation<br>
-          Leads<br>
-          Dashboard
+          Lead workspace
         </div>
 
         <div class="sidebar-subtitle">
-          LEADS · FOLLOW-UP · CONVERSION
+          RELOCATION CRM
         </div>
       </div>
 
@@ -3017,6 +3117,24 @@ RESPONSIVE + DASHBOARD FIXES
         <button type="button" class="sidebar-link" data-section-target="partnersSection">Partners</button>
         <button type="button" class="sidebar-link" data-section-target="revenueSection">Revenue</button>
       </nav>
+
+      <div class="mobile-lead-filters">
+        <div class="sidebar-field">
+          <label>Date</label>
+          <input type="date" id="filterDateMobile">
+        </div>
+
+        <div class="sidebar-field">
+          <label>Status</label>
+          <select id="filterStatusMobile">
+            <option value="">All</option>
+            <option value="New">New</option>
+            <option value="Qualified">Qualified</option>
+            <option value="Contacted">Contacted</option>
+            <option value="Closed">Closed</option>
+          </select>
+        </div>
+      </div>
     </section>
 
     <section class="stats-grid">
@@ -3054,26 +3172,6 @@ RESPONSIVE + DASHBOARD FIXES
         <div class="stat-label">Overdue New</div>
         <div class="stat-value" id="statOverdue">0</div>
         <div class="stat-sub">Awaiting first contact for 24h+</div>
-      </div>
-    </section>
-
-    <section class="card mobile-lead-filters-card">
-      <div class="mobile-lead-filters">
-        <div class="sidebar-field">
-          <label>Date</label>
-          <input type="date" id="filterDateMobile">
-        </div>
-
-        <div class="sidebar-field">
-          <label>Status</label>
-          <select id="filterStatusMobile">
-            <option value="">All</option>
-            <option value="New">New</option>
-            <option value="Qualified">Qualified</option>
-            <option value="Contacted">Contacted</option>
-            <option value="Closed">Closed</option>
-          </select>
-        </div>
       </div>
     </section>
 
@@ -3118,6 +3216,39 @@ RESPONSIVE + DASHBOARD FIXES
             <button class="btn btn-primary" id="newPartnerBtn" type="button">New partner</button>
           </div>
         </header>
+
+        <section class="card">
+          <div class="panel-title-row">
+            <div>
+              <div class="panel-title">Referral activity</div>
+              <div class="panel-subtitle">See how many leads were shared with each partner during a selected period.</div>
+            </div>
+            <div class="partner-report-filters">
+              <div class="field">
+                <label for="partnerReportFrom">From</label>
+                <input type="date" id="partnerReportFrom">
+              </div>
+              <div class="field">
+                <label for="partnerReportTo">To</label>
+                <input type="date" id="partnerReportTo">
+              </div>
+              <button class="btn btn-primary" id="applyPartnerReportBtn" type="button">Apply period</button>
+            </div>
+          </div>
+
+          <div class="partner-report-stats">
+            <div class="partner-report-stat"><strong id="partnerReportDeliveries">0</strong><span>Referral deliveries</span></div>
+            <div class="partner-report-stat"><strong id="partnerReportUniqueLeads">0</strong><span>Unique leads shared</span></div>
+            <div class="partner-report-stat"><strong id="partnerReportRecipients">0</strong><span>Partners reached</span></div>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="mini-table partner-report-table">
+              <thead><tr><th>Partner</th><th>Referrals sent</th><th>Unique leads</th><th>Most recent delivery</th></tr></thead>
+              <tbody id="partnerReportBody"></tbody>
+            </table>
+          </div>
+        </section>
 
         <section class="card">
           <div class="management-grid">
@@ -3466,6 +3597,7 @@ let allPartners = [];
 let selectedLead = null;
 let revenueMonthlyChart = null;
 let leadsPage = 1;
+let partnerReportInitialized = false;
 const LEADS_PER_PAGE = 25;
 
 const selectedLeadKeys = new Set();
@@ -4121,6 +4253,110 @@ async function loadPartners() {
   }
 }
 
+function initializePartnerReportPeriod() {
+  if (partnerReportInitialized) return;
+  const toInput = document.getElementById("partnerReportTo");
+  const fromInput = document.getElementById("partnerReportFrom");
+  const today = new Date();
+  const start = new Date(today);
+  start.setDate(start.getDate() - 29);
+  const dateValue = date => date.toISOString().slice(0, 10);
+  if (fromInput) fromInput.value = dateValue(start);
+  if (toInput) toInput.value = dateValue(today);
+  partnerReportInitialized = true;
+}
+
+async function fetchReferralDeliveries(fromIso, toExclusiveIso) {
+  const deliveries = [];
+  const pageSize = 1000;
+  for (let offset = 0; ; offset += pageSize) {
+    const { data, error } = await supabaseClient
+      .from("referral_deliveries")
+      .select("partner_id,lead_id,delivered_at")
+      .gte("delivered_at", fromIso)
+      .lt("delivered_at", toExclusiveIso)
+      .order("delivered_at", { ascending: false })
+      .range(offset, offset + pageSize - 1);
+    if (error) throw error;
+    const page = Array.isArray(data) ? data : [];
+    deliveries.push(...page);
+    if (page.length < pageSize) break;
+  }
+  return deliveries;
+}
+
+async function loadPartnerReferralReport() {
+  initializePartnerReportPeriod();
+  const fromInput = document.getElementById("partnerReportFrom");
+  const toInput = document.getElementById("partnerReportTo");
+  const body = document.getElementById("partnerReportBody");
+  if (!fromInput?.value || !toInput?.value || !body) return;
+
+  if (fromInput.value > toInput.value) {
+    showToast("The start date must be before the end date");
+    return;
+  }
+
+  body.innerHTML = emptyStateRow(4, { title: "Loading referral activity…" });
+  const fromIso = `${fromInput.value}T00:00:00.000Z`;
+  const toExclusive = new Date(`${toInput.value}T00:00:00.000Z`);
+  toExclusive.setUTCDate(toExclusive.getUTCDate() + 1);
+
+  try {
+    const deliveries = await fetchReferralDeliveries(fromIso, toExclusive.toISOString());
+    const perPartner = new Map();
+    const uniqueLeads = new Set();
+    deliveries.forEach(delivery => {
+      uniqueLeads.add(delivery.lead_id);
+      const current = perPartner.get(delivery.partner_id) || {
+        count: 0, leadIds: new Set(), latest: ""
+      };
+      current.count += 1;
+      current.leadIds.add(delivery.lead_id);
+      if (!current.latest || delivery.delivered_at > current.latest) current.latest = delivery.delivered_at;
+      perPartner.set(delivery.partner_id, current);
+    });
+
+    document.getElementById("partnerReportDeliveries").textContent = String(deliveries.length);
+    document.getElementById("partnerReportUniqueLeads").textContent = String(uniqueLeads.size);
+    document.getElementById("partnerReportRecipients").textContent = String(perPartner.size);
+
+    const knownIds = new Set(allPartners.map(partner => partner.partner_id));
+    const reportRows = allPartners.map(partner => ({
+      partner,
+      stats: perPartner.get(partner.partner_id) || { count: 0, leadIds: new Set(), latest: "" }
+    }));
+    perPartner.forEach((stats, partnerId) => {
+      if (!knownIds.has(partnerId)) reportRows.push({
+        partner: { partner_id: partnerId, name: "Former partner" }, stats
+      });
+    });
+    reportRows.sort((a, b) => b.stats.count - a.stats.count ||
+      String(a.partner.name || a.partner.company || "").localeCompare(String(b.partner.name || b.partner.company || "")));
+
+    body.innerHTML = reportRows.length
+      ? reportRows.map(({ partner, stats }) => `
+        <tr>
+          <td><strong>${escapeHtml(partner.name || partner.company || partner.email || partner.partner_id)}</strong><br><span class="sent-empty">${escapeHtml(partner.company || partner.email || partner.partner_id || "")}</span></td>
+          <td>${stats.count}</td>
+          <td>${stats.leadIds.size}</td>
+          <td>${stats.latest ? escapeHtml(formatDate(stats.latest)) : "—"}</td>
+        </tr>`).join("")
+      : emptyStateRow(4, {
+          icon: "tray",
+          title: "No partner referrals in this period",
+          subtitle: "Choose a different date range to review earlier activity."
+        });
+  } catch (error) {
+    console.error(error);
+    body.innerHTML = emptyStateRow(4, {
+      icon: "alert", tone: "danger", title: "Could not load referral activity",
+      subtitle: "Please refresh the report or try again shortly."
+    });
+    showToast("Could not load partner referral activity");
+  }
+}
+
 function getSelectedLeads() {
   return allLeads.filter(lead => selectedLeadKeys.has(getLeadKey(lead)));
 }
@@ -4519,7 +4755,10 @@ function setDashboardSection(sectionId) {
     button.classList.toggle("active", button.dataset.sectionTarget === sectionId);
   });
 
-  if (sectionId === "partnersSection") renderPartnersManager();
+  if (sectionId === "partnersSection") {
+    renderPartnersManager();
+    loadPartnerReferralReport();
+  }
   if (sectionId === "revenueSection") renderRevenueManager();
 }
 
@@ -5486,7 +5725,13 @@ const newPartnerBtn = document.getElementById("newPartnerBtn");
 if (newPartnerBtn) newPartnerBtn.onclick = clearPartnerForm;
 
 const refreshPartnersBtn = document.getElementById("refreshPartnersBtn");
-if (refreshPartnersBtn) refreshPartnersBtn.onclick = loadPartners;
+if (refreshPartnersBtn) refreshPartnersBtn.onclick = async () => {
+  await loadPartners();
+  await loadPartnerReferralReport();
+};
+
+const applyPartnerReportBtn = document.getElementById("applyPartnerReportBtn");
+if (applyPartnerReportBtn) applyPartnerReportBtn.onclick = loadPartnerReferralReport;
 
 const savePartnerBtn = document.getElementById("savePartnerBtn");
 if (savePartnerBtn) savePartnerBtn.onclick = savePartnerFromForm;

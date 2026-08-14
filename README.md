@@ -20,10 +20,11 @@ Production intentionally uses separate Workers for the public site, admin dashbo
 - reCAPTCHA verification, rate limiting and idempotent lead submission.
 - Preferred contact channel/time, safe session draft recovery and UTM attribution.
 - Resend transactional notifications and client confirmation email.
-- Authenticated CRM with lead status, score visualization, partners, per-partner information sharing, referrals, CSV/PDF exports and revenue tools.
+- Authenticated CRM with lead status, score visualization, partners, per-partner information sharing, date-range referral reporting, CSV/PDF exports and revenue tools.
 - Responsive layouts for public, login and CRM views.
 - Supabase RLS, administrator role checks and referral audit records.
 - Partner referrals use explicit field scopes so each recipient receives only the client information selected for that referral.
+- Partner emails include formal HTML and plain-text versions, human-readable field values, confidentiality language and purpose-limitation guidance.
 
 ## Requirements
 

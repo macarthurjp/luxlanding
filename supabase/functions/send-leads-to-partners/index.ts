@@ -164,10 +164,75 @@ function filteredNeeds(lead: Record<string, unknown>, categories: Set<ReferralCa
     .filter((need) => categories.has(need as ReferralCategory)).join(", ");
 }
 
-function leadRows(
+const REFERRAL_VALUE_LABELS: Record<string, string> = {
+  moving_job: "Relocating for employment",
+  moving_family: "Relocating with family",
+  student: "Student",
+  freelancer: "Freelancer / self-employed professional",
+  looking_job: "Seeking employment",
+  email: "Email",
+  whatsapp: "WhatsApp",
+  phone: "Telephone",
+  morning: "Morning",
+  afternoon: "Afternoon",
+  evening: "Evening",
+  "30_days": "Within 30 days",
+  "1_3_months": "Within 1–3 months",
+  "3_6_months": "Within 3–6 months",
+  "6_12_months": "Within 6–12 months",
+  exploring: "Exploring available options",
+  yes: "Yes",
+  no: "No",
+  maybe: "Considering professional support",
+  studio: "Studio",
+  "1": "1 bedroom",
+  "2": "2 bedrooms",
+  "3": "3 bedrooms",
+  "4plus": "4 or more bedrooms",
+  public: "Public school",
+  private: "Private school",
+  international: "International school",
+  beginner: "Beginner",
+  intermediate: "Intermediate",
+  advanced: "Advanced",
+  housing: "Housing",
+  admin: "Administrative / legal support",
+  schools: "Schools and childcare",
+  health: "Healthcare and insurance",
+  banking: "Banking",
+  moving: "Moving services",
+  language: "Language training",
+  job: "Employment support",
+  en: "English",
+  fr: "French",
+  de: "German",
+  lu: "Luxembourgish",
+  pt: "Portuguese",
+  es: "Spanish",
+};
+
+function formatReferralValue(label: string, value: unknown): string {
+  const raw = text(value, 2000);
+  if (!raw) return "";
+  if (label === "Monthly housing budget") {
+    const amount = Number(raw);
+    return Number.isFinite(amount)
+      ? new Intl.NumberFormat("en-IE", { style: "currency", currency: "EUR" }).format(amount)
+      : raw;
+  }
+  if (label === "Relevant needs") {
+    return raw.split(",").map((item) => {
+      const key = item.trim().toLowerCase();
+      return REFERRAL_VALUE_LABELS[key] || item.trim();
+    }).filter(Boolean).join(", ");
+  }
+  return REFERRAL_VALUE_LABELS[raw.toLowerCase()] || raw.replaceAll("_", " ");
+}
+
+function leadDataRows(
   lead: Record<string, unknown>,
   scopes: Set<ReferralScope>,
-): string {
+): Array<[string, string]> {
   const categories = new Set<ReferralCategory>();
   for (const scope of scopes) {
     if (scope !== "contact" && scope !== "summary" && scope !== "notes") {
@@ -235,7 +300,14 @@ function leadRows(
     ["Other need", lead.needs_other],
     ["Situation notes", lead.situation_notes],
   );
-  return rows.filter(([, value]) => text(value)).map(([label, value]) => `
+  return rows.filter(([, value]) => text(value)).map(([label, value]) => [
+    label,
+    formatReferralValue(label, value),
+  ]);
+}
+
+function leadRows(lead: Record<string, unknown>, scopes: Set<ReferralScope>): string {
+  return leadDataRows(lead, scopes).map(([label, value]) => `
     <tr>
       <td style="padding:6px 14px 6px 0;color:#667085;vertical-align:top;">${
     escapeHtml(label)
@@ -246,33 +318,60 @@ function leadRows(
     </tr>`).join("");
 }
 
+function buildPlainText(
+  partner: Record<string, unknown>,
+  leads: Record<string, unknown>[],
+  scopes: Set<ReferralScope>,
+): string {
+  const partnerName = text(partner.name || partner.company) || "Partner";
+  const leadSections = leads.map((lead, index) => {
+    const rows = leadDataRows(lead, scopes)
+      .map(([label, value]) => `${label}: ${value}`).join("\n");
+    return `CLIENT REFERRAL ${index + 1}\n${rows}`;
+  }).join("\n\n");
+  return `Dear ${partnerName},
+
+LuxLanding is pleased to refer ${leads.length === 1 ? "a client" : `${leads.length} clients`} whose relocation requirements may align with your professional services.
+
+${leadSections}
+
+Please acknowledge receipt and contact the client only in relation to this referral. The information is confidential, was shared for this specific purpose, and must not be forwarded without prior authorization.
+
+Kind regards,
+LuxLanding
+Luxembourg Relocation Support`;
+}
+
 function buildEmail(
   partner: Record<string, unknown>,
   leads: Record<string, unknown>[],
   scopes: Set<ReferralScope>,
 ): string {
   const partnerName = text(partner.name || partner.company) || "Partner";
-  const leadSections = leads.map((lead) => `
-    <div style="margin-top:22px;padding-top:18px;border-top:1px solid #e8eef7;">
-      <table style="width:100%;border-collapse:collapse;font-size:14px;">${
+  const leadSections = leads.map((lead, index) => `
+    <div style="margin-top:20px;border:1px solid #dfe7f1;border-radius:14px;overflow:hidden;">
+      <div style="padding:13px 18px;background:#f5f8fc;border-bottom:1px solid #dfe7f1;color:#17233d;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;">Client referral ${index + 1} · ${escapeHtml(text(lead.lead_id))}</div>
+      <div style="padding:12px 18px;">
+        <table role="presentation" style="width:100%;border-collapse:collapse;font-size:14px;">${
     leadRows(lead, scopes)
   }</table>
+      </div>
     </div>`).join("");
 
   return `<!doctype html>
-  <html><body style="margin:0;background:#f4f7fb;font-family:Arial,sans-serif;color:#121826;">
-    <div style="max-width:680px;margin:0 auto;padding:28px 16px;">
-      <div style="background:#111827;color:#fff;padding:24px 28px;border-radius:14px 14px 0 0;">
-        <div style="font-size:21px;font-weight:700;">LuxLanding</div>
-        <div style="margin-top:4px;color:#cbd5e1;font-size:13px;">Secure partner referral</div>
+  <html><body style="margin:0;background:#eef3f8;font-family:Arial,Helvetica,sans-serif;color:#172033;">
+    <div style="max-width:680px;margin:0 auto;padding:32px 14px;">
+      <div style="background:#17233d;color:#fff;padding:28px 32px;border-radius:16px 16px 0 0;border-bottom:4px solid #4a90e2;">
+        <div style="font-size:24px;font-weight:800;letter-spacing:-.02em;">LuxLanding</div>
+        <div style="margin-top:6px;color:#c8d5e8;font-size:13px;letter-spacing:.03em;">CONFIDENTIAL PARTNER REFERRAL</div>
       </div>
-      <div style="background:#fff;padding:28px;border-radius:0 0 14px 14px;">
-        <p style="margin-top:0;">Hello ${escapeHtml(partnerName)},</p>
-        <p>LuxLanding has assigned ${leads.length} relocation lead${
-    leads.length === 1 ? "" : "s"
-  } for your review.</p>
+      <div style="background:#fff;padding:32px;border:1px solid #dfe7f1;border-top:0;border-radius:0 0 16px 16px;">
+        <p style="margin:0 0 18px;font-size:16px;">Dear ${escapeHtml(partnerName)},</p>
+        <p style="margin:0;color:#4b5b73;font-size:15px;line-height:1.7;">LuxLanding is pleased to refer ${leads.length === 1 ? "a client" : `${leads.length} clients`} whose relocation requirements may align with your professional services. The information below reflects only the sections authorized for this referral.</p>
+        <div style="margin:22px 0 4px;padding:12px 15px;background:#edf5ff;border:1px solid #cfe2f8;border-radius:10px;color:#274b77;font-size:13px;line-height:1.5;"><strong>Purpose limitation:</strong> Please use these details exclusively to assess and respond to this LuxLanding referral.</div>
         ${leadSections}
-        <p style="margin:24px 0 0;color:#667085;font-size:12px;">These details are confidential and must only be used to respond to this referral.</p>
+        <p style="margin:24px 0 0;color:#4b5b73;font-size:13px;line-height:1.65;">Please acknowledge receipt and contact the client only in relation to this referral. This information is confidential and must not be forwarded without prior authorization.</p>
+        <p style="margin:24px 0 0;font-size:14px;line-height:1.6;">Kind regards,<br><strong>LuxLanding</strong><br><span style="color:#667085;">Luxembourg Relocation Support</span></p>
       </div>
     </div>
   </body></html>`;
@@ -453,12 +552,15 @@ Deno.serve(async (request) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: FROM_EMAIL,
+          from: FROM_EMAIL.includes("<") ? FROM_EMAIL : `LuxLanding <${FROM_EMAIL}>`,
           to: [email],
-          subject: `${leads.length} LuxLanding referral${
-            leads.length === 1 ? "" : "s"
-          }`,
+          subject: `Confidential LuxLanding referral — ${leads.length} ${leads.length === 1 ? "client" : "clients"}`,
           html: buildEmail(
+            partner,
+            leads,
+            partnerScopes.get(text(partner.partner_id, 100)) || getDefaultPartnerScopes(partner),
+          ),
+          text: buildPlainText(
             partner,
             leads,
             partnerScopes.get(text(partner.partner_id, 100)) || getDefaultPartnerScopes(partner),
