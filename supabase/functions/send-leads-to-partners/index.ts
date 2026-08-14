@@ -85,20 +85,156 @@ function isAdmin(user: { app_metadata?: Record<string, unknown> }): boolean {
     (Array.isArray(metadata.roles) && metadata.roles.includes("admin"));
 }
 
-function leadRows(lead: Record<string, unknown>): string {
+type ReferralCategory = "housing" | "admin" | "schools" | "health" | "banking" | "moving" | "language" | "job" | "freelancer" | "other";
+type ReferralScope = "contact" | "summary" | "housing" | "admin" | "schools" | "health" | "banking" | "moving" | "language" | "job" | "freelancer" | "notes";
+const ALLOWED_REFERRAL_SCOPES = new Set<ReferralScope>([
+  "contact", "summary", "housing", "admin", "schools", "health", "banking",
+  "moving", "language", "job", "freelancer", "notes",
+]);
+
+const PARTNER_CATEGORY_TERMS: Record<ReferralCategory, string[]> = {
+  housing: ["housing", "property", "real estate", "relocation"],
+  admin: ["admin", "paperwork", "immigration", "residence", "visa"],
+  schools: ["family", "school", "childcare", "education"],
+  health: ["health", "insurance", "cns"],
+  banking: ["banking", "bank", "finance"],
+  moving: ["moving", "removal", "logistics"],
+  language: ["language", "training", "course"],
+  job: ["job", "career", "recruit", "cv"],
+  freelancer: ["freelance", "business", "tax", "accounting"],
+  other: ["other", "general"],
+};
+
+function getPartnerCategories(partner: Record<string, unknown>): Set<ReferralCategory> {
+  const descriptor = `${text(partner.group, 300)} ${text(partner.services, 500)}`.toLowerCase();
+  const categories = new Set<ReferralCategory>();
+  for (const [category, terms] of Object.entries(PARTNER_CATEGORY_TERMS) as Array<[ReferralCategory, string[]]>) {
+    if (terms.some((term) => descriptor.includes(term))) categories.add(category);
+  }
+  if (/\b(law|lawyer|legal|attorney|avocat|abogado)\b/.test(descriptor)) {
+    categories.add("admin");
+    categories.add("freelancer");
+  }
+  return categories;
+}
+
+function getDefaultPartnerScopes(partner: Record<string, unknown>): Set<ReferralScope> {
+  const scopes = new Set<ReferralScope>(["contact", "summary"]);
+  const categories = getPartnerCategories(partner);
+  for (const category of categories) {
+    if (category === "other") scopes.add("notes");
+    else scopes.add(category);
+  }
+  return scopes;
+}
+
+function parsePartnerScopes(
+  value: unknown,
+  partners: Record<string, unknown>[],
+): Map<string, Set<ReferralScope>> {
+  const input = value && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : {};
+  const result = new Map<string, Set<ReferralScope>>();
+  for (const partner of partners) {
+    const partnerId = text(partner.partner_id, 100);
+    const requested = input[partnerId];
+    if (requested === undefined) {
+      result.set(partnerId, getDefaultPartnerScopes(partner));
+      continue;
+    }
+    if (!Array.isArray(requested) || requested.length > ALLOWED_REFERRAL_SCOPES.size) {
+      throw new RequestError("Invalid partner information selection.");
+    }
+    const scopes = new Set<ReferralScope>();
+    for (const rawScope of requested) {
+      const scope = text(rawScope, 30) as ReferralScope;
+      if (!ALLOWED_REFERRAL_SCOPES.has(scope)) {
+        throw new RequestError("Invalid partner information selection.");
+      }
+      scopes.add(scope);
+    }
+    result.set(partnerId, scopes);
+  }
+  return result;
+}
+
+function filteredNeeds(lead: Record<string, unknown>, categories: Set<ReferralCategory>): string {
+  return text(lead.needs, 500).split(/[\s,]+/).map((need) => need.trim().toLowerCase())
+    .filter((need) => categories.has(need as ReferralCategory)).join(", ");
+}
+
+function leadRows(
+  lead: Record<string, unknown>,
+  scopes: Set<ReferralScope>,
+): string {
+  const categories = new Set<ReferralCategory>();
+  for (const scope of scopes) {
+    if (scope !== "contact" && scope !== "summary" && scope !== "notes") {
+      categories.add(scope);
+    }
+  }
   const rows: Array<[string, unknown]> = [
     ["Lead ID", lead.lead_id],
+  ];
+
+  if (scopes.has("contact")) rows.push(
     ["Name", lead.contact_name],
     ["Email", lead.contact_email],
     ["Phone", lead.contact_phone],
     ["Preferred contact", lead.contact_method],
     ["Best contact time", lead.contact_time],
+  );
+
+  if (scopes.has("summary")) rows.push(
     ["Profile", lead.profile],
-    ["Needs", lead.needs],
+    ["Relevant needs", filteredNeeds(lead, categories)],
     ["Move timing", lead.move_timing],
     ["Support readiness", lead.support_readiness],
+  );
+
+  if (categories.has("housing")) rows.push(
+    ["Monthly housing budget", lead.housing_budget],
+    ["Bedrooms needed", lead.housing_bedrooms],
+    ["Has work contract", lead.housing_contract],
+  );
+  if (categories.has("schools")) rows.push(
+    ["Number of children", lead.schools_children_count],
+    ["Children ages", lead.schools_children_ages],
+    ["School preference", lead.schools_type],
+  );
+  if (categories.has("admin")) rows.push(
+    ["Has job contract", lead.admin_job_contract],
+    ["Has Luxembourg address", lead.admin_address],
+  );
+  if (categories.has("health")) rows.push(
+    ["Needs provider guidance", lead.health_provider],
+    ["Registered with CNS", lead.health_cns],
+  );
+  if (categories.has("banking")) rows.push(
+    ["Needs bank account help", lead.bank_account],
+    ["Employed in Luxembourg", lead.bank_employed],
+  );
+  if (categories.has("moving")) rows.push(
+    ["Needs moving-company help", lead.moving_help],
+    ["Moving from", lead.moving_country],
+  );
+  if (categories.has("language")) rows.push(
+    ["Target language", lead.language_target],
+    ["Current language level", lead.language_level],
+  );
+  if (categories.has("job")) rows.push(
+    ["Needs CV help", lead.job_cv_help],
+    ["Needs interview preparation", lead.job_interview],
+  );
+  if (categories.has("freelancer")) rows.push(
+    ["Needs business registration help", lead.freelancer_register],
+    ["Needs tax guidance", lead.freelancer_tax],
+  );
+  if (scopes.has("notes")) rows.push(
+    ["Other need", lead.needs_other],
     ["Situation notes", lead.situation_notes],
-  ];
+  );
   return rows.filter(([, value]) => text(value)).map(([label, value]) => `
     <tr>
       <td style="padding:6px 14px 6px 0;color:#667085;vertical-align:top;">${
@@ -113,12 +249,13 @@ function leadRows(lead: Record<string, unknown>): string {
 function buildEmail(
   partner: Record<string, unknown>,
   leads: Record<string, unknown>[],
+  scopes: Set<ReferralScope>,
 ): string {
   const partnerName = text(partner.name || partner.company) || "Partner";
   const leadSections = leads.map((lead) => `
     <div style="margin-top:22px;padding-top:18px;border-top:1px solid #e8eef7;">
       <table style="width:100%;border-collapse:collapse;font-size:14px;">${
-    leadRows(lead)
+    leadRows(lead, scopes)
   }</table>
     </div>`).join("");
 
@@ -246,9 +383,9 @@ Deno.serve(async (request) => {
       { data: partners, error: partnersError },
     ] = await Promise.all([
       supabase.from("leads").select(
-        "lead_id,contact_name,contact_email,contact_phone,contact_method,contact_time,profile,needs,move_timing,support_readiness,situation_notes",
+        "lead_id,contact_name,contact_email,contact_phone,contact_method,contact_time,profile,needs,needs_other,move_timing,support_readiness,situation_notes,housing_budget,housing_bedrooms,housing_contract,schools_children_count,schools_children_ages,schools_type,admin_job_contract,admin_address,health_provider,health_cns,bank_account,bank_employed,moving_help,moving_country,language_target,language_level,job_cv_help,job_interview,freelancer_register,freelancer_tax",
       ).in("lead_id", leadIds),
-      supabase.from("partners").select("partner_id,name,company,email,active")
+      supabase.from("partners").select("partner_id,name,company,email,active,group,services")
         .in("partner_id", partnerIds),
     ]);
     if (leadsError || partnersError) {
@@ -266,6 +403,7 @@ Deno.serve(async (request) => {
         404,
       );
     }
+    const partnerScopes = parsePartnerScopes(payload?.partnerScopes, partners);
 
     const sentToNames = partners.map((partner) =>
       text(partner.name || partner.company || partner.email, 120)
@@ -320,7 +458,11 @@ Deno.serve(async (request) => {
           subject: `${leads.length} LuxLanding referral${
             leads.length === 1 ? "" : "s"
           }`,
-          html: buildEmail(partner, leads),
+          html: buildEmail(
+            partner,
+            leads,
+            partnerScopes.get(text(partner.partner_id, 100)) || getDefaultPartnerScopes(partner),
+          ),
         }),
       });
       if (!resendResponse.ok) {

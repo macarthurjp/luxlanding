@@ -732,6 +732,20 @@ body{
   font-weight:700;
 }
 
+.lead-contact-line{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  min-width:0;
+}
+
+.lead-contact-line svg{
+  width:13px;
+  height:13px;
+  flex:0 0 auto;
+  color:#64748b;
+}
+
 .lead-card-stats{
   display:flex;
   align-items:center;
@@ -1003,15 +1017,56 @@ body{
 }
 
 .partner-option{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+  display:grid;
   gap:12px;
   padding:14px;
   border:1px solid rgba(226,232,240,.9);
   border-radius:16px;
   background:rgba(248,250,252,.8);
   cursor:pointer;
+}
+
+.partner-option-main{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.partner-sharing-options{
+  padding-top:10px;
+  border-top:1px solid var(--line);
+}
+
+.partner-sharing-options summary{
+  cursor:pointer;
+  color:#357abd;
+  font-size:12px;
+  font-weight:900;
+}
+
+.partner-scope-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  margin-top:10px;
+}
+
+.partner-scope{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  min-width:0;
+  font-size:11px;
+  font-weight:700;
+  color:var(--muted);
+}
+
+.partner-scope input{width:16px;height:16px;flex:0 0 auto;}
+.partner-scope.is-required{color:#64748b;}
+
+@media(max-width:600px){
+  .partner-scope-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
 }
 
 .partner-option input{
@@ -3082,6 +3137,7 @@ RESPONSIVE + DASHBOARD FIXES
                   <div class="multi-check-grid" id="partnerGroupInput">
                     <label class="multi-check"><input type="checkbox" value="Housing"> Housing</label>
                     <label class="multi-check"><input type="checkbox" value="Admin"> Admin</label>
+                    <label class="multi-check"><input type="checkbox" value="Legal"> Legal</label>
                     <label class="multi-check"><input type="checkbox" value="Family"> Family</label>
                     <label class="multi-check"><input type="checkbox" value="Health"> Health</label>
                     <label class="multi-check"><input type="checkbox" value="Banking"> Banking</label>
@@ -4321,8 +4377,14 @@ function renderTable() {
       <div class="lead-card-identity">
         <span class="lead-card-id">${escapeHtml(getLeadId(lead))}</span>
         <span class="lead-card-name">${escapeHtml(name)}</span>
-        <span class="lead-card-sub lead-card-email" title="${escapeHtml(email)}">${escapeHtml(email)}</span>
-        <span class="lead-card-sub lead-card-phone">${escapeHtml(phone)}</span>
+        <span class="lead-card-sub lead-contact-line lead-card-email" title="${escapeHtml(email)}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3 7 9 6 9-6"></path></svg>
+          <span>${escapeHtml(email)}</span>
+        </span>
+        <span class="lead-card-sub lead-contact-line lead-card-phone">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z"></path></svg>
+          <span>${escapeHtml(phone)}</span>
+        </span>
       </div>
       <div class="lead-card-stats">
         <div class="stat-pill">
@@ -4872,8 +4934,11 @@ function openLeadModal(lead) {
   document.getElementById("modalScoreValue").textContent = score;
   const scoreBar = document.getElementById("modalScoreBar");
   scoreBar.style.width = `${score}%`;
-  scoreBar.style.background =
-    statusNorm === "HOT" ? "#dc2626" : statusNorm === "WARM" ? "#d97706" : "#9ca3af";
+  scoreBar.style.background = score >= 80
+    ? "linear-gradient(90deg,#16a34a,#22c55e)"
+    : score >= 50
+    ? "linear-gradient(90deg,#d97706,#f59e0b)"
+    : "linear-gradient(90deg,#64748b,#94a3b8)";
 
   // ── helpers ──────────────────────────────────────────────────────────────
   function mv(v) {
@@ -5229,6 +5294,33 @@ document.getElementById("selectAllLeads").addEventListener("change", (e) => {
   renderTable();
 });
 
+const PARTNER_SCOPE_OPTIONS = [
+  ["summary", "Lead summary"], ["housing", "Housing & budget"],
+  ["admin", "Admin / legal"], ["freelancer", "Business & tax"],
+  ["schools", "Schools & family"], ["health", "Health"],
+  ["banking", "Banking"], ["moving", "Moving"],
+  ["language", "Language"], ["job", "Job search"],
+  ["notes", "Situation notes"]
+];
+
+function getRecommendedPartnerScopes(partner) {
+  const descriptor = `${partner.group || ""} ${partner.services || ""}`.toLowerCase();
+  const scopes = new Set(["summary"]);
+  const matches = {
+    housing:["housing","property","real estate","relocation"],
+    admin:["admin","paperwork","immigration","residence","visa","legal","lawyer","attorney","avocat","abogado"],
+    freelancer:["freelance","business","tax","accounting","legal","lawyer","attorney","avocat","abogado"],
+    schools:["family","school","childcare","education"], health:["health","insurance","cns"],
+    banking:["banking","bank","finance"], moving:["moving","removal","logistics"],
+    language:["language","training","course"], job:["job","career","recruit","cv"]
+  };
+  Object.entries(matches).forEach(([scope, terms]) => {
+    if (terms.some(term => descriptor.includes(term))) scopes.add(scope);
+  });
+  if (/\b(other|general)\b/.test(descriptor)) scopes.add("notes");
+  return scopes;
+}
+
 function openPartnerModal() {
   const selected = getSelectedLeads();
 
@@ -5257,22 +5349,30 @@ function openPartnerModal() {
     return;
   }
 
-  list.innerHTML = partners.map((partner) => `
-    <label class="partner-option">
-      <div>
-        <div class="partner-name">${escapeHtml(partner.name || partner.company || partner.email)}</div>
-        <div class="partner-email">
-          ${escapeHtml(partner.group || "General")} · ${escapeHtml(partner.email)}${partner.phone ? ` · ${escapeHtml(partner.phone)}` : ""}${partner.services ? ` · ${escapeHtml(partner.services)}` : ""}
+  list.innerHTML = partners.map((partner) => {
+    const recommended = getRecommendedPartnerScopes(partner);
+    return `
+    <div class="partner-option" data-partner-option="${escapeHtml(partner.partner_id || "")}">
+      <label class="partner-option-main">
+        <div>
+          <div class="partner-name">${escapeHtml(partner.name || partner.company || partner.email)}</div>
+          <div class="partner-email">
+            ${escapeHtml(partner.group || "General")} · ${escapeHtml(partner.email)}${partner.phone ? ` · ${escapeHtml(partner.phone)}` : ""}${partner.services ? ` · ${escapeHtml(partner.services)}` : ""}
+          </div>
         </div>
-      </div>
-
-      <input
-        type="checkbox"
-        class="partner-checkbox"
-        value="${escapeHtml(partner.partner_id || "")}"
-      >
-    </label>
-  `).join("");
+        <input type="checkbox" class="partner-checkbox" value="${escapeHtml(partner.partner_id || "")}">
+      </label>
+      <details class="partner-sharing-options">
+        <summary>Choose information to share</summary>
+        <div class="partner-scope-grid">
+          <label class="partner-scope"><input type="checkbox" data-partner-scope="contact" checked> Contact details</label>
+          ${PARTNER_SCOPE_OPTIONS.map(([scope, label]) => `
+            <label class="partner-scope"><input type="checkbox" data-partner-scope="${scope}" ${recommended.has(scope) ? "checked" : ""}> ${label}</label>
+          `).join("")}
+        </div>
+      </details>
+    </div>`;
+  }).join("");
 
   sendButton.disabled = false;
   updatePartnerSendSummary();
@@ -5326,6 +5426,13 @@ async function sendSelectedLeadsToPartners() {
 
   const leadIds = selectedLeads.map(lead => lead.lead_id).filter(Boolean);
   const partnerIds = selectedPartners.map(partner => partner.partner_id).filter(Boolean);
+  const partnerScopes = Object.fromEntries(partnerIds.map(partnerId => {
+    const option = document.querySelector(`[data-partner-option="${CSS.escape(partnerId)}"]`);
+    const scopes = option
+      ? [...option.querySelectorAll("[data-partner-scope]:checked")].map(input => input.dataset.partnerScope)
+      : [];
+    return [partnerId, scopes];
+  }));
 
   if (leadIds.length !== selectedLeads.length || partnerIds.length !== selectedPartners.length) {
     showToast("Some selected records are missing a secure ID");
@@ -5340,7 +5447,7 @@ async function sendSelectedLeadsToPartners() {
     activePartnerRequestId = requestId;
     const { data: emailResult, error: emailError } = await supabaseClient.functions.invoke(
       "send-leads-to-partners",
-      { body: { requestId, leadIds, partnerIds } }
+      { body: { requestId, leadIds, partnerIds, partnerScopes } }
     );
 
     if (emailError || emailResult?.success === false) {
