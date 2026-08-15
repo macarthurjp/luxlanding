@@ -9,8 +9,8 @@ await mkdir(new URL("images/", outputDirectory), { recursive: true });
 await cp(new URL("dashboard.html", projectRoot), new URL("index.html", outputDirectory));
 await cp(new URL("fonts/", projectRoot), new URL("fonts/", outputDirectory), { recursive: true });
 await cp(
-  new URL("images/luxlanding-logo-clean.png", projectRoot),
-  new URL("images/luxlanding-logo-clean.png", outputDirectory),
+  new URL("images/luxlanding-logo-transparent.png", projectRoot),
+  new URL("images/luxlanding-logo-transparent.png", outputDirectory),
 );
 await cp(
   new URL("images/favicon.png", projectRoot),

@@ -9,8 +9,8 @@ await copyFile(
   new URL("dashboard.html", outputDirectory),
 );
 await copyFile(
-  new URL("images/luxlanding-logo-clean.png", projectRoot),
-  new URL("images/luxlanding-logo-clean.png", outputDirectory),
+  new URL("images/luxlanding-logo-transparent.png", projectRoot),
+  new URL("images/luxlanding-logo-transparent.png", outputDirectory),
 );
 await copyFile(
   new URL("_headers.staging", projectRoot),
