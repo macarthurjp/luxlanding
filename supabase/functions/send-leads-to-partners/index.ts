@@ -309,10 +309,10 @@ function leadDataRows(
 function leadRows(lead: Record<string, unknown>, scopes: Set<ReferralScope>): string {
   return leadDataRows(lead, scopes).map(([label, value]) => `
     <tr>
-      <td style="padding:6px 14px 6px 0;color:#667085;vertical-align:top;">${
+      <td style="padding:6px 14px 6px 0;color:#667085;vertical-align:top;width:38%;">${
     escapeHtml(label)
   }</td>
-      <td style="padding:6px 0;color:#121826;font-weight:600;">${
+      <td style="padding:6px 0;color:#121826;font-weight:600;word-break:break-word;overflow-wrap:anywhere;">${
     escapeHtml(value)
   }</td>
     </tr>`).join("");
@@ -350,7 +350,7 @@ function buildEmail(
   const partnerName = text(partner.name || partner.company) || "Partner";
   const leadSections = leads.map((lead, index) => `
     <div style="margin-top:20px;border:1px solid #dfe7f1;border-radius:14px;overflow:hidden;">
-      <div style="padding:13px 18px;background:#f5f8fc;border-bottom:1px solid #dfe7f1;color:#17233d;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;">Client referral ${index + 1} · ${escapeHtml(text(lead.lead_id))}</div>
+      <div style="padding:13px 18px;background:#f5f8fc;border-bottom:1px solid #dfe7f1;color:#17233d;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;word-break:break-word;overflow-wrap:anywhere;">Client referral ${index + 1} · ${escapeHtml(text(lead.lead_id))}</div>
       <div style="padding:12px 18px;">
         <table role="presentation" style="width:100%;border-collapse:collapse;font-size:14px;">${
     leadRows(lead, scopes)
@@ -359,7 +359,12 @@ function buildEmail(
     </div>`).join("");
 
   return `<!doctype html>
-  <html><body style="margin:0;background:#eef3f8;font-family:Arial,Helvetica,sans-serif;color:#172033;">
+  <html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body style="margin:0;background:#eef3f8;font-family:Arial,Helvetica,sans-serif;color:#172033;">
     <div style="max-width:680px;margin:0 auto;padding:32px 14px;">
       <div style="background:#17233d;color:#fff;padding:28px 32px;border-radius:16px 16px 0 0;border-bottom:4px solid #4a90e2;">
         <div style="font-size:24px;font-weight:800;letter-spacing:-.02em;">LuxLanding</div>

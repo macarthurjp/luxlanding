@@ -149,7 +149,7 @@ function row(label: string, value: unknown): string {
   return `
     <tr>
       <td style="padding:6px 12px 6px 0;color:#6b7280;font-size:13px;white-space:nowrap;vertical-align:top;">${label}</td>
-      <td style="padding:6px 0;color:#1a1a2e;font-size:13px;font-weight:600;">${escapeHtml(str(value))}</td>
+      <td style="padding:6px 0;color:#1a1a2e;font-size:13px;font-weight:600;word-break:break-word;overflow-wrap:anywhere;">${escapeHtml(str(value))}</td>
     </tr>`;
 }
 
@@ -452,7 +452,7 @@ async function sendNotification(lead: Record<string, unknown>): Promise<void> {
   const html = `
 <!DOCTYPE html>
 <html>
-<head><meta charset="utf-8"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#f3f4f6;font-family:Arial,sans-serif;">
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;padding:24px 0;">
 <tr><td align="center">
@@ -672,7 +672,7 @@ async function sendConfirmation(lead: Record<string, unknown>): Promise<void> {
   const html = `
 <!DOCTYPE html>
 <html>
-<head><meta charset="utf-8"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#f4f7fb;font-family:Arial,Helvetica,sans-serif;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f7fb;padding:32px 12px;">
 <tr><td align="center">
