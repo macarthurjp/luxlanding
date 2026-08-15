@@ -989,8 +989,8 @@ form[id] {
    FAQ MODAL — APPLE STYLE
 --------------------------------------------------------- */
 
-.faq-minimal {
-    padding: 48px 20px 0;
+.partners-minimal {
+    padding: 48px 20px 70px;
     text-align: center;
     background: #f6f8fb;
 }
@@ -1121,6 +1121,107 @@ form[id] {
     text-align: center;
 }
 
+.partners-minimal h2 {
+    margin: 0 auto 34px;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 0.98;
+    letter-spacing: -0.05em;
+    color: #0d1117;
+    text-align: center;
+}
+
+.partners-logo-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 28px;
+}
+
+.partners-logo-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px 26px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.74);
+    border: 1px solid rgba(203, 213, 225, 0.72);
+    box-shadow: 0 22px 60px rgba(15, 23, 42, 0.08);
+    transition: all 0.25s ease;
+}
+
+.partners-logo-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 30px 80px rgba(15, 23, 42, 0.12);
+}
+
+.partners-logo-link img {
+    max-width: 160px;
+    max-height: 64px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+.partners-empty {
+    max-width: 780px;
+    margin: 0 auto;
+    font-size: 18px;
+    line-height: 1.8;
+    color: #4b5563;
+    letter-spacing: -0.02em;
+}
+
+.referral-instructions {
+    max-width: 520px;
+    margin: 0 auto 28px;
+    font-size: 17px;
+    line-height: 1.7;
+    color: #4b5563;
+    letter-spacing: -0.01em;
+}
+
+.referral-code-display {
+    margin: 0 auto 32px;
+    padding: 18px 28px;
+    max-width: fit-content;
+    border-radius: 16px;
+    background: rgba(74, 144, 226, 0.08);
+    border: 1px dashed rgba(74, 144, 226, 0.4);
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: var(--blue-dark);
+}
+
+.referral-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+}
+
+.referral-actions .btn-primary,
+.referral-actions .btn-secondary {
+    padding: 0 28px;
+    min-width: 0;
+}
+
+/* .btn-secondary is designed for the dark hero section — override it here
+   since this modal sits on a light background. */
+.referral-actions .btn-secondary {
+    background: rgba(74, 144, 226, 0.07);
+    color: #334155;
+    border-color: rgba(74, 144, 226, 0.2);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+.referral-actions .btn-secondary:hover {
+    background: rgba(74, 144, 226, 0.14);
+}
+
 .faq-list {
     display: grid;
     gap: 14px;
@@ -1189,12 +1290,6 @@ form[id] {
     margin-bottom: 0;
 }
 
-.privacy-minimal {
-    padding: 20px 20px 70px;
-    text-align: center;
-    background: #f6f8fb;
-}
-
 .privacy-contact {
     margin-top: 50px;
     display: flex;
@@ -1246,6 +1341,11 @@ form[id] {
         font-size: 2.4rem;
         letter-spacing: -0.055em;
         padding-right: 34px;
+    }
+
+    .partners-minimal h2 {
+        font-size: 2rem;
+        letter-spacing: -0.045em;
     }
 
     .privacy-box p {

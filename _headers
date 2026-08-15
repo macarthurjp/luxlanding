@@ -4,7 +4,7 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
   Cross-Origin-Opener-Policy: same-origin
-  Content-Security-Policy: default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; script-src 'self' https://www.google.com https://www.gstatic.com https://www.recaptcha.net https://static.cloudflareinsights.com; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://www.google.com https://www.recaptcha.net https://*.supabase.co https://cloudflareinsights.com; frame-src https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; script-src 'self' https://www.google.com https://www.gstatic.com https://www.recaptcha.net https://static.cloudflareinsights.com; style-src 'self'; font-src 'self'; img-src 'self' data: https:; connect-src 'self' https://www.google.com https://www.recaptcha.net https://*.supabase.co https://cloudflareinsights.com; frame-src https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; upgrade-insecure-requests
 
 /images/*
   Cache-Control: public, max-age=604800

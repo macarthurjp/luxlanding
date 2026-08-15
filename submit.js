@@ -560,6 +560,134 @@ async function submitLead(event) {
    INIT
 ========================================================= */
 
+/* =========================================================
+   PARTNERS SHOWCASE
+
+   Reads directly from Supabase's REST API with the anon key already
+   used above — RLS plus a column-level grant mean this can only ever
+   return partners with show_publicly = true, and only their public
+   fields (name/logo/website). No submit-lead round trip involved.
+========================================================= */
+
+let partnersShowcaseLoaded = false;
+
+async function loadPartnersShowcase() {
+  if (partnersShowcaseLoaded) return;
+  partnersShowcaseLoaded = true;
+
+  const grid = document.getElementById("partners-logo-grid");
+  if (!grid) return;
+
+  try {
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/partners?select=partner_id,name,logo_url,website_url&order=display_order.asc&logo_url=not.is.null&website_url=not.is.null`,
+      { headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": `Bearer ${SUPABASE_ANON_KEY}` } }
+    );
+    if (!response.ok) throw new Error(`partners fetch failed: ${response.status}`);
+    const partners = await response.json();
+
+    grid.replaceChildren();
+
+    if (!Array.isArray(partners) || !partners.length) {
+      const empty = document.createElement("p");
+      empty.className = "partners-empty";
+      empty.textContent = "No partners to show yet.";
+      grid.appendChild(empty);
+      return;
+    }
+
+    for (const partner of partners) {
+      const link = document.createElement("a");
+      link.href = partner.website_url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.className = "partners-logo-link";
+      link.addEventListener("click", (event) => handlePartnerLogoClick(event, partner));
+
+      const img = document.createElement("img");
+      img.alt = partner.name || "";
+      img.loading = "lazy";
+      // A broken/unreachable logo URL shouldn't leave a dead-icon card visible —
+      // drop the whole entry rather than show a link with no image.
+      img.onerror = () => link.remove();
+      img.src = partner.logo_url;
+      link.appendChild(img);
+      grid.appendChild(link);
+    }
+  } catch (error) {
+    console.error(error);
+    grid.replaceChildren();
+    const failed = document.createElement("p");
+    failed.className = "partners-empty";
+    failed.textContent = "Could not load partners right now.";
+    grid.appendChild(failed);
+    partnersShowcaseLoaded = false;
+  }
+}
+
+/* =========================================================
+   PARTNER REFERRAL CODE
+
+   Clicking a partner logo never navigates directly — it logs a
+   fire-and-forget click record (best-effort; a failed insert must
+   never block the visitor from reaching the partner site) and shows
+   a short code the visitor can quote to the partner. Conversion is
+   confirmed later by an admin from the dashboard, not by this code —
+   nothing happening on the partner's own site is observable here.
+========================================================= */
+
+function generateReferralCode() {
+  return `LUX-${crypto.randomUUID().replace(/-/g, "").slice(0, 6).toUpperCase()}`;
+}
+
+function logPartnerClick(partnerId, code) {
+  fetch(`${SUPABASE_URL}/rest/v1/partner_referral_clicks`, {
+    method: "POST",
+    headers: {
+      "apikey": SUPABASE_ANON_KEY,
+      "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+      "Content-Type": "application/json",
+      "Prefer": "return=minimal"
+    },
+    body: JSON.stringify({ partner_id: partnerId, referral_code: code })
+  }).catch((error) => console.error("Could not log partner click", error));
+}
+
+function openReferralCodeModal() {
+  const modal = document.getElementById("referral-code-modal");
+  if (!modal) return;
+  modal.classList.add("active");
+  document.body.classList.add("modal-open");
+  window.setTimeout(() => document.getElementById("referral-code-close")?.focus(), 0);
+}
+
+function handlePartnerLogoClick(event, partner) {
+  event.preventDefault();
+
+  const code = generateReferralCode();
+  logPartnerClick(partner.partner_id, code);
+
+  const codeDisplay = document.getElementById("referral-code-display");
+  if (codeDisplay) codeDisplay.textContent = code;
+
+  const continueLink = document.getElementById("referral-code-continue");
+  if (continueLink) continueLink.href = partner.website_url;
+
+  const copyBtn = document.getElementById("referral-code-copy");
+  if (copyBtn) {
+    const dict = window.translations?.[window.currentLang] || window.translations?.en || {};
+    const defaultLabel = dict["referral.copy"] || "Copy code";
+    copyBtn.textContent = defaultLabel;
+    copyBtn.onclick = () => {
+      navigator.clipboard?.writeText(code)
+        .then(() => { copyBtn.textContent = dict["referral.copied"] || "Copied!"; })
+        .catch(() => {});
+    };
+  }
+
+  openReferralCodeModal();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("#intake-form");
   const phoneInput = form?.querySelector('input[name="contact_phone"]');
@@ -655,4 +783,6 @@ document.addEventListener("DOMContentLoaded", () => {
       form.requestSubmit();
     });
   }
+
+  loadPartnersShowcase();
 });

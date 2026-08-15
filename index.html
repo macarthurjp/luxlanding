@@ -51,7 +51,7 @@
     <meta name="twitter:image:alt" content="LuxLanding relocation support in Luxembourg">
 
     <!-- Fonts & Styles -->
-    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="style.css?v=7">
     <link rel="stylesheet" href="vendor/intl-tel-input/css/intlTelInput.min.css?v=29.2.3">
     <link rel="stylesheet" href="form.css?v=8">
 
@@ -752,19 +752,14 @@
     </section>
     
 
-   <!-- FAQ -->
-<section class="faq-minimal reveal" id="faq">
-    <button class="faq-toggle" id="faq-toggle" aria-haspopup="dialog" aria-controls="faq-modal" data-i18n="faq.toggle">
-        Frequently asked questions
-    </button>
-</section>
+   <!-- PARTNERS -->
+<section class="partners-minimal reveal" id="partners-showcase">
+    <p class="faq-eyebrow" data-i18n="partners.eyebrow">Partners</p>
+    <h2 data-i18n="partners.title">Our trusted partners</h2>
 
-    <!-- PRIVACY NOTICE -->
-  <!-- PRIVACY -->
-<section class="privacy-minimal reveal" id="privacy">
-    <button class="privacy-toggle" id="privacy-toggle" aria-haspopup="dialog" aria-controls="privacy-modal" data-i18n="privacy.title">
-        Privacy notice
-    </button>
+    <div class="partners-logo-grid" id="partners-logo-grid">
+        <p class="partners-empty" id="partners-empty" data-i18n="partners.loading">Loading partners…</p>
+    </div>
 </section>
 
     </main>
@@ -772,6 +767,24 @@
     <!-- FAQ and Privacy modals live outside any .reveal section: a non-"none" transform
          on a .reveal ancestor turns position:fixed descendants into fixed-relative-to-that-ancestor
          instead of the viewport, so these must sit at the body level. -->
+    <div class="faq-modal" id="referral-code-modal" role="dialog" aria-modal="true" aria-labelledby="referral-code-modal-title">
+        <div class="faq-modal-box">
+            <button class="faq-close" id="referral-code-close" aria-label="Close">×</button>
+
+            <p class="faq-eyebrow" data-i18n="referral.eyebrow">Your reference code</p>
+            <h2 id="referral-code-modal-title" data-i18n="referral.title">Save this code</h2>
+
+            <p class="referral-instructions" data-i18n="referral.instructions">Mention this code when you contact our partner — it helps them, and us, confirm the connection came through LuxLanding.</p>
+
+            <div class="referral-code-display" id="referral-code-display">LUX-000000</div>
+
+            <div class="referral-actions">
+                <button class="btn-secondary" id="referral-code-copy" type="button" data-i18n="referral.copy">Copy code</button>
+                <a href="#" class="btn-primary" id="referral-code-continue" target="_blank" rel="noopener noreferrer" data-i18n="referral.continue">Continue to partner site</a>
+            </div>
+        </div>
+    </div>
+
     <div class="faq-modal" id="faq-modal" role="dialog" aria-modal="true" aria-labelledby="faq-modal-title">
         <div class="faq-modal-box">
             <button class="faq-close" id="faq-close" aria-label="Close">×</button>
@@ -854,10 +867,10 @@
     </footer>
 
     <!-- SCRIPTS -->
-    <script defer src="script.js?v=17"></script>
-    <script defer src="languages.js?v=18"></script>
+    <script defer src="script.js?v=19"></script>
+    <script defer src="languages.js?v=20"></script>
     <script defer src="logic.js?v=15"></script>
     <script defer src="vendor/intl-tel-input/intlTelInput.min.js?v=29.2.3"></script>
-    <script defer src="submit.js?v=34"></script>
+    <script defer src="submit.js?v=36"></script>
 </body>
 </html>

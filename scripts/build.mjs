@@ -44,6 +44,13 @@ for (const image of publicImages) {
   await cp(join(projectRoot, "images", image), join(outputDirectory, "images", image), { force: true });
 }
 
+// Partner logos are managed from the dashboard and drop into images/partners/
+// on disk — copy the whole directory so new logos ship without a code change.
+await cp(join(projectRoot, "images", "partners"), join(outputDirectory, "images", "partners"), {
+  recursive: true,
+  force: true,
+});
+
 // Some browsers still request /favicon.ico even when a PNG icon is declared.
 await cp(join(projectRoot, "images/favicon-64.png"), join(outputDirectory, "favicon.ico"), { force: true });
 

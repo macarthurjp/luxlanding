@@ -67,9 +67,9 @@ document.querySelectorAll('a[href="#lead-form"]').forEach(link => {
 
 function setupAccessibleModal({ modalId, toggleId, closeId, linkSelector }) {
     const modal = document.getElementById(modalId);
-    const toggle = document.getElementById(toggleId);
+    const toggle = toggleId ? document.getElementById(toggleId) : null;
     const close = document.getElementById(closeId);
-    if (!modal || !toggle || !close) return;
+    if (!modal || !close) return;
 
     let previousFocus = null;
     const open = event => {
@@ -85,7 +85,7 @@ function setupAccessibleModal({ modalId, toggleId, closeId, linkSelector }) {
         previousFocus?.focus();
     };
 
-    toggle.addEventListener('click', open);
+    toggle?.addEventListener('click', open);
     close.addEventListener('click', dismiss);
     document.querySelectorAll(linkSelector).forEach(link => link.addEventListener('click', open));
     modal.addEventListener('click', event => {
@@ -125,4 +125,13 @@ setupAccessibleModal({
     toggleId: 'faq-toggle',
     closeId: 'faq-close',
     linkSelector: 'a[href="#faq"]',
+});
+
+// Opened programmatically from submit.js on a partner logo click — no
+// dedicated toggle button, so this registration only wires up closing
+// (close button, Escape, backdrop click, focus trap).
+setupAccessibleModal({
+    modalId: 'referral-code-modal',
+    closeId: 'referral-code-close',
+    linkSelector: 'a[data-referral-modal-trigger]',
 });

@@ -1189,6 +1189,11 @@ body{
   box-shadow:0 0 0 4px rgba(106,169,255,.14);
 }
 
+.field-hint{
+  font-size:12px;
+  color:var(--muted);
+}
+
 .table-wrapper{
   overflow-x:auto;
 }
@@ -2556,7 +2561,10 @@ RESPONSIVE + DASHBOARD FIXES
 .partners-table td:nth-child(6){width:110px;min-width:110px;}
 
 .partners-table th:nth-child(7),
-.partners-table td:nth-child(7){width:180px;min-width:180px;}
+.partners-table td:nth-child(7){width:100px;min-width:100px;}
+
+.partners-table th:nth-child(8),
+.partners-table td:nth-child(8){width:180px;min-width:180px;}
 
 .revenue-table{
   min-width:1220px !important;
@@ -3251,6 +3259,29 @@ RESPONSIVE + DASHBOARD FIXES
         </section>
 
         <section class="card">
+          <div class="panel-title-row">
+            <div>
+              <div class="panel-title">Website referral tracking</div>
+              <div class="panel-subtitle">Codes shown to visitors when they click a partner logo on the public site. Mark a code as converted once the partner confirms it — this cannot be detected automatically.</div>
+            </div>
+            <button class="btn btn-outline" id="refreshReferralClicksBtn" type="button">Refresh</button>
+          </div>
+
+          <div class="partner-report-stats">
+            <div class="partner-report-stat"><strong id="referralClicksTotal">0</strong><span>Total clicks</span></div>
+            <div class="partner-report-stat"><strong id="referralClicksConverted">0</strong><span>Converted</span></div>
+            <div class="partner-report-stat"><strong id="referralClicksRate">0%</strong><span>Conversion rate</span></div>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="mini-table partner-report-table">
+              <thead><tr><th>Partner</th><th>Code</th><th>Clicked at</th><th>Converted</th></tr></thead>
+              <tbody id="referralClicksBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="card">
           <div class="management-grid">
             <div>
               <div class="panel-title-row">
@@ -3306,9 +3337,26 @@ RESPONSIVE + DASHBOARD FIXES
                   <input type="text" id="partnerServicesInput" placeholder="Housing, paperwork, schools...">
                 </div>
 
+                <div class="field">
+                  <label>Logo</label>
+                  <input type="file" id="partnerLogoFileInput" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+                  <small id="partnerLogoUploadStatus" class="field-hint"></small>
+                  <input type="url" id="partnerLogoUrlInput" placeholder="Uploads fill this in automatically, or paste a URL">
+                </div>
+
+                <div class="field">
+                  <label>Website URL</label>
+                  <input type="url" id="partnerWebsiteUrlInput" placeholder="https://example.com">
+                </div>
+
                 <label class="paid-toggle">
                   <input type="checkbox" id="partnerActiveInput" checked>
                   Active partner
+                </label>
+
+                <label class="paid-toggle">
+                  <input type="checkbox" id="partnerShowPubliclyInput">
+                  Show logo on public site
                 </label>
 
                   <div class="action-row">
@@ -3337,6 +3385,7 @@ RESPONSIVE + DASHBOARD FIXES
                       <th>Email</th>
                       <th>Services</th>
                       <th>Active</th>
+                      <th>Public</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -4357,6 +4406,96 @@ async function loadPartnerReferralReport() {
   }
 }
 
+let allReferralClicks = [];
+
+function renderReferralClicks() {
+  const body = document.getElementById("referralClicksBody");
+  if (!body) return;
+
+  const total = allReferralClicks.length;
+  const converted = allReferralClicks.filter(click => click.converted).length;
+  document.getElementById("referralClicksTotal").textContent = String(total);
+  document.getElementById("referralClicksConverted").textContent = String(converted);
+  document.getElementById("referralClicksRate").textContent =
+    total ? `${Math.round((converted / total) * 100)}%` : "0%";
+
+  if (!total) {
+    body.innerHTML = emptyStateRow(4, {
+      icon: "tray",
+      title: "No partner logo clicks yet",
+      subtitle: "Clicks appear here as soon as a visitor uses the public partners showcase."
+    });
+    return;
+  }
+
+  const partnerNames = new Map(allPartners.map(partner => [partner.partner_id, partner.name || partner.company || partner.partner_id]));
+
+  body.innerHTML = allReferralClicks.map(click => `
+    <tr>
+      <td>${escapeHtml(partnerNames.get(click.partner_id) || "Former partner")}</td>
+      <td><code>${escapeHtml(click.referral_code)}</code></td>
+      <td>${escapeHtml(formatDate(click.clicked_at))}</td>
+      <td>
+        <label class="paid-toggle">
+          <input type="checkbox" data-referral-click-id="${escapeHtml(click.id)}" ${click.converted ? "checked" : ""}>
+          ${click.converted ? "Converted" : "Not yet"}
+        </label>
+      </td>
+    </tr>`).join("");
+
+  body.querySelectorAll("[data-referral-click-id]").forEach(checkbox => {
+    checkbox.onchange = () => toggleReferralClickConverted(checkbox.dataset.referralClickId, checkbox.checked);
+  });
+}
+
+async function loadReferralClicks() {
+  const body = document.getElementById("referralClicksBody");
+  if (!body) return;
+  body.innerHTML = emptyStateRow(4, { title: "Loading referral clicks…" });
+
+  try {
+    const { data, error } = await supabaseClient
+      .from("partner_referral_clicks")
+      .select("id,partner_id,referral_code,clicked_at,converted,converted_at")
+      .order("clicked_at", { ascending: false })
+      .limit(200);
+    if (error) throw error;
+
+    allReferralClicks = Array.isArray(data) ? data : [];
+    renderReferralClicks();
+  } catch (error) {
+    console.error(error);
+    body.innerHTML = emptyStateRow(4, {
+      icon: "alert", tone: "danger", title: "Could not load referral clicks",
+      subtitle: "Please refresh or try again shortly."
+    });
+    showToast("Could not load referral clicks");
+  }
+}
+
+async function toggleReferralClickConverted(id, converted) {
+  const payload = converted
+    ? { converted: true, converted_at: new Date().toISOString() }
+    : { converted: false, converted_at: null };
+
+  try {
+    const { error } = await supabaseClient
+      .from("partner_referral_clicks")
+      .update(payload)
+      .eq("id", id);
+    if (error) throw error;
+
+    const click = allReferralClicks.find(item => item.id === id);
+    if (click) Object.assign(click, payload);
+    renderReferralClicks();
+    showToast(converted ? "Marked as converted" : "Marked as not converted");
+  } catch (error) {
+    console.error(error);
+    showToast("Could not update referral click");
+    renderReferralClicks();
+  }
+}
+
 function getSelectedLeads() {
   return allLeads.filter(lead => selectedLeadKeys.has(getLeadKey(lead)));
 }
@@ -4758,6 +4897,7 @@ function setDashboardSection(sectionId) {
   if (sectionId === "partnersSection") {
     renderPartnersManager();
     loadPartnerReferralReport();
+    loadReferralClicks();
   }
   if (sectionId === "revenueSection") renderRevenueManager();
 }
@@ -4769,7 +4909,10 @@ function clearPartnerForm() {
   const email = document.getElementById("partnerEmailInput");
   const phone = document.getElementById("partnerPhoneInput");
   const services = document.getElementById("partnerServicesInput");
+  const logoUrl = document.getElementById("partnerLogoUrlInput");
+  const websiteUrl = document.getElementById("partnerWebsiteUrlInput");
   const active = document.getElementById("partnerActiveInput");
+  const showPublicly = document.getElementById("partnerShowPubliclyInput");
   const cancelEditBtn = document.getElementById("cancelPartnerEditBtn");
 
   if (editIndex) editIndex.value = "";
@@ -4779,8 +4922,16 @@ function clearPartnerForm() {
   if (email) email.value = "";
   if (phone) phone.value = "";
   if (services) services.value = "";
+  if (logoUrl) logoUrl.value = "";
+  if (websiteUrl) websiteUrl.value = "";
   if (active) active.checked = true;
+  if (showPublicly) showPublicly.checked = false;
   if (cancelEditBtn) cancelEditBtn.style.display = "none";
+
+  const logoStatus = document.getElementById("partnerLogoUploadStatus");
+  if (logoStatus) logoStatus.textContent = "";
+  const logoFile = document.getElementById("partnerLogoFileInput");
+  if (logoFile) logoFile.value = "";
 }
 
 function fillPartnerForm(index) {
@@ -4794,10 +4945,54 @@ function fillPartnerForm(index) {
   document.getElementById("partnerEmailInput").value = partner.email || "";
   document.getElementById("partnerPhoneInput").value = partner.phone || "";
   document.getElementById("partnerServicesInput").value = partner.services || "";
+  document.getElementById("partnerLogoUrlInput").value = partner.logo_url || "";
+  document.getElementById("partnerWebsiteUrlInput").value = partner.website_url || "";
   document.getElementById("partnerActiveInput").checked = partner.active !== false;
+  document.getElementById("partnerShowPubliclyInput").checked = partner.show_publicly === true;
 
   const cancelEditBtn = document.getElementById("cancelPartnerEditBtn");
   if (cancelEditBtn) cancelEditBtn.style.display = "inline-flex";
+
+  const logoStatus = document.getElementById("partnerLogoUploadStatus");
+  if (logoStatus) logoStatus.textContent = "";
+}
+
+const PARTNER_LOGO_BUCKET = "partner-logos";
+const PARTNER_LOGO_MAX_BYTES = 5 * 1024 * 1024;
+
+async function handlePartnerLogoFileChange(event) {
+  const file = event.target.files?.[0];
+  event.target.value = "";
+  if (!file) return;
+
+  const status = document.getElementById("partnerLogoUploadStatus");
+  const logoUrlInput = document.getElementById("partnerLogoUrlInput");
+
+  if (!file.type.startsWith("image/")) {
+    if (status) status.textContent = "Please choose an image file.";
+    return;
+  }
+  if (file.size > PARTNER_LOGO_MAX_BYTES) {
+    if (status) status.textContent = "Image is too large (max 5 MB).";
+    return;
+  }
+
+  if (status) status.textContent = "Uploading…";
+  try {
+    const extension = (file.name.split(".").pop() || "png").toLowerCase().replace(/[^a-z0-9]/g, "") || "png";
+    const path = `${crypto.randomUUID()}.${extension}`;
+    const { error: uploadError } = await supabaseClient.storage
+      .from(PARTNER_LOGO_BUCKET)
+      .upload(path, file, { upsert: false, contentType: file.type });
+    if (uploadError) throw uploadError;
+
+    const { data } = supabaseClient.storage.from(PARTNER_LOGO_BUCKET).getPublicUrl(path);
+    if (logoUrlInput) logoUrlInput.value = data.publicUrl;
+    if (status) status.textContent = "Logo uploaded — remember to Save partner.";
+  } catch (err) {
+    console.error(err);
+    if (status) status.textContent = "Upload failed. Please try again.";
+  }
 }
 
 function renderPartnersManager() {
@@ -4805,7 +5000,7 @@ function renderPartnersManager() {
   if (!body) return;
 
   if (!allPartners.length) {
-    body.innerHTML = emptyStateRow(7, {
+    body.innerHTML = emptyStateRow(8, {
       icon: "people",
       title: "No partners yet",
       subtitle: "Add your first partner using the form on the left."
@@ -4821,6 +5016,7 @@ function renderPartnersManager() {
       <td>${escapeHtml(partner.email || "—")}</td>
       <td>${escapeHtml(partner.services || "—")}</td>
       <td>${partner.active !== false ? "Active" : "Inactive"}</td>
+      <td>${partner.show_publicly === true ? "Public" : "Hidden"}</td>
       <td>
         <div class="action-row">
           <button class="btn btn-outline" type="button" data-edit-partner="${index}">Edit</button>
@@ -4839,6 +5035,12 @@ function renderPartnersManager() {
   });
 }
 
+function normalizePartnerUrl(value) {
+  const trimmed = (value || "").trim();
+  if (!trimmed) return null;
+  return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+}
+
 function getPartnerFromForm() {
   return {
     group: getPartnerGroups().join(", ") || "Other",
@@ -4847,7 +5049,10 @@ function getPartnerFromForm() {
     email: document.getElementById("partnerEmailInput")?.value.trim() || "",
     phone: document.getElementById("partnerPhoneInput")?.value.trim() || "",
     services: document.getElementById("partnerServicesInput")?.value.trim() || "",
-    active: document.getElementById("partnerActiveInput")?.checked !== false
+    logo_url: document.getElementById("partnerLogoUrlInput")?.value.trim() || null,
+    website_url: normalizePartnerUrl(document.getElementById("partnerWebsiteUrlInput")?.value),
+    active: document.getElementById("partnerActiveInput")?.checked !== false,
+    show_publicly: document.getElementById("partnerShowPubliclyInput")?.checked === true
   };
 }
 
@@ -5732,6 +5937,12 @@ if (refreshPartnersBtn) refreshPartnersBtn.onclick = async () => {
 
 const applyPartnerReportBtn = document.getElementById("applyPartnerReportBtn");
 if (applyPartnerReportBtn) applyPartnerReportBtn.onclick = loadPartnerReferralReport;
+
+const refreshReferralClicksBtn = document.getElementById("refreshReferralClicksBtn");
+if (refreshReferralClicksBtn) refreshReferralClicksBtn.onclick = loadReferralClicks;
+
+const partnerLogoFileInput = document.getElementById("partnerLogoFileInput");
+if (partnerLogoFileInput) partnerLogoFileInput.addEventListener("change", handlePartnerLogoFileChange);
 
 const savePartnerBtn = document.getElementById("savePartnerBtn");
 if (savePartnerBtn) savePartnerBtn.onclick = savePartnerFromForm;
